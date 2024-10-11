@@ -2,7 +2,7 @@ import Image from "next/image";
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { FiX } from "react-icons/fi";
 
-export default function Home() {
+export default function Contact() {
   return (
     <>
       <section className="relative bg-white ">

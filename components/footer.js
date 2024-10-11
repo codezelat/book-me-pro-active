@@ -7,8 +7,8 @@ import SubscribeSection from "/components/SubscribeSection";
 export default function Footer() {
   return (
     <section>
-      <div className="">
-        <div className="container mx-auto px-20 py-10 bg-blue-900 z-10 absolute">
+      <div className=" bg-blue-900 z-10">
+        <div className="container mx-auto px-20 py-10 ">
           <div className="flex items-center justify-between mb-10">
             <div>
               <div className="text-white text-3xl font-extrabold">

@@ -1,16 +1,19 @@
-// components/Header.js
-
 "use client";
+import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation"; // Import the usePathname hook
 import { useEffect, useState } from "react";
 
 export default function Header() {
-  const pathname = usePathname(); // Get the current route
+  const { data: session } = useSession();
+  
+  const handleLogout = async () => {
+    await signOut({ redirect: true, callbackUrl: "/" });
+  };
 
-  // Check if the current page is the homepage
-  const isHomePage = pathname === "/";
+  const pathname = usePathname(); // Get the current route
+  const isHomePage = pathname === "/"; // Check if the current page is the homepage
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -23,7 +26,6 @@ export default function Header() {
     };
 
     window.addEventListener("scroll", handleScroll);
-
     return () => {
       window.removeEventListener("scroll", handleScroll); // Clean up the listener on unmount
     };
@@ -36,15 +38,11 @@ export default function Header() {
         className={`${
           isHomePage
             ? "bg-transparent absolute"
-            : `${
-                isScrolled
-                  ? "bg-white/70 backdrop-blur-md shadow-md"
-                  : "bg-white shadow-md"
-              }` // Apply blur and background only when scrolled
+            : `${isScrolled ? "bg-white/70 backdrop-blur-md shadow-md" : "bg-white shadow-md"}`
         } w-full fixed top-0 z-10 transition duration-300 ease-in-out`}
       >
-        <div className="container mx-auto px-20 ">
-          <div className="justify-between items-center flex py-5 ">
+        <div className="container mx-auto px-20">
+          <div className="justify-between items-center flex py-5">
             {/* Company Logo */}
             <div
               className={`text-3xl font-extrabold ${
@@ -52,7 +50,7 @@ export default function Header() {
               }`}
             >
               <Link href="/">
-                <div className="w-48 ">
+                <div className="w-48">
                   <Image
                     src={
                       isHomePage
@@ -84,25 +82,45 @@ export default function Header() {
                 <Link href="/contact">Contact</Link>
               </div>
 
-              {/* Login/Signup Button */}
-              <button
-                className={`${
-                  isHomePage
-                    ? "bg-blue-600 text-white"
-                    : "bg-blue-600 text-white"
-                } flex gap-3 items-center py-2 px-4 rounded`}
-              >
-                <div className="w-5 ">
-                  <Image
-                    src="/images/home/profile.png"
-                    width={1000}
-                    height={500}
-                    layout="responsive"
-                    alt="profile"
-                  />
-                </div>
-                <div>Login / Signup</div>
-              </button>
+              {/* Conditional Login/Logout Button */}
+              {session ? (
+                <button
+                  onClick={handleLogout}
+                  className={`${
+                    isHomePage ? "bg-red-600 text-white" : "bg-red-600 text-white"
+                  } flex gap-3 items-center py-2 px-4 rounded`}
+                >
+                  <div className="w-5">
+                    <Image
+                      src="/images/home/profile.png"
+                      width={1000}
+                      height={500}
+                      layout="responsive"
+                      alt="profile"
+                    />
+                  </div>
+                  <span>Logout</span>
+                </button>
+              ) : (
+                <button
+                  className={`${
+                    isHomePage ? "bg-blue-600 text-white" : "bg-blue-600 text-white"
+                  } flex gap-3 items-center py-2 px-4 rounded`}
+                >
+                  <div className="w-5">
+                    <Image
+                      src="/images/home/profile.png"
+                      width={1000}
+                      height={500}
+                      layout="responsive"
+                      alt="profile"
+                    />
+                  </div>
+                  <div>
+                    <Link href="/auth/login">Login / Signup</Link>
+                  </div>
+                </button>
+              )}
             </div>
           </div>
         </div>
