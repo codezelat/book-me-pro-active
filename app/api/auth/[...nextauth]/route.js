@@ -1,10 +1,11 @@
-// app/api/auth/nextauth/route.js
+// app/api/auth/[...nextauth]/route.js
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import clientPromise from "@/Lib/mongodb"; // Adjust this path as per your project
 import bcrypt from "bcryptjs"; // Ensure bcrypt is imported
 
-const authOptions = {
+// Define and export authOptions
+export const authOptions = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -27,7 +28,7 @@ const authOptions = {
                     throw new Error("Invalid email or password");
                 }
 
-                return { email: user.email, name: user.name }; // Return user object on successful login
+                return { email: user.email, name: user.name, contact: user.contact  }; // Return user object on successful login
             },
         }),
     ],
@@ -43,6 +44,7 @@ const authOptions = {
             if (user) {
                 token.email = user.email;
                 token.name = user.name;
+                token.contact = user.contact; 
             }
             return token;
         },
@@ -50,11 +52,14 @@ const authOptions = {
             // Pass user information from the token to the session
             session.user.email = token.email;
             session.user.name = token.name;
+            session.user.contact = token.contact; 
             return session;
         },
     },
 };
 
+// Initialize NextAuth with authOptions
 const handler = NextAuth(authOptions);
 
+// Export the NextAuth handler
 export { handler as GET, handler as POST };

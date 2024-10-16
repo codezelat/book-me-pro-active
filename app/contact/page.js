@@ -39,7 +39,7 @@ export default function Contact() {
                   layout="responsive"
                   alt="soccer"
                 />
-                {/* <img
+                {/* <
                           src="/images/home/section-1.gif"
                           alt="NFT Auto Store"
                         /> */}

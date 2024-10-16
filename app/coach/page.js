@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function Coach() {
   // List of image URLs for small thumbnails
@@ -85,15 +86,25 @@ export default function Coach() {
               <div className="flex flex-col gap-4">
                 {/* Main large image section */}
                 <div className="flex-1 flex items-center justify-center">
-                  <img src={selectedImage} alt="Selected" className="w-full" />
+                  <div className="w-full ">
+                    <Image
+                      src={selectedImage}
+                      width={1000}
+                      height={500}
+                      layout="responsive"
+                      alt="Selected"
+                    />
+                  </div>
                 </div>
 
                 {/* Small image thumbnails */}
                 <div className="flex flex-row gap-4">
                   {images.map((image, index) => (
-                    <img
+                    <Image
                       key={index}
                       src={image}
+                      width={1000}
+                      height={500}
                       alt={`Thumbnail ${index + 1}`}
                       className={`w-16 h-16 rounded-lg cursor-pointer ${
                         selectedImage === image ? "ring-4 ring-blue-500" : ""

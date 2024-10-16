@@ -7,10 +7,6 @@ import { useEffect, useState } from "react";
 
 export default function Header() {
   const { data: session } = useSession();
-  
-  const handleLogout = async () => {
-    await signOut({ redirect: true, callbackUrl: "/" });
-  };
 
   const pathname = usePathname(); // Get the current route
   const isHomePage = pathname === "/"; // Check if the current page is the homepage
@@ -38,7 +34,11 @@ export default function Header() {
         className={`${
           isHomePage
             ? "bg-transparent absolute"
-            : `${isScrolled ? "bg-white/70 backdrop-blur-md shadow-md" : "bg-white shadow-md"}`
+            : `${
+                isScrolled
+                  ? "bg-white/70 backdrop-blur-md shadow-md"
+                  : "bg-white shadow-md"
+              }`
         } w-full fixed top-0 z-10 transition duration-300 ease-in-out`}
       >
         <div className="container mx-auto px-20">
@@ -85,9 +85,10 @@ export default function Header() {
               {/* Conditional Login/Logout Button */}
               {session ? (
                 <button
-                  onClick={handleLogout}
                   className={`${
-                    isHomePage ? "bg-red-600 text-white" : "bg-red-600 text-white"
+                    isHomePage
+                      ? "bg-blue-600 text-white"
+                      : "bg-blue-600 text-white"
                   } flex gap-3 items-center py-2 px-4 rounded`}
                 >
                   <div className="w-5">
@@ -99,12 +100,14 @@ export default function Header() {
                       alt="profile"
                     />
                   </div>
-                  <span>Logout</span>
+                  <Link href="/dashboard">Dashboard</Link>
                 </button>
               ) : (
                 <button
                   className={`${
-                    isHomePage ? "bg-blue-600 text-white" : "bg-blue-600 text-white"
+                    isHomePage
+                      ? "bg-blue-600 text-white"
+                      : "bg-blue-600 text-white"
                   } flex gap-3 items-center py-2 px-4 rounded`}
                 >
                   <div className="w-5">
