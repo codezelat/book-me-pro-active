@@ -20,13 +20,13 @@ export default function Contact() {
         <div className="relative z-0 container  mx-auto px-20 py-24 md:px-20">
           {/* Heading */}
           <div className="text-black pt-24 text-start ">
-            <h1 className="text-5xl font-extrabold mb-4">Get In Touch</h1>
-            <p className="text-2xl">Contact Us if you need any support</p>
+            <h1 className="text-5xl font-bold mb-4">Get In Touch</h1>
+            <p className="text-3xl font-normal">Contact Us if you need any support</p>
           </div>
 
           {/* Quick Support Section */}
 
-          <div className="text-black text-3xl mt-20 font-extrabold">
+          <div className="text-black text-4xl mt-20 font-bold">
             Need Quick Support?
           </div>
           <div className="flex flex-col lg:flex-row gap-20 mb-8">
@@ -45,8 +45,8 @@ export default function Contact() {
                         /> */}
               </div>
               <div className="">
-                <h2 className="text-2xl font-bold">Hotline:</h2>
-                <p className="text-2xl font-bold">123 456 7890</p>
+                <h2 className="text-3xl font-normal">Hotline:</h2>
+                <p className="text-3xl font-normal">123 456 7890</p>
               </div>
             </div>
             {/* <div className="flex items-center gap-10 mt-8 px-16 justify-center bg-blue-600 text-white py-3 rounded-lg">
@@ -73,14 +73,10 @@ export default function Contact() {
                   layout="responsive"
                   alt="soccer"
                 />
-                {/* <img
-                          src="/images/home/section-1.gif"
-                          alt="NFT Auto Store"
-                        /> */}
               </div>
               <div className="">
-                <h2 className="text-2xl font-bold">Email:</h2>
-                <h2 className="text-2xl font-bold">info@company.com</h2>
+                <h2 className="text-3xl font-normal">Email:</h2>
+                <h2 className="text-3xl font-normal">info@company.com</h2>
               </div>
             </div>
           </div>
@@ -88,18 +84,18 @@ export default function Contact() {
 
           {/* Support Form Section */}
           <div className=" pt-16">
-            <p className="mb-4 text-black text-3xl font-extrabold">
+            <p className="mb-4 text-black text-4xl mt-20 font-bold">
               How can we help you?
             </p>
             <div className="flex  mt-10 gap-20 items-center ">
-              <div className="text-black text-2xl font-semibold">
+              <div className="text-black text-3xl font-normal">
                 Which section under your problems?{" "}
               </div>
               <div className="flex gap-8">
-                <button className="border-2 px-8 border-blue-600 text-blue-600 py-2 rounded-md">
+                <button className="border-2 font-normal text-lg px-8 border-blue-600 text-blue-600 py-2 rounded-md">
                   Sports
                 </button>
-                <button className="border-2 px-8 border-blue-600 text-blue-600 py-2 rounded-md">
+                <button className="border-2 font-normal text-lg px-8 border-blue-600 text-blue-600 py-2 rounded-md">
                   Services
                 </button>
               </div>
@@ -109,7 +105,7 @@ export default function Contact() {
 
           {/* Social Media Section */}
           <div className="flex mt-16 gap-20 items-center">
-            <p className="  text-black text-3xl font-extrabold">Follow Us On</p>
+            <p className="  text-black text-4xl font-bold">Follow Us On</p>
             <div className="flex text-blue-600 space-x-8">
               <a
                 href="https://facebook.com"

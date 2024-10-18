@@ -24,7 +24,7 @@ export default function Footer() {
                   </div>
                 </Link>
               </div>
-              <div className="flex text-xl items-center mt-5 gap-10 font-light text-white">
+              <div className="flex text-xl items-center mt-5 gap-10 font-normal text-white">
                 <div className="cursor-pointer duration-200">
                   <Link href="/">Home</Link>
                 </div>
@@ -40,7 +40,7 @@ export default function Footer() {
               </div>
             </div>
             <div>
-              <div className="text-white text-xl font-extrabold">
+              <div className="text-white text-2xl font-bold">
                 Subscribe to the newsletter
               </div>
               <div className="mt-5 ">
@@ -52,7 +52,7 @@ export default function Footer() {
             <div className="border-t border-gray-400 mb-4"></div>
 
             {/* Footer Content */}
-            <div className="container mx-auto flex justify-between mt-10 items-center text-white text-sm">
+            <div className="container mx-auto flex justify-between mt-10 items-center font-light text-white text-base">
               {/* Left Side - Copyright Text */}
               <div>© 2024 Rinish Global Booking. All rights reserved</div>
 

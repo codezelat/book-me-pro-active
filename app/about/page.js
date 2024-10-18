@@ -35,13 +35,13 @@ export default function About() {
         <div>
           <div className="flex items-center pt-40  h-full">
             <div className="container text-center mx-auto px-20 ">
-              <div className=" text-black font-extrabold text-5xl">
+              <div className=" text-black font-bold text-5xl">
                 Booking Your Coaching Sessions{" "}
               </div>
-              <div className=" mt-4 font-extrabold text-black text-5xl">
+              <div className=" mt-4 font-bold text-black text-5xl">
                 Just Got Easier
               </div>
-              <div className=" text-black font-thin mx-auto max-w-7xl mt-9 text-3xl">
+              <div className=" text-black font-light mx-auto max-w-5xl mt-9 text-2xl">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
                 enim ad minim veniam, quis nostrud exercitation ullamco laboris
@@ -148,10 +148,10 @@ export default function About() {
       </section>
       <section>
         <div className="container pt-24 mx-auto px-20 ">
-          <div className="grid grid-cols-9 gap-10 items-center  ">
+          <div className="grid grid-cols-9 gap-5 items-center  ">
             <div className="col-span-5">
-              <div className="text-4xl font-extrabold text-black ">Vision</div>
-              <div className="text-black mt-6 max-w-7xl font-thin   text-2xl">
+              <div className="text-4xl font-bold text-black ">Vision</div>
+              <div className="text-black mt-6 max-w-7xl font-light   text-2xl">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
                 enim ad minim veniam, quis nostrud exercitation ullamco laboris
@@ -164,7 +164,7 @@ export default function About() {
             </div>
 
             <div className=" col-span-4 ">
-              <div className="w-3/4 flex justify-center  ">
+              <div className="w-full flex justify-center  ">
                 <Image
                   src="/images/about/vission.png"
                   width={50}
@@ -179,9 +179,9 @@ export default function About() {
       </section>
       <section>
         <div className="container py-24 mx-auto px-20 ">
-          <div className="grid grid-cols-9  items-center  ">
+          <div className="grid gap-5 grid-cols-9  items-center  ">
             <div className=" col-span-4 ">
-              <div className="w-3/4 flex justify-center  ">
+              <div className="w-full flex justify-center  ">
                 <Image
                   src="/images/about/Mission.png"
                   width={50}
@@ -192,8 +192,8 @@ export default function About() {
               </div>
             </div>
             <div className="col-span-5">
-              <div className="text-4xl font-extrabold text-black  ">Mission</div>
-              <div className="text-black mt-6 font-thin max-w-7xl   text-2xl">
+              <div className="text-4xl font-bold text-black  ">Mission</div>
+              <div className="text-black mt-6 max-w-7xl font-light   text-2xl">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
                 enim ad minim veniam, quis nostrud exercitation ullamco laboris

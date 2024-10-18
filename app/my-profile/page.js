@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useSession, getSession } from "next-auth/react";
 import Image from "next/image";
 import axios from "axios";
+import Link from "next/link";
 
 export default function MyProfile() {
   const { data: session, update } = useSession(); // Fetch and update session data
@@ -42,8 +43,10 @@ export default function MyProfile() {
     <div className="container mt-24 py-24 mx-auto px-20">
       <div className="">
         {/* Welcome message and profile details */}
-        <h1 className="text-black text-4xl mb-4">Welcome, {session.user.name}</h1>
-        
+        <h1 className="text-black text-4xl mb-4">
+          Welcome, {session.user.name}
+        </h1>
+
         <div className="w-1/3 mb-6">
           <Image
             src={session.user.image || "/images/coach/coach.png"} // Default profile image if none exists
@@ -58,7 +61,9 @@ export default function MyProfile() {
           // Show profile details with an Edit button
           <div>
             <p className="text-black text-xl">Email: {session.user.email}</p>
-            <p className="text-black text-xl">Contact Number: {session.user.contact || "N/A"}</p>
+            <p className="text-black text-xl">
+              Contact Number: {session.user.contact || "N/A"}
+            </p>
             <button
               onClick={() => setEditMode(true)}
               className="bg-blue-600 text-white p-2 rounded mt-4"
@@ -102,12 +107,11 @@ export default function MyProfile() {
         )}
 
         {/* Logout button */}
-        <button
-          
-          className="bg-blue-600 text-white p-2 rounded mt-4"
-        >
-          Back to dashboard
-        </button>
+        <Link href="/dashboard">
+          <button className="bg-blue-600 text-white p-2 rounded mt-4">
+            Back to dashboard
+          </button>
+        </Link>
       </div>
     </div>
   );

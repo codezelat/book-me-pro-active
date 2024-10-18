@@ -73,13 +73,13 @@ export default function Header() {
               }`}
             >
               <div className="cursor-pointer duration-200">
-                <Link href="/">Home</Link>
+                <Link className="text-xl font-normal" href="/">Home</Link>
               </div>
               <div className="cursor-pointer duration-200">
-                <Link href="/about">About</Link>
+                <Link className="text-xl font-normal"  href="/about">About</Link>
               </div>
               <div className="cursor-pointer duration-200">
-                <Link href="/contact">Contact</Link>
+                <Link className="text-xl font-normal"  href="/contact">Contact</Link>
               </div>
 
               {/* Conditional Login/Logout Button */}
@@ -120,7 +120,7 @@ export default function Header() {
                     />
                   </div>
                   <div>
-                    <Link href="/auth/login">Login / Signup</Link>
+                    <Link className="text-xl font-normal"  href="/auth/login">Login / Signup</Link>
                   </div>
                 </button>
               )}
@@ -131,3 +131,4 @@ export default function Header() {
     </section>
   );
 }
+  

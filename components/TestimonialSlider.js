@@ -46,10 +46,10 @@ const TestimonialSlider = () => {
         <p className="text-2xl mt-8   font-thin text-black">
           {testimonials[currentIndex].text}
         </p>
-        <p className="mt-8 text-xl text-black font-semibold">
+        <p className="mt-8 text-2xl text-black font-normal">
           {testimonials[currentIndex].author}
         </p>
-        <p className="text-lg  font-thin text-black">
+        <p className="text-lg  font-normal text-black">
           {testimonials[currentIndex].role}
         </p>
       </div>
