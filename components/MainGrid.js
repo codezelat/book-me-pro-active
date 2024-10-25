@@ -14,7 +14,7 @@ import StatCard from './StatCard';
 
 const data = [
   {
-    title: 'Users',
+    title: "Today's Bookings",
     value: '14k',
     interval: 'Last 30 days',
     trend: 'up',
@@ -24,7 +24,7 @@ const data = [
     ],
   },
   {
-    title: 'Conversions',
+    title:  "Booking Requests",
     value: '325',
     interval: 'Last 30 days',
     trend: 'down',
@@ -34,7 +34,7 @@ const data = [
     ],
   },
   {
-    title: 'Event count',
+    title:  "Profile Clicks",
     value: '200k',
     interval: 'Last 30 days',
     trend: 'neutral',
@@ -64,13 +64,15 @@ export default function MainGrid() {
           </Grid>
         ))}
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-          <HighlightedCard />
+          {/* <HighlightedCard /> */}
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
+          {/* <SessionsChart /> */}
+          <ChartUserByCountry />
+        </Grid>
+        <Grid size={{ xs: 12, md: 6 }}>
+          {/* <PageViewsBarChart /> */}
           <SessionsChart />
-        </Grid>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <PageViewsBarChart />
         </Grid>
       </Grid>
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
@@ -82,12 +84,12 @@ export default function MainGrid() {
         </Grid>
         <Grid size={{ xs: 12, lg: 3 }}>
           <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
-            <CustomizedTreeView />
-            <ChartUserByCountry />
+            {/* <CustomizedTreeView />
+            <ChartUserByCountry /> */}
           </Stack>
         </Grid>
       </Grid>
-      <Copyright sx={{ my: 4 }} />
+      {/* <Copyright sx={{ my: 4 }} /> */}
     </Box>
   );
 }

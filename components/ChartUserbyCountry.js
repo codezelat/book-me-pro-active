@@ -9,40 +9,28 @@ import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
-// import { BrazilFlag, GlobeFlag, IndiaFlag, UsaFlag } from '@/app/internals/components/CustomIcons';
-
 
 const data = [
-  { label: 'India', value: 50000 },
-  { label: 'USA', value: 35000 },
-  { label: 'Brazil', value: 10000 },
-  { label: 'Other', value: 5000 },
+  { label: 'Approved', value: 60000 },
+  { label: 'Declined', value: 25000 },
+  { label: 'Not Reviewed', value: 13000 },
 ];
 
-const countries = [
+const stats = [
   {
-    name: 'India',
-    value: 50,
-    // flag: <IndiaFlag />,
-    color: 'hsl(220, 25%, 65%)',
+    name: 'Approved',
+    value: 60,
+    color: 'hsl(120, 40%, 50%)', // Green for approved
   },
   {
-    name: 'USA',
-    value: 35,
-    // flag: <UsaFlag />,
-    color: 'hsl(220, 25%, 45%)',
+    name: 'Declined',
+    value: 25,
+    color: 'hsl(0, 70%, 50%)', // Red for declined
   },
   {
-    name: 'Brazil',
-    value: 10,
-    // flag: <BrazilFlag />,
-    color: 'hsl(220, 25%, 30%)',
-  },
-  {
-    name: 'Other',
-    value: 5,
-    // flag: <GlobeFlag />,
-    color: 'hsl(220, 25%, 20%)',
+    name: 'Not Reviewed',
+    value: 15,
+    color: 'hsl(30, 60%, 50%)', // Orange for not reviewed
   },
 ];
 
@@ -107,13 +95,12 @@ PieCenterLabel.propTypes = {
 };
 
 const colors = [
-  'hsl(220, 20%, 65%)',
-  'hsl(220, 20%, 42%)',
-  'hsl(220, 20%, 35%)',
-  'hsl(220, 20%, 25%)',
+  'hsl(120, 40%, 50%)', // Green
+  'hsl(0, 70%, 50%)',   // Red
+  'hsl(30, 60%, 50%)',  // Orange
 ];
 
-export default function ChartUserByCountry() {
+export default function BookingRequestStats() {
   return (
     <Card
       variant="outlined"
@@ -121,7 +108,7 @@ export default function ChartUserByCountry() {
     >
       <CardContent>
         <Typography component="h2" variant="subtitle2">
-          Users by country
+          Statistics of Booking Request
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <PieChart
@@ -147,45 +134,50 @@ export default function ChartUserByCountry() {
               legend: { hidden: true },
             }}
           >
-            <PieCenterLabel primaryText="98.5K" secondaryText="Total" />
+            <PieCenterLabel primaryText="98K" secondaryText="Total Requests" />
           </PieChart>
         </Box>
-        {countries.map((country, index) => (
-          <Stack
-            key={index}
-            direction="row"
-            sx={{ alignItems: 'center', gap: 2, pb: 2 }}
-          >
-            {country.flag}
-            <Stack sx={{ gap: 1, flexGrow: 1 }}>
-              <Stack
-                direction="row"
-                sx={{
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: 2,
-                }}
-              >
-                <Typography variant="body2" sx={{ fontWeight: '500' }}>
-                  {country.name}
-                </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  {country.value}%
-                </Typography>
-              </Stack>
+        
+        {/* Horizontal Stack for stats with wrapping */}
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{
+            flexWrap: 'wrap',
+            justifyContent: 'space-around',
+            mt: 2,
+          }}
+        >
+          {stats.map((stat, index) => (
+            <Stack
+              key={index}
+              direction="column"
+              sx={{
+                alignItems: 'center',
+                gap: 1,
+                minWidth: { xs: '100%', sm: '30%' },
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: '500' }}>
+                {stat.name}
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {stat.value}%
+              </Typography>
               <LinearProgress
                 variant="determinate"
-                aria-label="Number of users by country"
-                value={country.value}
+                aria-label={`Booking requests ${stat.name}`}
+                value={stat.value}
                 sx={{
+                  width: '100%',
                   [`& .${linearProgressClasses.bar}`]: {
-                    backgroundColor: country.color,
+                    backgroundColor: stat.color,
                   },
                 }}
               />
             </Stack>
-          </Stack>
-        ))}
+          ))}
+        </Stack>
       </CardContent>
     </Card>
   );

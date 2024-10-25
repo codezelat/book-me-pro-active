@@ -6,6 +6,11 @@ import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 function AreaGradient({ color, id }) {
@@ -49,12 +54,76 @@ export default function SessionsChart() {
     theme.palette.primary.dark,
   ];
 
+  // Menu State for "Select period"
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
-        <Typography component="h2" variant="subtitle2" gutterBottom>
-          Sessions
-        </Typography>
+        {/* Header Section */}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={2}
+          sx={{ flexWrap: { xs: 'wrap', sm: 'nowrap' } }} // Ensures horizontal layout on mobile
+        >
+          <Typography
+            component="h2"
+            variant="subtitle1"
+            gutterBottom
+            sx={{
+              fontSize: { xs: '0.8rem', sm: '1rem' }, // 20% smaller on mobile
+            }}
+          >
+            Bookings
+          </Typography>
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            sx={{
+              flexWrap: { xs: 'wrap', sm: 'nowrap' }, // Horizontal layout on mobile
+              gap: { xs: 0.3, sm: 1 }, // Space adjustment for mobile
+            }}
+          >
+            <Button variant="outlined" size="small">Today</Button>
+            <Button variant="outlined" size="small">Yesterday</Button>
+            <Button variant="outlined" size="small">Week</Button>
+            <Button variant="outlined" size="small">Month</Button>
+            <Button variant="outlined" size="small">Quarter</Button>
+            <Button variant="outlined" size="small">Year</Button>
+
+            <Button
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              onClick={handleClick}
+              variant="outlined"
+              size="small"
+            >
+              Select period
+            </Button>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleClose}>Last 7 days</MenuItem>
+              <MenuItem onClick={handleClose}>Last 30 days</MenuItem>
+              <MenuItem onClick={handleClose}>Last 90 days</MenuItem>
+            </Menu>
+          </Stack>
+        </Stack>
+
+        {/* Chart Section */}
         <Stack sx={{ justifyContent: 'space-between' }}>
           <Stack
             direction="row"
@@ -64,12 +133,19 @@ export default function SessionsChart() {
               gap: 1,
             }}
           >
-            <Typography variant="h4" component="p">
+            <Typography
+              variant="h4"
+              component="p"
+              sx={{ fontSize: { xs: '0.4rem', sm: '2.5rem' } }} // 20% smaller on mobile
+            >
               13,277
             </Typography>
             <Chip size="small" color="success" label="+35%" />
           </Stack>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+          <Typography
+            variant="caption"
+            sx={{ color: 'text.secondary', fontSize: { xs: '0.4rem', sm: '0.75rem' } }} // 20% smaller on mobile
+          >
             Sessions per day for the last 30 days
           </Typography>
         </Stack>
