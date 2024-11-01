@@ -4,6 +4,7 @@ import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { FiX } from "react-icons/fi";
 import Calendar from "@/components/Calendar";
 import { useState } from 'react';
+import Form from "@/components/Form";
 
 export default function Contact() {
   return (
@@ -70,8 +71,12 @@ export default function Contact() {
           <div className="border-t border-black mt-16"></div>
 
           <div className="container mx-auto mt-10">
-          <h1 className="text-2xl font-bold">Book Your Appointment</h1>
+          <h1 className="text-2xl text-black font-bold">Book Your Appointment</h1>
           <Calendar />
+          </div>
+
+          <div className="container mx-auto mt-10">
+          <Form />
           </div>
 
 

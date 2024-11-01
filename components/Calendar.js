@@ -9,13 +9,8 @@ export default function Calendar() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [clientEmail, setClientEmail] = useState('');
-  const [clientPhoneNo, setClientPhoneNo] = useState('');
-  const [clientName, setClientName] = useState('');
-  const [clientNotes, setClientNotes] = useState('');
   const [trainerId, setTrainerId] = useState(''); // You might want to use a dropdown or populate this dynamically
-  const [status, setStatus] = useState('confirmed'); // Default status can be 'confirmed' or any other initial value
-
+  
   const timeslots = [
     '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
     '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM',
@@ -137,36 +132,7 @@ export default function Calendar() {
                       ))}
                     </div>
                   </div>
-                  <div className="mt-4">
-                    <input
-                      type="text"
-                      placeholder="Client Name"
-                      value={clientName}
-                      onChange={(e) => setClientName(e.target.value)}
-                      className="w-full p-2 mt-2 border rounded dark:bg-gray-700 dark:text-white"
-                    />
-                    <input
-                      type="email"
-                      placeholder="Client Email"
-                      value={clientEmail}
-                      onChange={(e) => setClientEmail(e.target.value)}
-                      className="w-full p-2 mt-2 border rounded dark:bg-gray-700 dark:text-white"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Client Phone No"
-                      value={clientPhoneNo}
-                      onChange={(e) => setClientPhoneNo(e.target.value)}
-                      className="w-full p-2 mt-2 border rounded dark:bg-gray-700 dark:text-white"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Client Notes"
-                      value={clientNotes}
-                      onChange={(e) => setClientNotes(e.target.value)}
-                      className="w-full p-2 mt-2 border rounded dark:bg-gray-700 dark:text-white"
-                    /> 
-                  </div>
+                 
                   <div className="mt-4 flex justify-end">
                     <button
                       type="button"

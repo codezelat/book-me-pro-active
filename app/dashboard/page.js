@@ -19,6 +19,7 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from './theme/customizations';
+import Status from '@/components/Status';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -57,6 +58,7 @@ export default function Dashboard(props) {
           >
             <DashboardHeader />
             <MainGrid />
+            <Status/>
           </Stack>
         </Box>
       </Box>
