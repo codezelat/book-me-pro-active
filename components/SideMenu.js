@@ -9,21 +9,26 @@ import SelectContent from "./SelectContent";
 import MenuContent from "./MenuContent";
 import Stack from "@mui/material/Stack";
 import OptionsMenu from "./OptionsMenu";
-import CardAlert from "./CardAlert";
 import Button from "@mui/material/Button";
 import { SquareArrowRight } from "lucide-react";
+import { LogOut } from "lucide-react";
 
-const drawerWidth = 240;
+const drawerWidth = 357; // Updated width to fixed 357px
 
-const Drawer = styled(MuiDrawer)({
+const Drawer = styled(MuiDrawer)(({ theme }) => ({
   width: drawerWidth,
   flexShrink: 0,
   boxSizing: "border-box",
   [`& .${drawerClasses.paper}`]: {
     width: drawerWidth,
     boxSizing: "border-box",
+    backgroundColor: "#ffffff", // Background color
+    padding: "60px 30px", // Top, bottom, left, right padding
+    gap: 0,
+    borderRadius: "5px 0px 0px 0px", // Border radius
+    opacity: 1, // Fully visible
   },
-});
+}));
 
 export default function SideMenu() {
   // State to track the active section
@@ -39,54 +44,91 @@ export default function SideMenu() {
       variant="permanent"
       sx={{
         display: { xs: "none", md: "block" },
-        [`& .${drawerClasses.paper}`]: {
-          backgroundColor: "background.paper",
-        },
+        height: 913, // Set height to 913px
+        justifyContent: "space-between",
       }}
     >
       {/* Profile Section */}
       <Box
         sx={{
+          width: "297px", // Fill width to specified 297px
+          height: "auto", // Hug height (adjusts based on content)
+          gap: "30px", // Gap between children
           display: "flex",
           alignItems: "center",
-          p: 2,
           flexDirection: "column",
           textAlign: "center",
+          pb: "30px",
         }}
       >
         <Avatar
           alt="John Doe"
           src="user.jpg" // Adjust the path if needed
           sx={{
-            width: 60,
-            height: 60,
-            mb: 1,
+            width: "75px",
+            height: "75px",
           }}
         />
-        <Typography
-          variant="body2"
-          sx={{ fontWeight: 500, lineHeight: "16px" }}
+        <Box
+          sx={{
+            width: "198px",
+            height: "45px",
+            gap: "5px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center", // Centers content horizontally within the Box
+          }}
         >
-          John Doe
-        </Typography>
-        <Typography variant="caption" sx={{ color: "text.secondary" }}>
-          Web Developer
-        </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              width: "147px",
+              height: "22px",
+              textAlign: "center",
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "18px",
+              fontWeight: 700,
+              lineHeight: "21.6px",
+            }}
+          >
+            John Doe
+          </Typography>
 
-        {/* Button with conditional background color */}
+          <Typography
+            variant="caption"
+            sx={{
+              width: "198px",
+              height: "18px",
+              gap: 0,
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "15px",
+              fontWeight: 400,
+              lineHeight: "18px",
+              textAlign: "center",
+              color: "#037D40",
+              display: "inline-block",
+              padding: "2px 4px",
+            }}
+          >
+            Web Developer
+          </Typography>
+        </Box>
 
         <Button
           sx={{
-            bgcolor: "#037D40", // Background color
+            width: "188px",
+            height: "46px",
+            padding: "12px 30px",
+            gap: "20px",
+            borderRadius: "5px 0px 0px 0px",
+            bgcolor: "#037D40",
             color: "white",
-            px:3, // Text color
-            "&:hover": {
-              bgcolor: "#037D40",
-             
-            },
             display: "flex",
             alignItems: "center",
-            gap: 1.5, 
+            justifyContent: "center",
+            "&:hover": {
+              bgcolor: "#037D40",
+            },
           }}
           size="large"
         >
@@ -95,32 +137,31 @@ export default function SideMenu() {
         </Button>
       </Box>
 
-      <Divider />
-
       {/* Sidebar Content */}
-      {/* <Box
-        sx={{
-          display: 'flex',
-          mt: 'calc(var(--template-frame-height, 0px) + 4px)',
-          p: 1.5,
-        }}
-      >
-        <SelectContent />
-      </Box> */}
-      <Divider />
       <MenuContent />
 
       {/* Additional Options */}
       <Box
         sx={{
-          p: 2,
-          gap: 1,
-          alignItems: "center",
-          borderTop: "1px solid",
-          borderColor: "divider",
+          width: "297px", // Set the width to 297px
+          height: "24px", // Set the height to 24px
+          padding: "0px 30px", // Add 30px padding on the left and right
+          gap: "15px", // Set gap between items to 15px
+
+          display: "flex", // Use flex layout for alignment
+          alignItems: "center", // Center items vertically
         }}
       >
-        <OptionsMenu />
+         <LogOut 
+          sx={{
+            width: "24px",
+            height: "24px",
+            padding: "3px 0px 0px 0px",
+            fill: "#037D40", // Change icon color to #037D40
+          }}
+        />
+       
+        <Button sx={{ color: "#037D40" }}>Log Out</Button>
       </Box>
     </Drawer>
   );
