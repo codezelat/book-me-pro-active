@@ -199,7 +199,7 @@ export default function Home() {
                 Our platform is packed with features that cater specifically to
                 the needs of coaches and their students. Whether you're managing
                 multiple locations or ensuring seamless communication with your
-                players, we’ve got everything you need in one place. Explore the
+                players, weve got everything you need in one place. Explore the
                 tools that will revolutionize how you manage your coaching
                 business:
               </div>
