@@ -1,13 +1,16 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Chip from "@mui/material/Chip";
-import { SparkLineChart } from "@mui/x-charts/SparkLineChart";
-import { Phone, Mail } from "lucide-react";
-import Button from "@mui/material/Button";
-import { CircleX, CircleCheck, CircleChevronDown } from "lucide-react";
-import { DataGrid } from "@mui/x-data-grid"; // Ensure you import DataGrid
+import { DataGrid } from "@mui/x-data-grid";
+import { useState } from "react";
+import { Button } from "@mui/material"; // Import Material-UI buttons
+import {
+  Phone,
+  Mail,
+  CircleX,
+  CircleCheck,
+  CircleChevronDown,
+} from "lucide-react"; // Replace with actual import for icons
+import UserDescription from "@/components/UserDescription";
 
-// CSS for custom row spacing
 const styles = {
   customRowSpacing: {
     "& .MuiDataGrid-row": {
@@ -16,90 +19,67 @@ const styles = {
   },
 };
 
-// Function to get days in a month
-function getDaysInMonth(month, year) {
-  const date = new Date(year, month, 0);
-  const monthName = date.toLocaleDateString("en-US", {
-    month: "short",
-  });
-  const daysInMonth = date.getDate();
-  const days = [];
-  let i = 1;
-  while (days.length < daysInMonth) {
-    days.push(`${monthName} ${i}`);
-    i += 1;
-  }
-  return days;
-}
+export default function CustomizedDataGrid() {
+  const [showUserDescription, setShowUserDescription] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
-// Function to render sparkline cell
-function renderSparklineCell(params) {
-  const data = getDaysInMonth(4, 2024);
-  const { value, colDef } = params;
-
-  if (!value || value.length === 0) {
-    return null;
-  }
+  const toggleUserDescription = (user) => {
+    setSelectedUser(user); // Set the selected user
+    setShowUserDescription(user ? true : false); // Show if a user is selected
+  };
 
   return (
-    <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
-      <SparkLineChart
-        data={value}
-        width={colDef.computedWidth || 100}
-        height={32}
-        plotType="bar"
-        showHighlight
-        showTooltip
-        colors={["hsl(210, 98%, 42%)"]}
-        xAxis={{
-          scaleType: "band",
-          data,
-        }}
+    <>
+      {showUserDescription && selectedUser && (
+        <UserDescription user={selectedUser} /> // Display UserDescription before the grid
+      )}
+      <MyDataGrid toggleUserDescription={toggleUserDescription} />
+    </>
+  );
+}
+
+// MyDataGrid Component
+function MyDataGrid({ toggleUserDescription }) {
+  // CSS for custom row spacing
+
+  return (
+    <div style={{ height: 500, width: "100%", padding: "10px" }}>
+      <DataGrid
+        rows={rows}
+        columns={columns(toggleUserDescription)} // Pass the function as a parameter
+        getRowId={(row) => row.id}
+        sx={styles.customRowSpacing} // Apply custom row spacing
       />
     </div>
   );
 }
 
-// Function to render status
-function renderStatus(status) {
-  const colors = {
-    Approved: "success",
-    Declined: "default",
-    Pending: "default",
-  };
-
-  return <Chip label={status} color={colors[status]} size="small" />;
-}
-
-// Function to render avatar
-export function renderAvatar(params) {
-  if (params.value == null) {
-    return "";
+// Render status function
+const renderStatus = (status) => {
+  let color;
+  switch (status) {
+    case "Approved":
+      break;
+    case "Declined":
+      break;
+    case "Pending":
+      break;
+    default:
+      color = "black";
   }
 
-  return (
-    <Avatar
-      sx={{
-        backgroundColor: params.value.color,
-        width: "24px",
-        height: "24px",
-        fontSize: "0.85rem",
-      }}
-    >
-      {params.value.name.toUpperCase().substring(0, 1)}
-    </Avatar>
-  );
-}
+  return <span style={{ color }}>{status}</span>;
+};
 
 // Column definitions
-export const columns = [
+export const columns = (toggleUserDescription) => [
   { field: "Name", headerName: "Name", flex: 1.5, minWidth: 200 },
   {
     field: "status",
     headerName: "Status",
     flex: 0.5,
     minWidth: 90,
-    renderCell: (params) => renderStatus(params.value),
+    renderCell: (params) => renderStatus(params.value), // Use the defined renderStatus function
   },
   {
     field: "Date",
@@ -197,9 +177,9 @@ export const columns = [
           display: "flex",
           gap: "8px",
           alignItems: "center",
-          justifyContent: "center", // Center align horizontally
-          width: "100%", // Take full width of the cell
-          height: "100%", // Take full height of the cell to vertically center items
+          justifyContent: "center",
+          width: "100%",
+          height: "100%",
         }}
       >
         <Button
@@ -241,7 +221,6 @@ export const columns = [
       </div>
     ),
   },
-
   {
     headerAlign: "center",
     flex: 0.5,
@@ -250,12 +229,13 @@ export const columns = [
       <div
         style={{
           display: "flex",
-          alignItems: "center",
           justifyContent: "center",
+          alignItems: "center",
           height: "100%",
         }}
       >
         <button
+          onClick={() => toggleUserDescription(params.row)} // Pass user data on click
           style={{
             display: "flex",
             alignItems: "center",
@@ -271,10 +251,8 @@ export const columns = [
             size={30}
             style={{
               color: "#fff",
-              backgroundColor: "#037D40",
-              borderRadius: "20%",
-
               padding: "6px",
+              backgroundColor: "#037D40",
             }}
           />
         </button>
@@ -283,13 +261,13 @@ export const columns = [
   },
 ];
 
-// Row data
 export const rows = [
   {
     id: 1,
     Name: "Homepage Overview",
     status: "Approved",
     Date: "2024-04-10",
+    Time: "22.00",
     eventCount: 8345,
   },
   {
@@ -297,6 +275,7 @@ export const rows = [
     Name: "Product Details - Gadgets",
     status: "Declined",
     Date: "2024-04-12",
+    Time: "22.00",
     eventCount: 5653,
   },
   {
@@ -304,19 +283,7 @@ export const rows = [
     Name: "Checkout Process - Step 1",
     status: "Pending",
     Date: "2024-04-15",
+    Time: "22.00",
     eventCount: 3455,
   },
 ];
-
-export default function MyDataGrid() {
-  return (
-    <div style={{ height: 500, width: "100%" }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        getRowId={(row) => row.id}
-        sx={styles.customRowSpacing} // Apply custom row spacing
-      />
-    </div>
-  );
-}

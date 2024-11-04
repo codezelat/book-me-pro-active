@@ -1,53 +1,195 @@
-import * as React from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Stack from '@mui/material/Stack';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
-import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
-import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
+import * as React from "react";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import AnalyticsRoundedIcon from "@mui/icons-material/AnalyticsRounded";
+import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
+import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
+import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
+import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
+import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import { useTheme } from "@mui/material/styles";
 
 const mainListItems = [
-  { text: 'Home', icon: <HomeRoundedIcon /> },
-  { text: 'My Bookings', icon: <AnalyticsRoundedIcon /> },
-  { text: 'Booking Requests', icon: <PeopleRoundedIcon /> },
-  { text: 'My calendar', icon: <AssignmentRoundedIcon /> },
+  { text: "Dashboard", icon: <HomeRoundedIcon /> },
+  { text: "My Bookings", icon: <AnalyticsRoundedIcon /> },
+  { text: "My Calendar", icon: <AssignmentRoundedIcon /> },
 ];
 
 const secondaryListItems = [
-  { text: 'Settings', icon: <SettingsRoundedIcon /> },
-  { text: 'About', icon: <InfoRoundedIcon /> },
-  { text: 'Feedback', icon: <HelpRoundedIcon /> },
+  { text: "Contact Us", icon: <HelpRoundedIcon /> },
+  { text: "Settings", icon: <SettingsRoundedIcon /> },
 ];
 
 export default function MenuContent() {
+  const [selectedIndex, setSelectedIndex] = React.useState(null);
+
+  const handleListItemClick = (index) => {
+    setSelectedIndex(index);
+  };
+
+  const theme = useTheme();
+  const textColor = theme.palette.mode === "dark" ? "white" : "#037D40";
+  const bgColorHover = theme.palette.mode === "dark" ? "#E4E0E1" : "#D1E8D5";
+  const selectedBgColor = "#D1E8D5";
+
   return (
-    <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
+    <Stack
+      sx={{
+        width: "297px",
+        height: "auto",
+        gap: "20px",
+        opacity: 1,
+        flexGrow: 1,
+        p: 1,
+        justifyContent: "space-between",
+      }}
+    >
       <List dense>
+        <div
+          style={{
+            width: "297px",
+            height: "18px",
+            padding: "0px 20px",
+            gap: "10px",
+            color: "#037D40",
+            fontSize: "15px",
+            fontWeight: 700,
+            textAlign: "left",
+            marginBottom: "10px",
+          }}
+        >
+          Main Menu
+        </div>
         {mainListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton selected={index === 0}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
+          <React.Fragment key={index}>
+            <ListItem disablePadding>
+              <ListItemButton
+                onClick={() => handleListItemClick(index)}
+                sx={{
+                  width: "297px",
+                  height: "64px",
+                  padding: "20px 0 0 0",
+                  justifyContent: "space-between",
+                  bgcolor:
+                    selectedIndex === index ? selectedBgColor : "inherit",
+                  "&:hover": { bgcolor: bgColorHover },
+                  color: textColor,
+                  gap: "0px",
+                  opacity: 1,
+                  borderRadius: 0,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    width: "24px",
+                    height: "24px",
+                    padding: "2px 0 0 0",
+                    gap: "0px",
+                    opacity: 0.8,
+                  }}
+                >
+                  {React.cloneElement(item.icon, {
+                    sx: { fill: textColor },
+                  })}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.text}
+                  sx={{
+                    width: "88px",
+                    height: "22px",
+                    typography: "body1",
+                    fontFamily: "Kanit",
+                    fontSize: "18px",
+                    fontWeight: 400,
+                    lineHeight: "21.6px",
+                    textAlign: "left",
+                  }}
+                />
+                <ArrowRightIcon sx={{ fill: textColor }} />
+              </ListItemButton>
+            </ListItem>
+            <Divider />
+          </React.Fragment>
         ))}
       </List>
 
       <List dense>
+        <div
+          style={{
+            width: "297px",
+            height: "18px",
+            padding: "0px 20px",
+            gap: "10px",
+            color: "#037D40",
+            fontSize: "15px",
+            fontWeight: 700,
+            textAlign: "left",
+            marginBottom: "10px",
+          }}
+        >
+          Help & Support
+        </div>
         {secondaryListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
+          <React.Fragment key={index}>
+            <ListItem disablePadding>
+              <ListItemButton
+                onClick={() =>
+                  handleListItemClick(index + mainListItems.length)
+                }
+                sx={{
+                  width: "297px",
+                  height: "64px",
+                  padding: "20px 0 0 0",
+                  justifyContent: "space-between",
+                  bgcolor:
+                    selectedIndex === index + mainListItems.length
+                      ? selectedBgColor
+                      : "transparent",
+                  "&:hover": { bgcolor: bgColorHover },
+                  color: textColor,
+                  gap: "0px",
+                  opacity: 1,
+                  borderRadius: 0,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    width: "24px",
+                    height: "24px",
+                    padding: "2px 0 0 0",
+                    gap: "0px",
+                    opacity: 0.8,
+                  }}
+                >
+                  {React.cloneElement(item.icon, {
+                    sx: { fill: textColor },
+                  })}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.text}
+                  sx={{
+                    width: "88px",
+                    height: "22px",
+                    typography: "body1",
+                    fontFamily: "Kanit",
+                    fontSize: "18px",
+                    fontWeight: 400,
+                    lineHeight: "21.6px",
+                    textAlign: "left",
+                  }}
+                />
+                <ArrowRightIcon sx={{ fill: textColor }} />
+              </ListItemButton>
+            </ListItem>
+            <Divider />
+          </React.Fragment>
         ))}
       </List>
     </Stack>

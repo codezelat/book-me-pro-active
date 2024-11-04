@@ -1,7 +1,7 @@
 "use client";
 import ProfileEditComponent from "@/components/ProfileEditComponent/page";
 
-export default function ProfileUpdate() {
+export default function Profile() {
   return (
     <section>
       <div className="container mx-auto my-24 ">
@@ -10,3 +10,4 @@ export default function ProfileUpdate() {
     </section>
   );
 }
+

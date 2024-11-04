@@ -1,10 +1,12 @@
+
 import * as React from 'react';
 import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import ChartUserByCountry from "./ChartUserByCountry";
 import Typography from '@mui/material/Typography';
 import Copyright from '../app/internals/components/copyright';
-import ChartUserByCountry from './ChartUserByCountry';
+import BookingRequestStats from './BookingRequestStats';
 import CustomizedTreeView from './CustomizedTreeView';
 import CustomizedDataGrid from './CustomizedDataGrid';
 import HighlightedCard from './HighlightedCard';
@@ -15,43 +17,49 @@ import StatCard from './StatCard';
 const data = [
   {
     title: "Today's Bookings",
-    value: '14k',
-    interval: 'Last 30 days',
-    trend: 'up',
+    value: "14k",
+    interval: "Last 30 days",
+    trend: "up",
     data: [
-      200, 24, 220, 260, 240, 380, 100, 240, 280, 240, 300, 340, 320, 360, 340, 380,
-      360, 400, 380, 420, 400, 640, 340, 460, 440, 480, 460, 600, 880, 920,
+      200, 24, 220, 260, 240, 380, 100, 240, 280, 240, 300, 340, 320, 360, 340,
+      380, 360, 400, 380, 420, 400, 640, 340, 460, 440, 480, 460, 600, 880, 920,
     ],
   },
   {
-    title:  "Booking Requests",
-    value: '325',
-    interval: 'Last 30 days',
-    trend: 'down',
+    title: "Booking Requests",
+    value: "325",
+    interval: "Last 30 days",
+    trend: "down",
     data: [
-      1640, 1250, 970, 1130, 1050, 900, 720, 1080, 900, 450, 920, 820, 840, 600, 820,
-      780, 800, 760, 380, 740, 660, 620, 840, 500, 520, 480, 400, 360, 300, 220,
+      1640, 1250, 970, 1130, 1050, 900, 720, 1080, 900, 450, 920, 820, 840, 600,
+      820, 780, 800, 760, 380, 740, 660, 620, 840, 500, 520, 480, 400, 360, 300,
+      220,
     ],
   },
   {
-    title:  "Profile Clicks",
-    value: '200k',
-    interval: 'Last 30 days',
-    trend: 'neutral',
+    title: "Profile Clicks",
+    value: "200k",
+    interval: "Last 30 days",
+    trend: "neutral",
     data: [
-      500, 400, 510, 530, 520, 600, 530, 520, 510, 730, 520, 510, 530, 620, 510, 530,
-      520, 410, 530, 520, 610, 530, 520, 610, 530, 420, 510, 430, 520, 510,
+      500, 400, 510, 530, 520, 600, 530, 520, 510, 730, 520, 510, 530, 620, 510,
+      530, 520, 410, 530, 520, 610, 530, 520, 610, 530, 420, 510, 430, 520, 510,
     ],
   },
 ];
 
 export default function MainGrid() {
   return (
-    <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "913px",
+        gap: "15px",
+        maxWidth: { sm: "100%", md: "1700px" },
+      }}
+    >
       {/* cards */}
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Overview
-      </Typography>
+
       <Grid
         container
         spacing={2}
@@ -59,37 +67,107 @@ export default function MainGrid() {
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
         {data.map((card, index) => (
-          <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Grid
+            key={index}
+            item
+            xs={12}
+            sm={6}
+            lg={3}
+            sx={{
+              width: "402px",
+              height: "159px",
+              padding: "22px 9px 22px 4px",
+              gap: "20px",
+              borderRadius: "5px 0px 0px 0px",
+            }}
+          >
             <StatCard {...card} />
           </Grid>
         ))}
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-          {/* <HighlightedCard /> */}
-        </Grid>
-        <Grid size={{ xs: 12, md: 6 }}>
-          {/* <SessionsChart /> */}
-          <ChartUserByCountry />
-        </Grid>
-        <Grid size={{ xs: 12, md: 6 }}>
-          {/* <PageViewsBarChart /> */}
-          <SessionsChart />
-        </Grid>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>{/* <HighlightedCard /> */}</Grid>
+
+        {/* Flex container for ChartUserByCountry and SessionsChart */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "15px", // Adjusts the space between charts
+            width: "1236px",
+            alignItems: "center",
+            
+            height: "370px",
+          }}
+        >
+          <Grid
+            item
+            xs={12}
+            md={6}
+            sx={{
+              width: "252px",
+              height: "370px",
+
+              borderRadius: "5px 0px 0px 0px",
+              justifyContent: "space-between",
+            }}
+          >
+            <ChartUserByCountry />
+          </Grid>
+
+          <Grid
+            item
+            xs={12}
+            md={6}
+            sx={{
+              width: "969px",
+              height: "370px",
+              borderRadius: "5px 0px 0px 0px",
+              
+              
+            }}
+          >
+            <SessionsChart />
+          </Grid>
+        </Box>
       </Grid>
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Details
-      </Typography>
-      <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, lg: 9 }}>
+
+      <Grid
+        container
+        spacing={2}
+        columns={12}
+        sx={{
+          width: "1236px",
+          height: "354px",
+          gap: "15px",
+        }}
+      >
+        <Grid
+          item
+          xs={12}
+          lg={9}
+          sx={{
+            width: "100%", // Adjust to fill available space within parent container
+            height: "100%",
+          }}
+        >
           <CustomizedDataGrid />
         </Grid>
-        <Grid size={{ xs: 12, lg: 3 }}>
-          <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
+        <Grid
+          item
+          xs={12}
+          lg={3}
+          sx={{
+            width: "100%", // Adjust to fill available space within parent container
+            height: "100%",
+          }}
+        >
+          <Stack gap={2} direction={{ xs: "column", sm: "row", lg: "column" }}>
             {/* <CustomizedTreeView />
-            <ChartUserByCountry /> */}
+      <ChartUserByCountry /> */}
           </Stack>
         </Grid>
+
       </Grid>
-     
+
       {/* <Copyright sx={{ my: 4 }} /> */}
     </Box>
   );
