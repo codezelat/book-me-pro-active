@@ -1,20 +1,18 @@
 "use client";
 
-
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { alpha } from "@mui/material/styles";
 import ProfileEditComponent from "/components/ProfileEditComponent/page";
 import OptionsMenu from "/components/OptionsMenu";
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from "react";
 
 import DashboardHeader from "@/components/DashboardHeader";
 import SideMenu from "@/components/SideMenu";
 import AppNavbar from "@/components/AppNavbar";
-import AppTheme from "@/app/shared-theme/AppTheme"; // Ensure the correct path here
+import AppTheme from "@/app/shared-theme/AppTheme";
 import MainGrid from "@/components/MainGrid";
 
 import {
@@ -35,11 +33,10 @@ export default function Dashboard(props) {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  const [showProfileEdit, setShowProfileEdit] = React.useState(false);
-  const [isProfileVisible, setIsProfileVisible] = useState(false);
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
 
   // Redirect to login if not authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/auth/login");
     }
@@ -58,35 +55,16 @@ export default function Dashboard(props) {
       <CssBaseline enableColorScheme />
       <Box sx={{ display: "flex" }}>
         <SideMenu session={session} />
+        <AppNavbar />
 
-        <AppNavbar onProfileClick={handleProfileClick} /> 
-        <Box
-          component="main"
-          sx={(theme) => ({
-            flexGrow: 1,
-            backgroundColor: theme.vars
-              ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
-              : alpha(theme.palette.background.default, 1),
-            overflow: "auto",
-          })}
-        >
-          <Stack
-            spacing={2}
-            sx={{
-              alignItems: "center",
-              mx: 3,
-              pb: 5,
-              mt: { xs: 8, md: 0 },
-            }}
-          >
-            <DashboardHeader />
-            <MainGrid />
-            {/* Conditionally render MainGrid or ProfileEditComponent */}
-            {/* Ensure this prop is set */}
+        <Box sx={{ padding: 2, flexGrow: 1 }}>
+          <Stack direction="column" spacing={2}>
             {showProfileEdit ? <ProfileEditComponent /> : <MainGrid />}
-            {isProfileVisible ? <ProfileEditComponent /> : <MainGrid />}
           </Stack>
         </Box>
+        
+        {/* OptionsMenu to control ProfileEditComponent visibility */}
+        <OptionsMenu onProfileClick={handleProfileClick} />
       </Box>
     </AppTheme>
   );
