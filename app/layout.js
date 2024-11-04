@@ -14,24 +14,23 @@ const kanit = Kanit({
 });
 
 export default function Layout({ children }) {
-  const pathname = usePathname(); // Get the current route path
+  const pathname = usePathname();
 
-  // Check if the current page is either the dashboard or myBookings
-  const isDashboardOrMyBookings =
-    pathname === "/dashboard" || pathname === "/myBookings";
+  // Check if the current page is any dashboard path
+  const isDashboard = pathname.startsWith("/dashboard");
 
   return (
     <SessionProvider>
       <html lang="en">
         <body className={kanit.className}>
           {/* Only show Header if it's not the dashboard or myBookings */}
-          {!isDashboardOrMyBookings && <Header />}
+          {!isDashboard && <Header />}
 
           {/* Page content */}
           {children}
 
           {/* Only show Footer if it's not the dashboard or myBookings */}
-          {!isDashboardOrMyBookings && <Footer />}
+          {!isDashboard && <Footer />}
         </body>
       </html>
     </SessionProvider>
