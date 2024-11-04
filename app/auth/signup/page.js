@@ -1,8 +1,8 @@
-"use client"; // Marks this component as a Client Component
+"use client";
 
 import { useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation"; // Import from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -10,10 +10,12 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [contact, setContact] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter(); // useRouter from 'next/navigation'
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // Clear any previous error message
+
     try {
       const res = await axios.post("/api/auth/signup", {
         name,
@@ -21,11 +23,18 @@ export default function Signup() {
         password,
         contact,
       });
-      if (res.status === 200) {
-        router.push("/auth/login"); // Redirect to login page on success
+
+      if (res.status === 201) {
+        router.push("/auth/login"); // Redirect on successful signup
       }
     } catch (err) {
-      setError("Signup failed. Please try again.");
+      if (err.response && err.response.status === 409) {
+        setError("User already exists. Please use a different email.");
+      } else if (err.response && err.response.status === 400) {
+        setError("Please fill in all fields correctly.");
+      } else {
+        setError("Signup failed. Please try again.");
+      }
     }
   };
 
@@ -39,6 +48,7 @@ export default function Signup() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           style={{ border: "1px solid black" }}
+          required
         />
         <input
           type="email"
@@ -46,28 +56,29 @@ export default function Signup() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           style={{ border: "1px solid black" }}
+          required
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={{ border: "1px solid black " }}
+          style={{ border: "1px solid black" }}
+          required
         />
         <input
           type="text"
-          placeholder="Contact Number" // New field for contact
+          placeholder="Contact Number"
           value={contact}
           onChange={(e) => setContact(e.target.value)}
           style={{ border: "1px solid black" }}
+          required
         />
-        <div className="bg-blue-600 px-6 py-3">
-          <button className="text-white" type="submit">
-            Sign Up
-          </button>{" "}
-        </div>
+        <button className="bg-blue-600 px-6 py-3 text-white" type="submit">
+          Sign Up
+        </button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
   );
 }

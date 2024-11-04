@@ -1,67 +1,104 @@
+// app/dashboard/page.js
 "use client";
+import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
 
-import * as React from 'react';
 
-import { alpha } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
+export default function Dashboard() {
+  const { data: session } = useSession();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-import DashboardHeader from '@/components/DashboardHeader';
-import SideMenu from '@/components/SideMenu';
-import AppNavbar from '@/components/AppNavbar';
-import AppTheme from '../shared-theme/AppTheme';
-import MainGrid from '@/components/MainGrid';
+  if (!session) {
+    return <p>Loading...</p>;
+  }
 
-import {
-  chartsCustomizations,
-  dataGridCustomizations,
-  datePickersCustomizations,
-  treeViewCustomizations,
-} from './theme/customizations';
-import Status from '@/components/Status';
+  const handleLogout = async () => {
+    await signOut({ redirect: true, callbackUrl: "/" });
+  };
+  
 
-const xThemeComponents = {
-  ...chartsCustomizations,
-  ...dataGridCustomizations,
-  ...datePickersCustomizations,
-  ...treeViewCustomizations,
-};
-
-export default function Dashboard(props) {
   return (
-    <AppTheme {...props} themeComponents={xThemeComponents}>
-    
-    <CssBaseline enableColorScheme />
-      <Box sx={{ display: 'flex' }}>
-         <SideMenu />
-        <AppNavbar />
-        {/* Main content */}
-        <Box
-          component="main"
-          sx={(theme) => ({
-            flexGrow: 1,
-            backgroundColor: theme.vars
-              ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
-              : alpha(theme.palette.background.default, 1),
-            overflow: 'auto',
-          })}
-        >
-          <Stack
-            spacing={2}
-            sx={{
-              alignItems: 'center',
-              mx: 3,
-              pb: 5,
-              mt: { xs: 8, md: 0 },
-            }}
+    <div className="flex h-screen">
+      <aside className="w-1/4 bg-gray-100 p-6">
+        <Link href="/" className="text-3xl text-black font-bold mb-6">
+          BookMePro
+        </Link>
+        <ul className="mt-6 space-y-4">
+          <li>
+            <Link
+              href="/dashboard"
+              className="text-lg text-gray-700 font-semibold"
+            >
+              Dashboard
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/dashboard"
+              className="text-lg text-gray-700 font-semibold"
+            >
+              Dashboard
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/dashboard"
+              className="text-lg text-gray-700 font-semibold"
+            >
+              Dashboard
+            </Link>
+          </li>
+        </ul>
+      </aside>
+
+      <main className="flex-grow p-6 bg-gray-50">
+        <div className="flex justify-between mb-6">
+          <h1 className="text-2xl text-black font-semibold">
+            Welcome Back, {session.user.name}!
+          </h1>
+          <div className="relative">
+            <div
+              className="flex items-center cursor-pointer"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              <Image
+                src={session.user.image || "/images/coach/coach.png"}
+                width={40}
+                height={40}
+                className="rounded-full"
+                alt="Profile"
+              />
+              <span className="ml-2 text-black font-light">
+                {session.user.name}
+              </span>
+            </div>
+            {dropdownOpen && (
+              <ul className="absolute right-0 mt-2 w-48 bg-white shadow-md">
+                <li className="px-4 text-gray-700 py-2">
+                  <Link href="/ProfileEditComponent">My Profile</Link>
+                </li>
+                <li className="px-4 text-gray-700 py-2" onClick={handleLogout}>
+                  Logout
+                </li>
+              </ul>
+            )}
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-lg text-gray-700 font-semibold">
+            Your Profile Link:
+          </h2>
+          <Link
+            href={`/coach/${session.user.id}`}
+            className="text-blue-500 underline"
           >
-            <DashboardHeader />
-            <MainGrid />
-            <Status/>
-          </Stack>
-        </Box>
-      </Box>
-     </AppTheme>
+            {`https://yourdomain.com/coach/${session.user.id}`}
+          </Link>
+        </div>
+      </main>
+    </div>
   );
 }

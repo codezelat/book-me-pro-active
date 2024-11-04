@@ -1,32 +1,36 @@
-import clientPromise from "@/Lib/mongodb"; // Adjust import path according to your structure
+// app/api/auth/signup/route.js
+import connectToDatabase from "@/Lib/mongodb";
 import bcrypt from "bcryptjs";
-import { NextResponse } from "next/server"; // Use NextResponse in App Router
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
     try {
-        const { name, email, password, contact } = await req.json();  // Parse the request body
+        const { name, email, password, contact } = await req.json();
 
-        const hashedPassword = bcrypt.hashSync(password, 10);
-        const client = await clientPromise;
-        const db = client.db("your-database-name");
-
-        // Check if the user already exists
-        const user = await db.collection("users").findOne({ email });
-
-        if (user) {
-            return NextResponse.json({ message: "User already exists" }, { status: 400 });
+        // Basic validation to ensure all fields are provided
+        if (!name || !email || !password || !contact) {
+            return NextResponse.json({ message: "All fields are required." }, { status: 400 });
         }
 
-        // Insert new user into the database
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const { db } = await connectToDatabase();
+
+        // Check if the user already exists
+        const existingUser = await db.collection("users").findOne({ email });
+        if (existingUser) {
+            return NextResponse.json({ message: "User already exists." }, { status: 409 });
+        }
+
+        // Insert the new user
         await db.collection("users").insertOne({
             name,
             email,
             password: hashedPassword,
-            contact
+            contact,
+            createdAt: new Date(),
         });
 
-        return NextResponse.json({ message: "User created successfully" }, { status: 200 });
-
+        return NextResponse.json({ message: "User created successfully" }, { status: 201 });
     } catch (error) {
         console.error("Error creating user:", error);
         return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });

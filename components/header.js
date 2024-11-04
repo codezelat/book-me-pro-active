@@ -100,7 +100,7 @@ export default function Header() {
                       alt="profile"
                     />
                   </div>
-                  <Link href="/dashboard">Dashboard</Link>
+                  <Link href="/dashboard/dash">Dashboard</Link>
                 </button>
               ) : (
                 <button

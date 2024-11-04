@@ -11,6 +11,7 @@ import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import SideMenuMobile from './SideMenuMobile';
 import MenuButton from './MenuButton';
 import ColorModeIconDropdown from '@/app/shared-theme/ColorModeIconDropdown';
+import OptionMenu from '/components/OptionsMenu'; // Assuming OptionMenu handles profile actions
 
 const Toolbar = styled(MuiToolbar)({
   width: '100%',
@@ -28,7 +29,7 @@ const Toolbar = styled(MuiToolbar)({
   },
 });
 
-export default function AppNavbar() {
+export default function AppNavbar({ onProfileClick }) {  // Accept onProfileClick as a prop
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -69,6 +70,8 @@ export default function AppNavbar() {
             </Typography>
           </Stack>
           <ColorModeIconDropdown />
+          {/* Pass onProfileClick to OptionMenu */}
+          <OptionMenu onProfileClick={onProfileClick} />  
           <MenuButton aria-label="menu" onClick={toggleDrawer(true)}>
             <MenuRoundedIcon />
           </MenuButton>
