@@ -1,8 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const ProfileEditComponent = ({ coachData = {}, onUpdateSuccess }) => {
+  const router = useRouter(); // Add the useRouter hook here
+
   const [profilePhoto, setProfilePhoto] = useState(coachData.image || "");
   const [gallery, setGallery] = useState(coachData.gallery || []);
   const [firstName, setFirstName] = useState(coachData.firstName || "");
@@ -12,8 +15,8 @@ const ProfileEditComponent = ({ coachData = {}, onUpdateSuccess }) => {
   const [title, setTitle] = useState(coachData.title || "");
   const [description, setDescription] = useState(coachData.description || "");
   const [hourlyRate, setHourlyRate] = useState(coachData.hourlyRate || "");
-  
-  const [statusMessage, setStatusMessage] = useState(""); // State for success/error message
+
+  const [statusMessage, setStatusMessage] = useState(""); // Success/Error message state
 
   const handleProfilePhotoChange = (e) => {
     setProfilePhoto(e.target.files[0]);
@@ -30,7 +33,7 @@ const ProfileEditComponent = ({ coachData = {}, onUpdateSuccess }) => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    setStatusMessage(""); // Reset the status message
+    setStatusMessage("");
 
     const formData = new FormData();
     formData.append("profilePhoto", profilePhoto);
@@ -50,13 +53,13 @@ const ProfileEditComponent = ({ coachData = {}, onUpdateSuccess }) => {
       });
 
       if (res.ok) {
-        setStatusMessage("Profile updated successfully!"); // Set success message
-        onUpdateSuccess(); // Refresh data in the dashboard and profile page
+        setStatusMessage("Profile updated successfully!");
+        onUpdateSuccess(); // Refresh parent component data
       } else {
-        setStatusMessage("Failed to update profile. Please try again."); // Set error message if response is not OK
+        setStatusMessage("Failed to update profile. Please try again.");
       }
     } catch (error) {
-      setStatusMessage("An error occurred. Please try again."); // Set error message if fetch fails
+      setStatusMessage("An error occurred. Please try again.");
     }
   };
 
@@ -65,28 +68,32 @@ const ProfileEditComponent = ({ coachData = {}, onUpdateSuccess }) => {
       <h2 className="text-xl font-semibold mb-4">Profile Details</h2>
 
       {/* Display Status Message */}
-      {statusMessage && <p className="text-center text-green-500 mb-4">{statusMessage}</p>}
+      {statusMessage && (
+        <p className={`text-center ${statusMessage.includes("successfully") ? "text-green-500" : "text-red-500"} mb-4`}>
+          {statusMessage}
+        </p>
+      )}
 
       {/* Profile Photo Section */}
       <div className="mb-4">
         <label>Profile Photo</label>
-        <div className="relative w-24 h-24">
+        <div className="relative w-24 h-24 mb-2">
           {profilePhoto ? (
-            <Image src={URL.createObjectURL(profilePhoto)} alt="Profile Photo" layout="fill" />
+            <Image src={URL.createObjectURL(profilePhoto)} alt="Profile Photo" layout="fill" objectFit="cover" />
           ) : (
             <div className="w-24 h-24 bg-gray-200 flex items-center justify-center">No Image</div>
           )}
-          <input type="file" onChange={handleProfilePhotoChange} className="mt-2" />
         </div>
+        <input type="file" onChange={handleProfilePhotoChange} />
       </div>
 
       {/* Gallery Section */}
       <div className="mb-4">
-        <label>Gallery Section</label>
+        <label>Gallery</label>
         <div className="flex space-x-2">
           {gallery.map((image, index) => (
             <div key={index} className="relative w-24 h-24">
-              <Image src={URL.createObjectURL(image)} alt="Gallery Image" layout="fill" />
+              <Image src={URL.createObjectURL(image)} alt="Gallery Image" layout="fill" objectFit="cover" />
               <button onClick={() => removeGalleryImage(index)} className="absolute top-0 right-0 bg-red-500 text-white p-1">X</button>
             </div>
           ))}
@@ -103,8 +110,17 @@ const ProfileEditComponent = ({ coachData = {}, onUpdateSuccess }) => {
       <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" className="input" />
       <input type="number" value={hourlyRate} onChange={(e) => setHourlyRate(e.target.value)} placeholder="Hourly Rate" className="input" />
 
-      {/* Update Button */}
-      <button type="submit" className="btn-primary">Update</button>
+      {/* Update and Dashboard Buttons */}
+      <div className="flex space-x-4 mt-4">
+        <button type="submit" className="btn-primary">Update</button>
+        <button
+          type="button"
+          onClick={() => router.push('/dashboard/profile', { scroll: false })}
+          className="btn-secondary"
+        >
+          Dashboard
+        </button>
+      </div>
     </form>
   );
 };

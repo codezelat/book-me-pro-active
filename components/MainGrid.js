@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Copyright from '../app/internals/components/copyright';
-import ChartUserByCountry from './ChartUserByCountry';
+import BookingRequestStats from './BookingRequestStats';
 import CustomizedTreeView from './CustomizedTreeView';
 import CustomizedDataGrid from './CustomizedDataGrid';
 import HighlightedCard from './HighlightedCard';
@@ -68,7 +68,7 @@ export default function MainGrid() {
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {/* <SessionsChart /> */}
-          <ChartUserByCountry />
+          <BookingRequestStats />
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {/* <PageViewsBarChart /> */}
@@ -82,12 +82,12 @@ export default function MainGrid() {
         <Grid size={{ xs: 12, lg: 9 }}>
           <CustomizedDataGrid />
         </Grid>
-        <Grid size={{ xs: 12, lg: 3 }}>
-          <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
+        {/* <Grid size={{ xs: 12, lg: 3 }}>
+          <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}> */}
             {/* <CustomizedTreeView />
             <ChartUserByCountry /> */}
-          </Stack>
-        </Grid>
+          {/* </Stack>
+        </Grid> */}
       </Grid>
      
       {/* <Copyright sx={{ my: 4 }} /> */}

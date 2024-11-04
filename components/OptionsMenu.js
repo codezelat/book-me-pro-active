@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Divider, { dividerClasses } from "@mui/material/Divider";
@@ -11,6 +13,7 @@ import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import { signOut } from "next-auth/react";
 import MenuButton from "./MenuButton";
+import { useRouter } from "next/navigation";
 
 const MenuItem = styled(MuiMenuItem)({
   margin: "2px 0",
@@ -19,15 +22,25 @@ const MenuItem = styled(MuiMenuItem)({
 const handleLogout = async () => {
   await signOut({ redirect: true, callbackUrl: "/" });
 };
+
 export default function OptionsMenu({ onProfileClick }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const router = useRouter();
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleProfileClick = () => {
+    router.push('/dashboard/profile');
+    handleClose();
+  };
+
   return (
     <React.Fragment>
       <MenuButton
@@ -57,17 +70,8 @@ export default function OptionsMenu({ onProfileClick }) {
           },
         }}
       >
-        {/* Call onProfileClick when Profile is clicked */}
-        <MenuItem
-          onClick={() => {
-            if (onProfileClick) {
-              onProfileClick(); // Trigger the profile click action
-            }
-          }}
-        >
-          Profile
-        </MenuItem>
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        {/* Call handleProfileClick when Profile is clicked */}
+        <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
         <Divider />
         <MenuItem onClick={handleClose}>Add another account</MenuItem>
