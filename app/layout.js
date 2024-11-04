@@ -1,4 +1,5 @@
 "use client";
+
 import { usePathname } from "next/navigation"; // Import the usePathname hook
 import { Kanit } from "next/font/google";
 import "./globals.css";
