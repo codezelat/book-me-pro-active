@@ -19,19 +19,19 @@ const stats = [
     value: 60,
     name: "Approved",
 
-    color: "hsl(120, 40%, 50%)",
+    color: " #037D40",
   },
   {
     value: 25,
-    name: "Declined",
+    name: "Not Reviewed",
 
-    color: "hsl(0, 70%, 50%)",
+    color: "#8BC3A7",
   },
   {
     value: 15,
-    name: "Not Reviewed",
+    name: "Declined",
 
-    color: "hsl(30, 60%, 50%)",
+    color: "#D50000",
   },
 ];
 
@@ -90,7 +90,7 @@ function PieCenterLabel({ primaryText, secondaryText }) {
   );
 }
 
-const colors = ["hsl(120, 40%, 50%)", "hsl(0, 70%, 50%)", "hsl(30, 60%, 50%)"];
+const colors = ["#037D40", "#D50000", "#8BC3A7"];
 
 export default function BookingRequestStats() {
   return (
@@ -140,12 +140,12 @@ export default function BookingRequestStats() {
         {/* Row with name and value for each item */}
         <Stack
           direction="row"
-          spacing={0} // No gap
+          spacing={5} // No gap
           sx={{
-            justifyContent: "space-between",
-            width: "192px",
-            height: "41px",
-            mt: 2,
+            //justifyContent: "space-between",
+            width: "160px",
+            height: "20px",
+            mx:2
           }}
         >
           {stats.map((stat, index) => (
@@ -154,9 +154,10 @@ export default function BookingRequestStats() {
               sx={{
                 textAlign: "center",
                 color: stat.color,
+                
               }}
             >
-              <Typography variant="body2" sx={{ textAlign: "left" }}>
+              <Typography variant="body2" sx={{  }}>
                 {stat.value}%
               </Typography>
               <Typography
@@ -164,7 +165,7 @@ export default function BookingRequestStats() {
                 sx={{
                   color: "text.secondary",
                   fontWeight: "500",
-                  fontSize: "10px",
+                  fontSize: "12px",
                 }}
               >
                 {stat.name}

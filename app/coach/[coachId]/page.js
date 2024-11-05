@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
-import Form from "/components/Form";
+import Calendar from "/components/Calendar";
 
 export default function CoachProfilePage() {
   const { coachId } = useParams();
@@ -20,7 +20,7 @@ export default function CoachProfilePage() {
     "/images/coach/coach4.png",
     "/images/coach/coach5.png",
   ];
-  const [showBookingForm, setShowBookingForm] = useState(false);
+  const [showBookingForm, setShowBookingCalendar] = useState(false);
   // State to store the selected image
   const [selectedImage, setSelectedImage] = useState(images[0]);
 
@@ -88,11 +88,11 @@ export default function CoachProfilePage() {
             <div className="flex items-center mb-6 space-x-8">
               <button
                 className="bg-blue-600 text-white font-semibold py-3 px-8  rounded-md flex items-center space-x-4"
-                onClick={() => setShowBookingForm(true)}
+                onClick={() => setShowBookingCalendar(true)}
               >
                 <span>📅</span>
                 <div className="">
-                  <Form /> {/* Render the Form component here */}
+                  <Calendar /> {/* Render the Form component here */}
                 </div>
               </button>
 

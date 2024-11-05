@@ -58,6 +58,7 @@ export default function Dashboard(props) {
         <AppNavbar />
 
         <Box sx={{ padding: 2, flexGrow: 1 }}>
+          
           <Stack direction="column" spacing={2}>
             {showProfileEdit ? <ProfileEditComponent /> : <MainGrid />}
           </Stack>
