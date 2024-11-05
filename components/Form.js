@@ -1,5 +1,6 @@
 // components/Form.js
 import React, { useState } from "react";
+import axios from "axios";
 
 const Form = ({ selectedDate, selectedTime, closeModal }) => {
   const [formData, setFormData] = useState({
@@ -16,11 +17,24 @@ const Form = ({ selectedDate, selectedTime, closeModal }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", { ...formData, selectedDate, selectedTime });
-    // You can add form submission logic here
-    closeModal(); // Close the modal after submission
+
+    try {
+      const response = await axios.post("/api/appointments/create", {
+        ...formData,
+        selectedDate,
+        selectedTime,
+      });
+
+      if (response.status === 201) {
+        alert("Appointment created successfully!");
+        closeModal(); // Close the modal after successful submission
+      }
+    } catch (error) {
+      console.error("Error creating appointment:", error);
+      alert("Failed to create appointment. Please try again.");
+    }
   };
 
   return (

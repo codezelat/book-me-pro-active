@@ -1,30 +1,33 @@
 // pages/api/appointments/create.js
 import connectToDatabase from '../../../../Lib/mongodb';
-import PersonalTrainer from '../../../../server/models/Appointments';
+import PersonalTrainer from '../../../../server/models/Appointment';
 
 export default async function handler(req, res) {
-    await connectToDatabase();
-
-    if (req.method === 'POST') {
-        const { bookedAt, clientEmail, clientPhoneNo, clientName, clientNotes, trainerId, status } = req.body;
-
-        try {
-            const appointment = new Appointments({
-                bookedAt,
-                clientEmail,
-                clientPhoneNo,
-                clientName,
-                clientNotes,
-                trainerId,
-                status: status || 'pending'
-            });
-            await appointment.save();
-            res.status(201).json(appointment);
-        } catch (error) {
-            res.status(500).json({ error: 'Failed to create appointment' });
-        }
+    await dbConnect(); // Connect to MongoDB
+  
+    if (req.method === "POST") {
+      try {
+        const { name, age, phone, email, address, appointmentDetails, selectedDate, selectedTime } = req.body;
+  
+        // Create a new appointment document
+        const newAppointment = new Appointment({
+          name,
+          age,
+          phone,
+          email,
+          address,
+          appointmentDetails,
+          selectedDate,
+          selectedTime,
+        });
+  
+        await newAppointment.save();
+        res.status(201).json({ message: "Appointment created successfully!" });
+      } catch (error) {
+        console.error("Failed to save appointment:", error);
+        res.status(500).json({ message: "Failed to save appointment data" });
+      }
     } else {
-        res.setHeader('Allow', ['POST']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
+      res.status(405).json({ message: "Method not allowed" });
     }
-}
+  }

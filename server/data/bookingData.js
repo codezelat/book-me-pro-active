@@ -1,5 +1,5 @@
 // bookingData.js
-import Booking from '../models/Appointments';
+import Booking from '../models/Appointment';
 
 // Create a new booking
 export const createBooking = async (bookingData) => {
