@@ -1,35 +1,30 @@
-import mongoose from 'mongoose';
+// /Lib/mongodb.js
+import { MongoClient } from "mongodb";
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const uri = process.env.MONGODB_URI;
+let client;
+let clientPromise;
 
-if (!MONGODB_URI) {
-  throw new Error(
-    'Please define the MONGODB_URI environment variable inside .env.local'
-  );
+if (!uri) {
+  throw new Error("Please add your Mongo URI to .env.local");
 }
 
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
-
-async function connectToDatabase() {
-  if (cached.conn) {
-    return cached.conn;
+if (process.env.NODE_ENV === "development") {
+  // In development mode, we want to keep the same client between hot reloads.
+  if (!global._mongoClientPromise) {
+    client = new MongoClient(uri);
+    global._mongoClientPromise = client.connect();
   }
-
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }).then((mongoose) => {
-      return mongoose;
-    });
-  }
-
-  cached.conn = await cached.promise;
-  return cached.conn;
+  clientPromise = global._mongoClientPromise;
+} else {
+  // In production mode, it's best to not use a global variable.
+  client = new MongoClient(uri);
+  clientPromise = client.connect();
 }
 
-export default connectToDatabase;
+// Export a function to use the connected client
+export default async function connectToDatabase() {
+  const client = await clientPromise;
+  const db = client.db("your-database-name");
+  return { db, client };
+}

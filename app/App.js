@@ -2,7 +2,7 @@
 import * as React from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import "../styles/globals.css"; // Import global styles if any
+import "../styles/globals.css";
 
 const darkTheme = createTheme({
   palette: {
@@ -15,7 +15,7 @@ const darkTheme = createTheme({
     },
     background: {
       default: "#121212", // Background for the app
-      paper: "#1e1e1e",   // Background for cards, modals, etc.
+      paper: "#1e1e1e", // Background for cards, modals, etc.
     },
     text: {
       primary: "#ffffff", // Main text color

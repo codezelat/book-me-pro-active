@@ -2,24 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap");
+
 :root {
+  
   --background: #ffffff;
   --foreground: #171717;
-  
+  --font-kanit: "Kanit", sans-serif; /* Define the Kanit font */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #ffffff;
-    --foreground: #ededed;
+    /* --background: #121212; Dark background */
+    /* --foreground: #ededed; Lighter text for dark mode */
   }
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-kanit), sans-serif;
-  
+  font-family: var(--font-kanit); /* Apply Kanit font */
+}
+
+/* Ensure Tailwind applies its utilities */
+body {
+  @apply font-sans; /* This ensures Tailwind uses the font-family defined in the config */
 }
 
 @layer utilities {
@@ -31,4 +38,3 @@ body {
 .custom-shape {
   clip-path: polygon(0 0, 100% 0%, 100% 85%, 0% 100%);
 }
-

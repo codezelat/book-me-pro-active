@@ -49,6 +49,7 @@ export default function MainGrid() {
         width: "100%",
         maxWidth: { xs: "100%", md: "1700px" },
         px: { xs: 2, md: 3 },
+        position: "fixed",
       }}
     >
       {/* Stat cards */}
@@ -63,7 +64,7 @@ export default function MainGrid() {
             sx={{
               width: "402px",
               height: "159px",
-              padding: "22px 9px 22px 4px",
+              padding: "10px ",
               gap: "20px",
               borderRadius: "5px 0px 0px 0px",
             }}
@@ -87,9 +88,7 @@ export default function MainGrid() {
           mb: 5,
         }}
       >
-        
-          <BookingRequestStats />
-        
+        <BookingRequestStats />
 
         <Box
           sx={{

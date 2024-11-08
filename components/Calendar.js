@@ -47,7 +47,7 @@ export default function Calendar() {
     <>
       <button
         onClick={openModal}
-        className="bg-blue-600 text-white font-semibold py-3 px-2 rounded-md flex items-center space-x-4"
+        className="bg-[#037D40] text-white font-semibold  rounded-md flex items-center "
       >
         Book Me
       </button>
@@ -122,7 +122,7 @@ export default function Calendar() {
                         </div>
                       </>
                     ) : (
-                      <Form/>
+                      <Form />
                     )}
                   </div>
                 </Dialog.Panel>

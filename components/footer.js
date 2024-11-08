@@ -7,7 +7,7 @@ import SubscribeSection from "/components/SubscribeSection";
 export default function Footer() {
   return (
     <section>
-      <div className=" bg-blue-900 z-10">
+      <div className=" bg-footer z-10">
         <div className="container mx-auto px-20 py-10 ">
           <div className="flex items-center justify-between mb-10">
             <div>
@@ -39,11 +39,11 @@ export default function Footer() {
                 </div>
               </div>
             </div>
-            <div>
-              <div className="text-white text-2xl font-bold">
+            <div className="">
+              <div className="text-white text-2xl sm:text-[18px] md:text-xl lg:text-3xl font-bold">
                 Subscribe to the newsletter
               </div>
-              <div className="mt-5 ">
+              <div>
                 <SubscribeSection />
               </div>
             </div>

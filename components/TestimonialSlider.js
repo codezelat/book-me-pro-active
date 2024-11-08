@@ -1,6 +1,6 @@
-// components/TestimonialSlider.js
 "use client";
 import { useState } from "react";
+import Slider from "../public/slider"; // Importing your Slider component
 
 const testimonials = [
   {
@@ -18,7 +18,6 @@ const testimonials = [
     author: "Jane Smith",
     role: "Design Lead",
   },
-  // Add more testimonials here if needed
 ];
 
 const TestimonialSlider = () => {
@@ -35,39 +34,35 @@ const TestimonialSlider = () => {
     );
   };
 
-  const handleDotClick = (index) => {
-    setCurrentIndex(index);
-  };
-
   return (
-    <div className="w-full flex flex-col justify-center  space-y-8">
+    <div className="w-full flex flex-col justify-center space-y-8 px-4 md:px-8 lg:px-12">
       {/* Testimonial Content */}
-      <div className="">
-        <p className="text-2xl mt-8   font-thin text-black">
+      <div className="text-center md:text-left">
+        <p className="text-lg md:text-[26px] mt-4 md:mt-8 font-[275] text-black">
           {testimonials[currentIndex].text}
         </p>
-        <p className="mt-8 text-2xl text-black font-normal">
+        <p className="mt-4 md:mt-8 text-lg md:text-[26px] text-black font-normal">
           {testimonials[currentIndex].author}
         </p>
-        <p className="text-lg  font-normal text-black">
+        <p className="text-sm md:text-lg font-normal text-black">
           {testimonials[currentIndex].role}
         </p>
       </div>
 
       {/* Slider Navigation */}
-      <div className="flex  items-center justify-between">
-        <div className="flex  items-center space-x-5">
+      <div className="flex items-center justify-between flex-wrap md:flex-wrap">
+        <div className="flex  ">
           {/* Previous Button */}
           <button
             onClick={handlePrev}
-            className="p-3 bg-blue-600 text-white rounded-md"
+            className="p-2 md:p-3 bg-primary text-white rounded-md"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              className="w-5 h-5"
+              className="w-4 h-4 md:w-5 md:h-5"
             >
               <path
                 strokeLinecap="round"
@@ -77,31 +72,20 @@ const TestimonialSlider = () => {
               />
             </svg>
           </button>
-
-          {/* Dots */}
-          <div className="flex items-center space-x-5">
-            {testimonials.map((_, index) => (
-              <div
-                key={index}
-                className={`w-2 h-2 rounded-full ${
-                  currentIndex === index ? "bg-blue-600" : "bg-gray-300"
-                }`}
-                onClick={() => handleDotClick(index)}
-              ></div>
-            ))}
-          </div>
+          {/* Slider Component */}
+          <Slider className="" currentIndex={currentIndex} />
 
           {/* Next Button */}
           <button
             onClick={handleNext}
-            className="p-3 bg-blue-600 text-white rounded-md"
+            className="p-2 md:p-3 bg-primary text-white rounded-md"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              className="w-5 h-5"
+              className="w-4 h-4 md:w-5 md:h-5"
             >
               <path
                 strokeLinecap="round"
@@ -112,8 +96,9 @@ const TestimonialSlider = () => {
             </svg>
           </button>
         </div>
+
         {/* Explore All Button */}
-        <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg">
+        <button className="w-full mt-4 md:my-5 md:w-auto px-4 md:px-6 py-2 md:py-[13px] bg-primary text-white font-semibold rounded-lg">
           Explore All
         </button>
       </div>
