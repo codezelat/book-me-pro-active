@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"; // Import the usePathname hook
 import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 
-export default function Header() {
+export default function DashboardHeader() {
   const { data: session } = useSession();
 
   const pathname = usePathname(); // Get the current route

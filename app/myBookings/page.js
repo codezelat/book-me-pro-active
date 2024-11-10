@@ -1,151 +1,165 @@
 "use client";
-
-import * as React from "react";
-import { alpha } from "@mui/material/styles";
+import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-
+import ProfileEditComponent from "/components/ProfileEditComponent/page";
 import DashboardHeader from "@/components/DashboardHeader";
 import SideMenu from "@/components/SideMenu";
-import AppNavbar from "@/components/AppNavbar";
-import AppTheme from "../shared-theme/AppTheme";
-import UserDescription from "@/components/UserDescription";
-
-import { dataGridCustomizations } from "./Theme/customizations";
-import CustomizedDataGrid from "@/components/CustomizedDataGrid";
-import Button from "@mui/material/Button";
-
-// Dark and light theme settings
-const lightTheme = createTheme({
-  palette: {
-    mode: "light",
-    background: {
-      default: "#f5f5f5",
-    },
-    primary: {
-      main: "#037D40",
-    },
-  },
-});
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    background: {
-      default: "#121212",
-    },
-    primary: {
-      main: "#037D40",
-    },
-  },
-});
+import AppTheme from "@/app/shared-theme/AppTheme";
+import MainGrid from "@/components/MainGrid";
+import { Button, useTheme } from "@mui/material";
+import {
+  chartsCustomizations,
+  dataGridCustomizations,
+  datePickersCustomizations,
+  treeViewCustomizations,
+} from "@/app/dashboard/theme/customizations";
+import CustomizedDataGrid from "./Theme/customizations/dataGrid";
 
 const xThemeComponents = {
+  ...chartsCustomizations,
   ...dataGridCustomizations,
+  ...datePickersCustomizations,
+  ...treeViewCustomizations,
 };
 
-export default function myBookings(props) {
-  // Set the theme dynamically based on user preference or system settings
-  const [themeMode, setThemeMode] = React.useState("light");
+export default function Dashboard(props) {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
 
-  // Toggle between light and dark themes
-  const toggleTheme = () => {
-    setThemeMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
-  };
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/auth/login");
+    }
+  }, [status, router]);
+
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
+
+  const handleProfileClick = () => setShowProfileEdit(true);
+
+  const theme = useTheme(); // Get theme instance
+  const isDarkMode = theme.palette.mode === "dark"; // Dark mode check
 
   return (
-    <ThemeProvider theme={themeMode === "light" ? lightTheme : darkTheme}>
-      <CssBaseline enableColorScheme sx={{ width: "100%", height: "100%" }} />
-      <Box sx={{ display: "flex" }}>
-        <SideMenu />
+    <AppTheme {...props} themeComponents={xThemeComponents}>
+      <CssBaseline enableColorScheme />
+      <div
+        className="h-full w-full m-0 p-0 "
+        style={{
+          backgroundColor: isDarkMode
+            ? theme.palette.background.default
+            : "#f7f7f7",
 
-        {/* Main content */}
+          color: isDarkMode ? "#000000" : "#ffffff",
+        }}
+      >
+        {/* Header */}
         <Box
-          component="main"
-          sx={(theme) => ({
-            flexGrow: 1,
-            backgroundColor: theme.vars
-              ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
-              : alpha(theme.palette.background.default, 1),
-            overflow: "auto",
-          })}
+          sx={{
+            position: "fixed",
+            left: 0,
+            right: 0,
+            paddingTop: "10px",
+            paddingLeft: "20px",
+            paddingRight: "20px",
+            height: "82px",
+            zIndex: 10,
+            backgroundColor: isDarkMode
+              ? "background.default"
+              : "background.paper",
+            color: isDarkMode ? "text.primary" : "text.secondary",
+          }}
         >
-          <Stack
-            spacing={2}
-            sx={{
-              mx: 3,
-              pb: 5,
-              mt: { xs: 8, md: 0 },
-            }}
-          >
-            <DashboardHeader />
-            <div className="custom-padding px-20">
-              <div className="flex justify-between pt-[15px] ">
-                <div className="text-black block ">My Bookings</div>
-                <div className="flex justify-between gap-3 pb-10">
-                  <Button
-                    sx={{
-                      bgcolor: "#037D40",
-                      color: "white",
-                      px: 3,
-                      fontWeight: "bold", // Set text to bold
-                      "&:hover": {
-                        bgcolor: "#037D40",
-                      },
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 1.5,
-                    }}
-                    size="large"
-                  >
-                    Pending
-                  </Button>
-                  <Button
-                    sx={{
-                      bgcolor: "#E6F2EC",
-                      color: "black",
-                      px: 3,
-                      fontWeight: "bold", // Set text to bold
-                      "&:hover": {
-                        bgcolor: "#037D40",
-                        color: "white",
-                      },
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 1.5,
-                    }}
-                    size="large"
-                  >
-                    Approved
-                  </Button>
-                  <Button
-                    sx={{
-                      bgcolor: "#E6F2EC",
-                      color: "black",
-                      px: 3,
-                      fontWeight: "bold", // Set text to bold
-                      "&:hover": {
-                        bgcolor: "#037D40",
-                        color: "white",
-                      },
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 1.5,
-                    }}
-                    size="large"
-                  >
-                    Rejected
-                  </Button>
-                </div>
-              </div>
+          <DashboardHeader />
+        </Box>
 
+        {/* Sidebar */}
+        <Box
+          sx={{
+            width: "250px",
+            position: "fixed",
+            top: "92px",
+            left: 0,
+            bottom: 0,
+            overflowY: "auto",
+            zIndex: 5,
+            backgroundColor: isDarkMode ? "background.default" : "#f4f4f4",
+            borderRight: "1px solid #ddd",
+          }}
+        >
+          <SideMenu session={session} />
+        </Box>
+
+        {/* Main Content Area */}
+        <Box
+          sx={{
+            marginLeft: "250px",
+
+            minHeight: "100vh",
+            overflow: "auto",
+            backgroundColor: isDarkMode ? "background.default" : "#f7f7f7",
+            color: isDarkMode ? "#000000" : "#ffffff",
+          }}
+        >
+          <Stack direction="column" spacing={2} paddingTop={10} marginLeft={10}>
+            <Box
+              className="custom-padding px-20"
+              sx={{
+                overflow: "auto",
+                minHeight: "100vh",
+
+                backgroundColor: isDarkMode
+                  ? "background.default"
+                  : "background.paper",
+                color: isDarkMode ? "text.primary" : "text.secondary",
+              }}
+            >
+              {/* My Bookings Header */}
+              <Box display="flex" justifyContent="space-between" pt={2}>
+                <Box className="text-black" sx={{}}>
+                  My Bookings
+                </Box>
+                <Stack direction="row" spacing={3} pt={5} pb={2}>
+                  {["Pending", "Approved", "Rejected"].map((status, index) => (
+                    <Button
+                      key={index}
+                      sx={{
+                        bgcolor: status === "Pending" ? "#037D40" : "#E6F2EC",
+                        color: isDarkMode
+                          ? "black"
+                          : status === "Pending"
+                          ? "white"
+                          : "black",
+                        px: 3,
+                        fontWeight: "bold",
+                        "&:hover": {
+                          bgcolor: status === "Pending" ? "#037D40" : "#037D40",
+                          color: "white",
+                        },
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                      }}
+                      size="large"
+                    >
+                      {status}
+                    </Button>
+                  ))}
+                </Stack>
+              </Box>
+
+              {/* Data Grid */}
               <CustomizedDataGrid />
-            </div>
+            </Box>
           </Stack>
         </Box>
-      </Box>
-    </ThemeProvider>
+      </div>
+    </AppTheme>
   );
 }

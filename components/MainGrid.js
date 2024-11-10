@@ -43,13 +43,14 @@ export default function MainGrid() {
 
   return (
     <Box
-    className="custom-padding"
+      className="custom-padding"
       sx={{
         width: "100%",
         height: "auto",
         maxWidth: { xs: "100%", md: "1700px" },
-        paddingTop:10,
-
+        paddingTop: 10,
+        paddingLeft: 30,
+        paddingRight: 20,
         position: "fixed",
         bgcolor: isDarkMode ? "background.default" : "background.paper",
         color: isDarkMode ? "text.primary" : "text.secondary",
@@ -133,10 +134,10 @@ export default function MainGrid() {
             height: "354px",
           }}
         > */}
-          {/* <Stack gap={2} direction={{ xs: "column", sm: "row", lg: "column" }}> */}
-            {/* <CustomizedTreeView />
+        {/* <Stack gap={2} direction={{ xs: "column", sm: "row", lg: "column" }}> */}
+        {/* <CustomizedTreeView />
                 <ChartUserByCountry /> */}
-          {/* </Stack>
+        {/* </Stack>
         </Grid> */}
       </Grid>
 

@@ -53,6 +53,7 @@ export default function Dashboard(props) {
             position: "fixed",
             left: 0,
             right: 0,
+            
             paddingTop: "10px",
             paddingLeft: "20px",
             paddingRight: "20px",
