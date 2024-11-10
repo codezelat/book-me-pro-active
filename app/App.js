@@ -1,38 +1,30 @@
-// pages/_app.js
 import * as React from "react";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProviderComponent, useThemeMode } from "../ThemeContext"; // Adjust the path
+import IconButton from "@mui/material/IconButton";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import "../styles/globals.css";
 
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#037D40", // Customize primary color
-    },
-    secondary: {
-      main: "#b0b0b0", // Customize secondary color if needed
-    },
-    background: {
-      default: "#121212", // Background for the app
-      paper: "#1e1e1e", // Background for cards, modals, etc.
-    },
-    text: {
-      primary: "#ffffff", // Main text color
-      secondary: "#b0b0b0", // Secondary text color
-    },
-  },
-  typography: {
-    fontFamily: "Kanit, sans-serif", // Customize font if needed
-  },
-});
-
 function MyApp({ Component, pageProps }) {
+  // Destructure theme-related functions and states from the useThemeMode hook
+  const { isDarkMode, toggleTheme } = useThemeMode();
+
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline /> {/* Applies global dark mode styles */}
-      <Component {...pageProps} />
-    </ThemeProvider>
+    <ThemeProviderComponent>
+      <CssBaseline /> {/* Adds a CSS reset to standardize styles */}
+      {/* Dark Mode Toggle Button */}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", padding: 2 }}>
+        <IconButton onClick={toggleTheme} color="inherit">
+          {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+        </IconButton>
+      </Box>
+      {/* Main Content */}
+      <Box sx={{ p: 2 }}>
+        <Component {...pageProps} />
+      </Box>
+    </ThemeProviderComponent>
   );
 }
 

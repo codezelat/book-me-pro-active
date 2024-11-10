@@ -5,10 +5,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap");
 
 :root {
-  
-  --background: #ffffff;
-  --foreground: #171717;
-  --font-kanit: "Kanit", sans-serif; /* Define the Kanit font */
+  --background-color: #ffffff;
+  --foreground-color: #000000;
+  --primary-color: #037d40;
+  --secondary-color: #e6f2ec;
+  --footer-color: #01351b;
+}
+
+.dark {
+  --background-color: #121212;
+  --foreground-color: #ffffff;
+  --primary-color: #90caf9;
+  --secondary-color: #37474f;
+  --footer-color: #0a1f1b;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -16,6 +25,28 @@
     /* --background: #121212; Dark background */
     /* --foreground: #ededed; Lighter text for dark mode */
   }
+}
+
+.bg-background {
+  background-color: var(--background-color);
+}
+.text-foreground {
+  color: var(--foreground-color);
+}
+.bg-primary {
+  background-color: var(--primary-color);
+}
+.bg-secondary {
+  background-color: var(--secondary-color);
+}
+.bg-footer {
+  background-color: var(--footer-color);
+}
+.text-primary {
+  color: var(--primary-color);
+}
+.text-secondary {
+  color: var(--secondary-color);
 }
 
 body {
@@ -33,6 +64,13 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.custom-padding {
+  padding-left: 100px;
+  padding-right: 20;
+  padding-top: 30px;
+  padding-bottom: 10px;
 }
 
 .custom-shape {

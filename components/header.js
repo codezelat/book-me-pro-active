@@ -43,7 +43,7 @@ export default function Header() {
       >
         <div className="container mx-auto px-20">
           <div className="justify-between items-center flex py-5">
-            {/* Company Logo */}
+            {/* Company Logo */} 
             <div
               className={`text-3xl font-extrabold ${
                 isHomePage ? "text-white" : "text-primary"

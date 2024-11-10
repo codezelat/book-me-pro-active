@@ -32,8 +32,8 @@ export default function Header() {
     <section>
       {/* Conditional class for background color/image */}
       <div>
-        <div className=" mx-auto px-10">
-          <div className="justify-between items-center flex py-5">
+        <div className=" mx-auto px-10  position: fixed;">
+          <div className="justify-between items-center flex ">
             {/* Company Logo */}
             <div>
               <Link href="/">

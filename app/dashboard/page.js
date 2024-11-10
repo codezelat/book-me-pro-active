@@ -1,5 +1,4 @@
 "use client";
-
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -28,7 +27,6 @@ const xThemeComponents = {
 export default function Dashboard(props) {
   const { data: session, status } = useSession();
   const router = useRouter();
-
   const [showProfileEdit, setShowProfileEdit] = useState(false);
 
   useEffect(() => {
@@ -48,71 +46,56 @@ export default function Dashboard(props) {
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
-      <Box
-        sx={{
-          position: "fixed",
-          position: "absolute",
-          left: 0,
-          right: 0,
-          height: "92px",
-          zIndex: 10,
-          marginBottom: 50,
-        }}
-      >
-        <DashboardHeader />
-      </Box>
-      {/* Set up main container with header fixed at the top */}
-      <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-        {/* Fixed Header */}
-
-        {/* Main Content below the header */}
+      <div className="h-full w-full m-0 p-0">
+        {/* Top Header */}
         <Box
           sx={{
-            display: "flex",
-            flexGrow: 1,
-            paddingTop: "70px", // Adjust this to match the height of your fixed header
-            //overflow: "hidden",
+            position: "fixed",
+            left: 0,
+            right: 0,
+            paddingTop: "10px",
+            paddingLeft: "20px",
+            paddingRight: "20px",
+            height: "82px",
+            zIndex: 10,
+            backgroundColor: "white",
           }}
         >
-          {/* Side Menu */}
-          <Box
-            sx={{
-              width: "250px",
-              position: "absolute",
-              left: 0,
-              top: "92px",
-              paddingBottom: "50px",
-              bottom: 0,
-              height: "calc(100vh - 92px)",
-              overflowY: "auto",
-              borderRight: "1px solid #ddd",
-            }}
-          >
-            <SideMenu session={session} />
-          </Box>
-
-          {/* Main Dashboard Content */}
-          <Box
-            sx={{
-              // position: "absolute",
-              left: "178px",
-              top: "92px",
-              right: 0,
-              bottom: 0,
-              marginLeft: "350px", // Adjust to match the width of the SideMenu
-              flexGrow: 1,
-              padding: 3,
-              paddingLeft: "100px",
-              overflow: "auto",
-              backgroundColor: "#f7f7f7", // Optional: Match background color
-            }}
-          >
-            <Stack direction="column" spacing={2}>
-              {showProfileEdit ? <ProfileEditComponent /> : <MainGrid />}
-            </Stack>
-          </Box>
+          <DashboardHeader />
         </Box>
-      </Box>
+
+        {/* Sidebar */}
+        <Box
+          sx={{
+            width: "250px",
+            position: "fixed",
+            top: "92px", // Positioned below header
+            left: 0,
+            bottom: 0,
+            overflowY: "auto",
+            zIndex: 5, // Ensure sidebar stays above main content
+            backgroundColor: "#f4f4f4",
+            borderRight: "1px solid #ddd",
+          }}
+        >
+          <SideMenu session={session} />
+        </Box>
+
+        {/* Main Content Area */}
+        <Box
+          sx={{
+            marginLeft: "250px", // Adjusts main content to start after sidebar
+           // paddingTop: "60px", // Adjusts main content to start after header
+            overflow: "auto",
+            backgroundColor: "#f7f7f7",
+            minHeight: "100vh",
+          }}
+        >
+          <Stack direction="column" spacing={2} padding={3}>
+            {showProfileEdit ? <ProfileEditComponent /> : <MainGrid />}
+          </Stack>
+        </Box>
+      </div>
     </AppTheme>
   );
 }

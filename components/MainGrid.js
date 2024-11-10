@@ -3,6 +3,7 @@ import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles"; // Import useTheme
 import Copyright from "../app/internals/components/copyright";
 import CustomizedTreeView from "./CustomizedTreeView";
 import CustomizedDataGrid from "./CustomizedDataGrid";
@@ -18,38 +19,40 @@ const data = [
     value: "14k",
     interval: "Last 30 days",
     trend: "up",
-    data: [
-      /* data omitted for brevity */
-    ],
+    data: [],
   },
   {
     title: "Booking Requests",
     value: "325",
     interval: "Last 30 days",
     trend: "down",
-    data: [
-      /* data omitted for brevity */
-    ],
+    data: [],
   },
   {
     title: "Profile Clicks",
     value: "200k",
     interval: "Last 30 days",
     trend: "neutral",
-    data: [
-      /* data omitted for brevity */
-    ],
+    data: [],
   },
 ];
 
 export default function MainGrid() {
+  const theme = useTheme(); // Use theme within the component
+  const isDarkMode = theme.palette.mode === "dark"; // Check if dark mode is active
+
   return (
     <Box
+    className="custom-padding"
       sx={{
         width: "100%",
+        height: "auto",
         maxWidth: { xs: "100%", md: "1700px" },
-        px: { xs: 2, md: 3 },
+        paddingTop:10,
+
         position: "fixed",
+        bgcolor: isDarkMode ? "background.default" : "background.paper",
+        color: isDarkMode ? "text.primary" : "text.secondary",
       }}
     >
       {/* Stat cards */}
@@ -64,7 +67,7 @@ export default function MainGrid() {
             sx={{
               width: "402px",
               height: "159px",
-              padding: "10px ",
+              padding: "10px",
               gap: "20px",
               borderRadius: "5px 0px 0px 0px",
             }}
@@ -108,7 +111,6 @@ export default function MainGrid() {
         sx={{
           width: "100%",
           maxWidth: { md: "1236px" },
-          mb: 2,
         }}
       >
         <Grid
@@ -117,12 +119,12 @@ export default function MainGrid() {
           md={9}
           sx={{
             width: "100%",
-            height: "354px",
+            height: "350px",
           }}
         >
           <CustomizedDataGrid />
         </Grid>
-        <Grid
+        {/* <Grid
           item
           xs={12}
           md={3}
@@ -130,12 +132,12 @@ export default function MainGrid() {
             width: "100%",
             height: "354px",
           }}
-        >
-          <Stack gap={2} direction={{ xs: "column", sm: "row", lg: "column" }}>
+        > */}
+          {/* <Stack gap={2} direction={{ xs: "column", sm: "row", lg: "column" }}> */}
             {/* <CustomizedTreeView />
                 <ChartUserByCountry /> */}
-          </Stack>
-        </Grid>
+          {/* </Stack>
+        </Grid> */}
       </Grid>
 
       {/* <Copyright sx={{ my: 4 }} /> */}
