@@ -68,7 +68,7 @@ export default function Dashboard(props) {
             paddingTop: "10px",
             paddingLeft: "20px",
             paddingRight: "20px",
-            height: "82px",
+            height: "94px",
             zIndex: 10,
             backgroundColor: isDarkMode
               ? "background.default"

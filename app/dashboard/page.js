@@ -90,6 +90,7 @@ export default function Dashboard(props) {
             overflow: "auto",
             backgroundColor: "#f7f7f7",
             minHeight: "100vh",
+            
           }}
         >
           <Stack direction="column" spacing={2} padding={3}>
