@@ -196,7 +196,7 @@ export default function CoachProfilePage() {
           exercitation ullamco laboris nisi ut aliquip ex ea commodo.
         </div>
       </div>
-      <div className="container pb-24 mx-auto px-20">
+      {/* <div className="container pb-24 mx-auto px-20">
         <div className="text-3xl text-black font-extrabold mb-6">Awards</div>
         <li className="text-[19px] font-[300] mb-4 text-black">
           Don Balón Award: 2009, 2010
@@ -222,7 +222,7 @@ export default function CoachProfilePage() {
         <li className="text-[19px] font-[300] mb-4 text-black">
           FIFA World Coach of the Year: 2011[278]
         </li>
-      </div>
+      </div> */}
       {/* Booking Form Section */}
     </section>
   );
