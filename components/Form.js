@@ -1,7 +1,14 @@
 // components/Form.js
 import React, { useState } from "react";
 import axios from "axios";
-import { TextField, Button, Modal, Box, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Modal,
+  Box,
+  Typography,
+  Container,
+} from "@mui/material";
 
 const Form = ({ selectedDate, selectedTime, closeModal }) => {
   const [formData, setFormData] = useState({
@@ -18,22 +25,9 @@ const Form = ({ selectedDate, selectedTime, closeModal }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-   const handleDateChange = (newValue) => {
-    setFormData({
-      ...formData,
-      selectedDate: newValue,
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log("Submitting data:", {
-      ...formData,
-      selectedDate,
-      selectedTime,
-    }); // Log the data being sent
-  
+    console.log("Submitting data:", { ...formData, selectedDate, selectedTime });
 
     try {
       const response = await axios.post("/api/appointments", {
@@ -44,7 +38,7 @@ const Form = ({ selectedDate, selectedTime, closeModal }) => {
 
       if (response.status === 201) {
         alert("Appointment created successfully!");
-        closeModal(); // Close the modal after successful submission
+        closeModal();
       }
     } catch (error) {
       console.error("Error creating appointment:", error);
@@ -54,93 +48,69 @@ const Form = ({ selectedDate, selectedTime, closeModal }) => {
 
   return (
     <Modal open={true} onClose={closeModal}>
-    <div>
-      <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-        Fill in your details
-      </h2>
-      <form onSubmit={handleSubmit}>
-        <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-          <div className="sm:col-span-2">
-            <label
-              htmlFor="name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Full Name
-            </label>
-            <input
-              type="text"
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 400,
+          bgcolor: "background.paper",
+          boxShadow: 24,
+          p: 4,
+          borderRadius: 2,
+        }}
+      >
+        <Typography variant="h6" component="h2" gutterBottom>
+          Fill in your details
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <Container sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <TextField
+              label="Full Name"
               name="name"
-              id="name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              placeholder="Enter your full name"
               required
+              variant="outlined"
               value={formData.name}
               onChange={handleChange}
             />
-          </div>
-          <div className="w-full">
-            <label
-              htmlFor="phone"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Phone Number
-            </label>
-            <input
-              type="text"
+            <TextField
+              label="Phone Number"
               name="phone"
-              id="phone"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              placeholder="123-456-7890"
               required
+              variant="outlined"
               value={formData.phone}
               onChange={handleChange}
             />
-          </div>
-          <div className="w-full">
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Email
-            </label>
-            <input
-              type="email"
+            <TextField
+              label="Email"
               name="email"
-              id="email"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              placeholder="example@example.com"
               required
+              type="email"
+              variant="outlined"
               value={formData.email}
               onChange={handleChange}
             />
-          </div>
-          <div className="sm:col-span-2">
-            <label
-              htmlFor="appointmentDetails"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Appointment Details
-            </label>
-            <textarea
-              id="appointmentDetails"
+            <TextField
+              label="Appointment Details"
               name="appointmentDetails"
-              rows="5"
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              placeholder="Describe your goals, preferred time, or any other relevant information"
+              multiline
+              rows={4}
+              variant="outlined"
               value={formData.appointmentDetails}
               onChange={handleChange}
-            ></textarea>
-
-          </div>
-        </div>
-        <button
-          type="submit"
-          className="inline-flex items-center px-4 py-2 mt-4 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-        >
-          Submit
-        </button>
-      </form>
-    </div>
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="#1976d2"
+              sx={{ mt: 2 }}
+            >
+              Submit
+            </Button>
+          </Container>
+        </form>
+      </Box>
     </Modal>
   );
 };
