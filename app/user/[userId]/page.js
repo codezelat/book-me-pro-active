@@ -1,4 +1,4 @@
-// app/coach/[coachId]/page.js
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useParams } from "next/navigation";
@@ -9,9 +9,9 @@ import Calendar from "/components/Calendar";
 import { Album } from "lucide-react";
 import Link from "next/link";
 
-export default function CoachProfilePage() {
-  const { coachId } = useParams();
-  const [coach, setCoach] = useState(null);
+export default function UserProfilePage() {
+  const { userId } = useParams();
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const images = [
@@ -45,26 +45,26 @@ export default function CoachProfilePage() {
   }, [currentIndex, images]);
 
   useEffect(() => {
-    const fetchCoachData = async () => {
+    const fetchUserData = async () => {
       try {
-        const response = await axios.get(`/api/coach/${coachId}`);
-        setCoach(response.data);
+        const response = await axios.get(`/api/user/${userId}`);
+        setUser(response.data);
       } catch (error) {
-        console.error("Error loading coach data:", error);
-        setError("Unable to load coach profile.");
+        console.error("Error loading user data:", error);
+        setError("Unable to load user profile.");
       } finally {
         setLoading(false);
       }
     };
 
-    if (coachId) {
-      fetchCoachData();
+    if (userId) {
+      fetchUserData();
     }
-  }, [coachId]);
+  }, [userId]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
-  if (!coach) return <p>Coach not found.</p>;
+  if (!user) return <p>User not found.</p>;
 
   return (
     <section className="">
@@ -72,7 +72,7 @@ export default function CoachProfilePage() {
         <div className="grid py-24 justify-center gap-10 grid-cols-2 items-center">
           <div>
             <div className="text-[54px] text-black font-bold ">
-              {coach.name}
+              {user.name}
             </div>
             <div className="text-[45px] font-normal  text-black">
               World Class Football Manager
@@ -88,11 +88,11 @@ export default function CoachProfilePage() {
               $1,000 per hour
             </div>
             <div className="flex gap-20 text-xl text-black py-5">
-              <p>Contact: {coach.contact}</p>
+              <p>Contact: {user.contact}</p>
               <p>
                 Email:
-                <Link href={`mailto:${coach.email}`}>
-                  <a className="text-blue-600 underline"> {coach.email}</a>{" "}
+                <Link href={`mailto:${user.email}`}>
+                  <a className="text-blue-600 underline"> {user.email}</a>{" "}
                 </Link>
               </p>
             </div>

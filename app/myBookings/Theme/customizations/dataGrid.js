@@ -22,21 +22,20 @@ const styles = {
 export default function CustomizedDataGrid() {
   const [showUserDescription, setShowUserDescription] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-
   const toggleUserDescription = (user) => {
-    setSelectedUser(user); // Set the selected user
-    setShowUserDescription(user ? true : false); // Show if a user is selected
+    setSelectedUser(user);
+    setShowUserDescription((prev) => !prev);
   };
 
   return (
     <>
       {showUserDescription && selectedUser && (
-        <UserDescription user={selectedUser} /> // Display UserDescription before the grid
+        <UserDescription
+          user={selectedUser}
+          onClose={() => setShowUserDescription(false)}
+        />
       )}
-      <MyDataGrid
-        className="paddingTop:[10px] "
-        toggleUserDescription={toggleUserDescription}
-      />
+      <MyDataGrid toggleUserDescription={toggleUserDescription} />
     </>
   );
 }
@@ -244,7 +243,7 @@ export const columns = (toggleUserDescription) => [
         }}
       >
         <button
-          onClick={() => toggleUserDescription(params.row)} // Pass user data on click
+           onClick={() => toggleUserDescription(params.row)} // Pass user data on click
           style={{
             display: "flex",
             alignItems: "center",

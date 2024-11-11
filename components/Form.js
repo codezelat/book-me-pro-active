@@ -1,6 +1,7 @@
 // components/Form.js
 import React, { useState } from "react";
 import axios from "axios";
+import { TextField, Button, Modal, Box, Typography } from "@mui/material";
 
 const Form = ({ selectedDate, selectedTime, closeModal }) => {
   const [formData, setFormData] = useState({
@@ -17,11 +18,25 @@ const Form = ({ selectedDate, selectedTime, closeModal }) => {
     setFormData({ ...formData, [name]: value });
   };
 
+   const handleDateChange = (newValue) => {
+    setFormData({
+      ...formData,
+      selectedDate: newValue,
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log("Submitting data:", {
+      ...formData,
+      selectedDate,
+      selectedTime,
+    }); // Log the data being sent
+  
+
     try {
-      const response = await axios.post("/api/appointments/create", {
+      const response = await axios.post("/api/appointments", {
         ...formData,
         selectedDate,
         selectedTime,
@@ -38,6 +53,7 @@ const Form = ({ selectedDate, selectedTime, closeModal }) => {
   };
 
   return (
+    <Modal open={true} onClose={closeModal}>
     <div>
       <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
         Fill in your details
@@ -114,6 +130,7 @@ const Form = ({ selectedDate, selectedTime, closeModal }) => {
               value={formData.appointmentDetails}
               onChange={handleChange}
             ></textarea>
+
           </div>
         </div>
         <button
@@ -124,6 +141,7 @@ const Form = ({ selectedDate, selectedTime, closeModal }) => {
         </button>
       </form>
     </div>
+    </Modal>
   );
 };
 
