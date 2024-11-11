@@ -1,6 +1,7 @@
 // app/api/coach/[coachId]/route.js
 import { ObjectId } from "mongodb";
-import connectToDatabase from "@/Lib/mongodb";
+import connectToDatabase from "../../../../Lib/mongodb";
+import User from "@/models/user";
 
 export async function GET(req, { params }) {
     const { db } = await connectToDatabase();

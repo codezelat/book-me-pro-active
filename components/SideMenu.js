@@ -60,7 +60,7 @@ export default function SideMenu({ session }) {
           textAlign: "center",
           padding: "30px",
           gap: "30px",
-          // paddingTop: 10,
+          paddingTop: 6,
           // overflowY: "auto", // Ensures scrolling if content overflows
         }}
       >

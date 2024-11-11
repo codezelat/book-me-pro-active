@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
-export default function Coach() {
+export default function User() {
   // List of image URLs for small thumbnails
   const images = [
     "/images/coach/coach.png",
