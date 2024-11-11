@@ -2,18 +2,17 @@ import { CircleChevronUp, User, CalendarDays, Clock, Bell } from "lucide-react";
 import React from "react";
 import { useTheme } from "@mui/material/styles";
 import Button from "@mui/material/Button";
-import { Phone, Mail } from "lucide-react";
+import { Phone, Mail, CircleX, CircleCheck } from "lucide-react";
 
-const UserDescription = ({ user }) => {
+const UserDescription = ({ user, onClose }) => {
   const theme = useTheme();
-  const isDarkMode = theme.palette.mode === "dark"; // Check if dark mode is active
+  const isDarkMode = theme.palette.mode === "dark";
 
   if (!user) return null;
-
   return (
     <div
       className={`p-4 px-5 pb-10 ${
-        isDarkMode ? "bg-[#1E1E1E] text-white" : "bg-[#037D40] text-black"
+        isDarkMode ? "bg-[#1E1E1E] text-white" : "bg-[#F7FAFF] text-black"
       }`}
     >
       <div className="px-5 py-5">
@@ -63,6 +62,7 @@ const UserDescription = ({ user }) => {
           </div>
 
           <button
+            onClick={onClose}
             style={{
               backgroundColor: isDarkMode ? "#90CAF9" : "#037D40",
               cursor: "pointer",
@@ -87,73 +87,120 @@ const UserDescription = ({ user }) => {
             cumque itaque pariatur impedit ducimus!
           </p>
         </div>
+
         <div
-          className="flex"
+          className="flex justify-between items-center"
           style={{
             display: "flex",
             gap: "8px",
             alignItems: "center",
-            //justifyContent: "center",
+            justifyItems: "between",
             width: "100%",
             height: "100%",
           }}
         >
+          <div className="flex gap-2">
           <button
-            className="px-3 rounded-sm"
-            onClick={() => alert(`Calling ${params.value}`)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#037D40",
-              border: "1",
-              borderColor: "#037D40",
+              className=" rounded-sm px-2
+                py-60.5 text-white"
+              onClick={() => alert(`Calling ${params.value}`)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#037D40",
+                border: "1",
+                borderColor: "#037D40",
 
-              cursor: "pointer",
-              marginRight: "8px",
-            }}
-          >
-            <Phone
-              size={29}
-              style={{
-                color: "white",
-                // backgroundColor: "#fff",
-                borderRadius: "20%",
-                // border: "2px solid #037D40",
-                padding: "5px",
+                cursor: "pointer",
+                marginRight: "8px",
               }}
-            />
-            0760237431
-          </button>
-          {/* {params.value} */}
-          <button
-            className="px-3 rounded-sm"
-            onClick={() => alert(`Calling ${params.value}`)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#037D40",
-              border: "1",
-              borderColor: "#037D40",
-              
-              cursor: "pointer",
-              marginRight: "8px",
-            }}
-          >
-            <Mail
-              size={29}
+            >
+              <Phone
+                size={29}
+                style={{
+                  color: "white",
+                  // backgroundColor: "#fff",
+                  borderRadius: "20%",
+                  // border: "2px solid #037D40",
+                  padding: "5px",
+                }}
+              />
+              0760237431
+            </button>
+
+
+            <button
+              className=" rounded-sm px-2 text-white
+                py-0.5"
+              onClick={() => alert(`Calling ${params.value}`)}
               style={{
-                color: "white",
-                // backgroundColor: "#fff",
-                borderRadius: "20%",
-                // border: "2px solid #037D40",
-                padding: "5px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#037D40",
+                border: "1",
+                borderColor: "#037D40",
+
+                cursor: "pointer",
+                marginRight: "8px",
               }}
-            />
-            sakuniakela273@gmail.com
-          </button>
-          {/* {params.value} */}
+            >
+              <Mail
+                size={29}
+                style={{
+                  color: "white",
+                  // backgroundColor: "#fff",
+                  borderRadius: "20%",
+                  // border: "2px solid #037D40",
+                  padding: "5px",
+                }}
+              />
+              sakuniakela273@gmail.com
+            </button>
+
+          </div>
+          <div className="flex gap-2 px-2
+                py-0.5"> 
+          <Button
+              sx={{
+                bgcolor: "#D50000",
+                color: "white",
+                px: 2,
+                py: 0.5,
+                "&:hover": { bgcolor: "#B20000" },
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1.5,
+              }}
+              size="small"
+              onClick={() => alert("Declined")}
+            >
+              Decline
+              <CircleX sx={{ color: "white", fill: "white" }} />
+            </Button>
+
+            <Button
+              sx={{
+                bgcolor: "#037D40",
+                color: "white",
+                px: 2,
+                py: 0.5,
+                "&:hover": { bgcolor: "#025b2e" },
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1.5,
+              }}
+              size="small"
+              onClick={() => alert("Accepted")}
+            >
+              Approve
+              <CircleCheck sx={{ color: "white", fill: "white" }} />
+            </Button>
+
+          </div>
         </div>
       </div>
     </div>

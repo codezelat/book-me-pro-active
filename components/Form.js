@@ -21,7 +21,7 @@ const Form = ({ selectedDate, selectedTime, closeModal }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/appointments/create", {
+      const response = await axios.post("/api/appointments", {
         ...formData,
         selectedDate,
         selectedTime,

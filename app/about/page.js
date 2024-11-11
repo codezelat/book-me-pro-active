@@ -207,34 +207,6 @@ export default function About() {
           </div>
         </div>
       </section>
-
-      <section>
-        <div className="container py-24 mx-auto px-20 ">
-          <div>
-            <div className="text-4xl font-extrabold text-black text-center">
-              Behind The Screen
-            </div>
-            <div className="text-black font-thin mt-6 max-w-5xl mx-auto text-center  text-2xl">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo.
-            </div>
-            <div>
-              <div className="grid mt-6  grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-6">
-                {teamMembers.map((member, index) => (
-                  <TeamMemberCard
-                    key={index}
-                    name={member.name}
-                    quote={member.quote}
-                    image={member.image}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </>
   );
 }

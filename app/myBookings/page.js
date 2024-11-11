@@ -122,7 +122,7 @@ export default function Dashboard(props) {
             >
               {/* My Bookings Header */}
               <Box display="flex" justifyContent="space-between" pt={2}>
-                <Box className="text-black" sx={{}}>
+                <Box className="text-black text-[18px] font-bold" sx={{}}>
                   My Bookings
                 </Box>
                 <Stack direction="row" spacing={3} pt={5} pb={2}>

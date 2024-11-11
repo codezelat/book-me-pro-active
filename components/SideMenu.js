@@ -151,6 +151,7 @@ export default function SideMenu({ session }) {
       <Box
         sx={{
           padding: "5px 50px 0px 60px",
+
           display: "flex",
           alignItems: "center",
           fontWeight: 700,
@@ -158,7 +159,7 @@ export default function SideMenu({ session }) {
         }}
       >
         <Button
-          startIcon={<LogOut sx={{ fill: "#A3D2D5" }} />}
+          startIcon={<LogOut sx={{ fill: "#A3D2D5", padding: "5px" }} />}
           sx={{
             fontFamily: "Kanit, sans-serif",
             color: "#037D40",
@@ -168,7 +169,7 @@ export default function SideMenu({ session }) {
             opacity: 0.8,
             "&:hover": { backgroundColor: "#D1E8D5", opacity: 0.8 },
             "&:hover": {
-              bgcolor: theme.palette.mode === "dark" ? "#055a2f" : "#036b34", // Darker shade for dark mode
+              bgcolor: theme.palette.mode === "dark" ? "#333333" : "#D1E8D5", // Darker shade for dark mode
             },
           }}
           onClick={() => signOut()}
