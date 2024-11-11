@@ -16,21 +16,23 @@ const kanit = Kanit({
 export default function Layout({ children }) {
   const pathname = usePathname();
 
-  // Check if the current page is any dashboard path
-  const isDashboard = pathname.startsWith("/dashboard");
+  // Check if the current page is not dashboard or myBookings
+  const showHeaderAndFooter = !(
+    pathname.startsWith("/dashboard") || pathname.startsWith("/myBookings")
+  );
 
   return (
     <SessionProvider>
       <html lang="en">
         <body className={kanit.className}>
           {/* Only show Header if it's not the dashboard or myBookings */}
-          {!isDashboard && <Header />}
+          {showHeaderAndFooter && <Header />}
 
           {/* Page content */}
           {children}
 
           {/* Only show Footer if it's not the dashboard or myBookings */}
-          {!isDashboard && <Footer />}
+          {showHeaderAndFooter && <Footer />}
         </body>
       </html>
     </SessionProvider>

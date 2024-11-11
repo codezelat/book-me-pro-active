@@ -121,7 +121,7 @@ export const columns = (toggleUserDescription) => [
         }}
       >
         <button
-          onClick={() => alert(`Calling ${params.value}`)}
+          //onClick={() => alert(Calling ${params.value})}
           style={{
             display: "flex",
             alignItems: "center",
@@ -147,7 +147,7 @@ export const columns = (toggleUserDescription) => [
         </button>
         {params.value}
         <button
-          onClick={() => alert(`Emailing ${params.value}`)}
+          //onClick={() => alert(Emailing ${params.value})}
           style={{
             display: "flex",
             alignItems: "center",

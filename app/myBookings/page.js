@@ -43,7 +43,6 @@ export default function Dashboard(props) {
 
   const handleProfileClick = () => setShowProfileEdit(true);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const theme = useTheme(); // Get theme instance
   const isDarkMode = theme.palette.mode === "dark"; // Dark mode check
 
@@ -123,7 +122,7 @@ export default function Dashboard(props) {
             >
               {/* My Bookings Header */}
               <Box display="flex" justifyContent="space-between" pt={2}>
-                <Box className="text-black font-[700] text-[18px]" sx={{}}>
+                <Box className="text-black text-[18px] font-bold" sx={{}}>
                   My Bookings
                 </Box>
                 <Stack direction="row" spacing={3} pt={5} pb={2}>
