@@ -1,186 +1,180 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
-import MuiDrawer, { drawerClasses } from "@mui/material/Drawer";
+import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import MenuContent from "./MenuContent";
 import Button from "@mui/material/Button";
-import { SquareArrowRight } from "lucide-react";
-import { LogOut } from "lucide-react";
+import { SquareArrowRight, LogOut } from "lucide-react";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
+import { useTheme } from "@mui/material/styles";
+import { isOverflown } from "@mui/x-data-grid/utils/domUtils";
 
+const drawerWidth = 357;
 
-const drawerWidth = 357; // Updated width to fixed 357px
-
-
-const Drawer = styled(MuiDrawer)({
+const Drawer = styled(MuiDrawer)(({ theme }) => ({
   width: drawerWidth,
   flexShrink: 0,
+  overflow: "hidden",
   boxSizing: "border-box",
-  [`& .${drawerClasses.paper}`]: {
+  "& .MuiDrawer-paper": {
     width: drawerWidth,
-    boxSizing: "border-box",
-    backgroundColor: "#ffffff", // Background color
-    padding: "60px 30px", // Top, bottom, left, right padding
-    gap: 0,
-    borderRadius: "5px 0px 0px 0px", // Border radius
-    opacity: 1, // Fully visible
+    backgroundColor: theme.palette.mode === "dark" ? "#121212" : "#ffffff",
+    color: theme.palette.mode === "dark" ? "#ffff" : "#0000",
+    padding: "70px 40px",
+    borderRadius: "5px 0px 0px 0px",
+    overflow: "hidden",
   },
-});
+}));
 
-export default function SideMenu( {session}) {
-  // State to track the active section
+export default function SideMenu({ session }) {
   const [activeSection, setActiveSection] = React.useState("Home");
+  const theme = useTheme();
 
-  // Function to handle section changes
   const handleSectionChange = (section) => {
     setActiveSection(section);
   };
 
-
   return (
     <Drawer
-      variant="permanent"
+      variant="permanent" // Set variant directly here
       sx={{
-        display: { xs: "none", md: "block" },
-        height: 913, // Set height to 913px
-        justifyContent: "space-between",
-
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        gap: "30px",
+        paddingBottom: 5,
+        height: "calc(100vh - 60px)", // Adjust height as needed
+        overflow: "hidden",
       }}
     >
-      {/* Profile Section */}
       <Box
         sx={{
-          width: "297px", // Fill width to specified 297px
-          height: "auto", // Hug height (adjusts based on content)
-          gap: "30px", // Gap between children
           display: "flex",
-          alignItems: "center",
           flexDirection: "column",
+          alignItems: "center",
           textAlign: "center",
-          pb: "30px",
+          padding: "30px",
+          gap: "30px",
+          // paddingTop: 10,
+          // overflowY: "auto", // Ensures scrolling if content overflows
         }}
       >
         <Avatar
           alt={session?.user?.name || "User"}
           src={session?.user?.image || "default-image.jpg"}
-          sx={{
-            width: "75px",
-            height: "75px",
-          }}
+          sx={{ width: "75px", height: "75px" }}
         />
 
         <Box
           sx={{
             width: "198px",
             height: "45px",
-            gap: "5px",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center", // Centers content horizontally within the Box
-          }}
-        >
-        
-
-         
-        </Box>
-
-        <Button
-          sx={{
-            width: "188px",
-            height: "46px",
-            padding: "12px 30px",
-            gap: "20px",
-            borderRadius: "5px 0px 0px 0px",
-            bgcolor: "#037D40",
-            color: "white",
-            display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            "&:hover": {
-              bgcolor: "#037D40",
-            },
           }}
-          size="large"
         >
-          Edit Profile
-          <SquareArrowRight sx={{ color: "white", fill: "white" }} />
-        </Button>
+          <Button
+            sx={{
+              width: "188px",
+              height: "46px",
+              gap: "20px",
+              borderRadius: "5px 0px 0px 0px",
+              bgcolor: "#037D40",
+              color: "white",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: "Kanit, sans-serif",
+              "&:hover": { bgcolor: "#036b34" },
+            }}
+            size="large"
+          >
+            Edit Profile
+            <SquareArrowRight sx={{ color: "white", fill: "white" }} />
+          </Button>
+        </Box>
 
         <Typography
           variant="body2"
-          sx={{width: "147px",
+          sx={{
+            width: "147px",
             height: "22px",
             textAlign: "center",
             fontFamily: "Kanit, sans-serif",
             fontSize: "18px",
             fontWeight: 700,
-            lineHeight: "21.6px",}}
+            color: theme.palette.text.primary,
+          }}
         >
           {session?.user?.name || "Guest"}
         </Typography>
-        <Typography variant="caption" sx={{  width: "198px",
-              height: "18px",
-              gap: 0,
-              fontFamily: "Kanit, sans-serif",
-              fontSize: "15px",
-              fontWeight: 400,
-              lineHeight: "18px",
-              textAlign: "center",
-              color: "#037D40",
-              display: "inline-block",
-              padding: "2px 4px",}}>
+        <Typography
+          variant="caption"
+          sx={{
+            width: "198px",
+            height: "18px",
+            fontFamily: "Kanit, sans-serif",
+            fontSize: "15px",
+            fontWeight: 400,
+            textAlign: "center",
+            color: "#037D40",
+            padding: "2px 4px",
+          }}
+        >
           {session?.user?.role || "Member"}
         </Typography>
-
-      </Box>
-      <Box sx={{
-        px:2,
-        wordBreak:"break-word"
-      
-      }}>
-        <Typography variant="subtitle2">
-          Your Coach Profile Page Link:
-        </Typography>
-        <Link
-          href={`/coach/${session.user.id}`}
-          className="text-blue-500 underline"
-        >
-          {`https://yourdomain.com/coach/${session.user.id}`}
-        </Link>
       </Box>
 
-      <Divider />
+      {session && session.user && (
+        <Box sx={{ px: 2, wordBreak: "break-word", color: "black" }}>
+          <Typography variant="subtitle2">
+            Your Coach Profile Page Link:
+          </Typography>
+          <Link
+            href={`/coach/${session.user.id}`}
+            className="text-blue-500 underline "
+            sx={{ color: theme.palette.mode === "dark" ? "white" : "black" }}
+          >
+            {`https://yourdomain.com/coach/${session.user.id}`}
+          </Link>
+        </Box>
+      )}
 
-      {/* Pass session to MenuContent */}
+      <Divider sx={{ backgroundColor: "#A3D2D5" }} />
       <MenuContent session={session} />
-
-      {/* Additional Options */}
       <Box
         sx={{
-
-          width: "297px", // Set the width to 297px
-          height: "24px", // Set the height to 24px
-          padding: "0px 30px", // Add 30px padding on the left and right
-          gap: "15px", // Set gap between items to 15px
-
-          display: "flex", // Use flex layout for alignment
-          alignItems: "center", // Center items vertically
-
+          padding: "5px 50px 0px 60px",
+          display: "flex",
+          alignItems: "center",
+          fontWeight: 700,
+          fontFamily: "Kanit, sans-serif",
         }}
       >
-         <LogOut 
+        <Button
+          startIcon={<LogOut sx={{ fill: "#A3D2D5" }} />}
           sx={{
-            width: "24px",
-            height: "24px",
-            padding: "3px 0px 0px 0px",
-            fill: "#037D40", // Change icon color to #037D40
+            fontFamily: "Kanit, sans-serif",
+            color: "#037D40",
+            textTransform: "none",
+            display: "flex",
+            alignItems: "center",
+            opacity: 0.8,
+            "&:hover": { backgroundColor: "#D1E8D5", opacity: 0.8 },
+            "&:hover": {
+              bgcolor: theme.palette.mode === "dark" ? "#055a2f" : "#036b34", // Darker shade for dark mode
+            },
           }}
-        />
-       
-        <Button sx={{ color: "#037D40" }}>Log Out</Button>
+          onClick={() => signOut()}
+        >
+          Log Out
+        </Button>
       </Box>
     </Drawer>
   );

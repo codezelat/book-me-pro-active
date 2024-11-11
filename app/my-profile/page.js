@@ -68,7 +68,7 @@ export default function MyProfile() {
               onClick={() => setEditMode(true)}
               className="bg-blue-600 text-white p-2 rounded mt-4"
             >
-              Edit Profile
+              Book Me
             </button>
           </div>
         ) : (

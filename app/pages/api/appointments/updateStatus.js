@@ -1,6 +1,6 @@
 // pages/api/appointments/updateStatus.js
 import connectToDatabase from '../../../../Lib/mongodb';
-import Appointment from '../../../../server/models/Appointments';
+import Appointment from '../../../../server/models/Appointment';
 
 export default async function handler(req, res) {
     await connectToDatabase();

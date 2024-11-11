@@ -1,18 +1,17 @@
-
-import * as React from 'react';
-import Grid from '@mui/material/Grid2';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Copyright from '../app/internals/components/copyright';
-import BookingRequestStats from './BookingRequestStats';
-import CustomizedTreeView from './CustomizedTreeView';
-import CustomizedDataGrid from './CustomizedDataGrid';
-import HighlightedCard from './HighlightedCard';
-import PageViewsBarChart from './PageViewsBarChart';
-import SessionsChart from './SessionsChart';
-
-import StatCard from './StatCard';
+import * as React from "react";
+import Grid from "@mui/material/Grid2";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles"; // Import useTheme
+import Copyright from "../app/internals/components/copyright";
+import CustomizedTreeView from "./CustomizedTreeView";
+import CustomizedDataGrid from "./CustomizedDataGrid";
+import HighlightedCard from "./HighlightedCard";
+import PageViewsBarChart from "./PageViewsBarChart";
+import SessionsChart from "./SessionsChart";
+import StatCard from "./StatCard";
+import BookingRequestStats from "./BookingRequestStats";
 
 const data = [
   {
@@ -20,63 +19,56 @@ const data = [
     value: "14k",
     interval: "Last 30 days",
     trend: "up",
-    data: [
-      200, 24, 220, 260, 240, 380, 100, 240, 280, 240, 300, 340, 320, 360, 340,
-      380, 360, 400, 380, 420, 400, 640, 340, 460, 440, 480, 460, 600, 880, 920,
-    ],
+    data: [],
   },
   {
     title: "Booking Requests",
     value: "325",
     interval: "Last 30 days",
     trend: "down",
-    data: [
-      1640, 1250, 970, 1130, 1050, 900, 720, 1080, 900, 450, 920, 820, 840, 600,
-      820, 780, 800, 760, 380, 740, 660, 620, 840, 500, 520, 480, 400, 360, 300,
-      220,
-    ],
+    data: [],
   },
   {
     title: "Profile Clicks",
     value: "200k",
     interval: "Last 30 days",
     trend: "neutral",
-    data: [
-      500, 400, 510, 530, 520, 600, 530, 520, 510, 730, 520, 510, 530, 620, 510,
-      530, 520, 410, 530, 520, 610, 530, 520, 610, 530, 420, 510, 430, 520, 510,
-    ],
+    data: [],
   },
 ];
 
 export default function MainGrid() {
+  const theme = useTheme(); // Use theme within the component
+  const isDarkMode = theme.palette.mode === "dark"; // Check if dark mode is active
+
   return (
     <Box
+      className="custom-padding"
       sx={{
         width: "100%",
-        height: "913px",
-        gap: "15px",
-        maxWidth: { sm: "100%", md: "1700px" },
+        height: "auto",
+        maxWidth: { xs: "100%", md: "1700px" },
+        paddingTop: 10,
+        paddingLeft: 30,
+        paddingRight: 20,
+        position: "fixed",
+        bgcolor: isDarkMode ? "background.default" : "background.paper",
+        color: isDarkMode ? "text.primary" : "text.secondary",
       }}
     >
-      {/* cards */}
-
-      <Grid
-        container
-        spacing={2}
-        columns={12}
-        sx={{ mb: (theme) => theme.spacing(2) }}
-      >
+      {/* Stat cards */}
+      <Grid container spacing={2} sx={{ mb: 2 }}>
         {data.map((card, index) => (
           <Grid
             key={index}
             item
             xs={12}
             sm={6}
-            lg={3}
+            md={3}
             sx={{
               width: "402px",
               height: "159px",
-              padding: "22px 9px 22px 4px",
+              padding: "10px",
               gap: "20px",
               borderRadius: "5px 0px 0px 0px",
             }}
@@ -84,88 +76,69 @@ export default function MainGrid() {
             <StatCard {...card} />
           </Grid>
         ))}
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>{/* <HighlightedCard /> */}</Grid>
-
-        {/* Flex container for ChartUserByCountry and SessionsChart */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "15px", // Adjusts the space between charts
-            width: "1236px",
-            alignItems: "center",
-            
-            height: "370px",
-          }}
-        >
-          <Grid
-            item
-            xs={12}
-            md={6}
-            sx={{
-              width: "252px",
-              height: "370px",
-
-              borderRadius: "5px 0px 0px 0px",
-              justifyContent: "space-between",
-            }}
-          >
-            <BookingRequestStats />
-          </Grid>
-
-          <Grid
-            item
-            xs={12}
-            md={6}
-            sx={{
-              width: "969px",
-              height: "370px",
-              borderRadius: "5px 0px 0px 0px",
-              
-              
-            }}
-          >
-            <SessionsChart />
-          </Grid>
-        </Box>
+        <Grid item xs={12} sm={6} lg={3}>
+          {/* <HighlightedCard /> */}
+        </Grid>
       </Grid>
 
+      {/* Flex container for BookingRequestStats and SessionsChart */}
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        spacing={2}
+        sx={{
+          width: "100%",
+          maxWidth: { md: "1236px" },
+          height: { xs: "auto", md: "370px" },
+          mb: 5,
+        }}
+      >
+        <BookingRequestStats />
+
+        <Box
+          sx={{
+            width: { xs: "100%", md: "969px" },
+            height: { xs: "300px", md: "370px" },
+            borderRadius: "5px 0px 0px 0px",
+          }}
+        >
+          <SessionsChart />
+        </Box>
+      </Stack>
+
+      {/* CustomizedDataGrid and additional components */}
       <Grid
         container
         spacing={2}
-        columns={12}
         sx={{
-          width: "1236px",
-          height: "354px",
-          gap: "15px",
+          width: "100%",
+          maxWidth: { md: "1236px" },
         }}
       >
         <Grid
           item
           xs={12}
-          lg={9}
+          md={9}
           sx={{
-            width: "100%", // Adjust to fill available space within parent container
-            height: "100%",
+            width: "100%",
+            height: "350px",
           }}
         >
           <CustomizedDataGrid />
         </Grid>
-        <Grid
+        {/* <Grid
           item
           xs={12}
-          lg={3}
+          md={3}
           sx={{
-            width: "100%", // Adjust to fill available space within parent container
-            height: "100%",
+            width: "100%",
+            height: "354px",
           }}
-        >
-          <Stack gap={2} direction={{ xs: "column", sm: "row", lg: "column" }}>
-            {/* <CustomizedTreeView />
-      <ChartUserByCountry /> */}
-          </Stack>
-        </Grid>
-
+        > */}
+        {/* <Stack gap={2} direction={{ xs: "column", sm: "row", lg: "column" }}> */}
+        {/* <CustomizedTreeView />
+                <ChartUserByCountry /> */}
+        {/* </Stack>
+        </Grid> */}
       </Grid>
 
       {/* <Copyright sx={{ my: 4 }} /> */}

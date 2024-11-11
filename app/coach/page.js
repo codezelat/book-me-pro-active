@@ -120,7 +120,7 @@ export default function Coach() {
       </section>
       <section>
         <div className="container pb-24 mx-auto px-20">
-          <div className="text-3xl text-black font-extrabold mb-6">
+          <div className="text-[26px] text-black font-700 mb-6">
             Description
           </div>
           <div className="text-xl mb-4 text-black">

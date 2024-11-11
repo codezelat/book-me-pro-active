@@ -14,7 +14,7 @@ import UserDescription from "@/components/UserDescription";
 const styles = {
   customRowSpacing: {
     "& .MuiDataGrid-row": {
-      marginBottom: "10px", // Adjust this value for the desired row spacing
+      // marginBottom: "10px", // Adjust this value for the desired row spacing
     },
   },
 };
@@ -33,7 +33,10 @@ export default function CustomizedDataGrid() {
       {showUserDescription && selectedUser && (
         <UserDescription user={selectedUser} /> // Display UserDescription before the grid
       )}
-      <MyDataGrid toggleUserDescription={toggleUserDescription} />
+      <MyDataGrid
+        className="paddingTop:[10px] "
+        toggleUserDescription={toggleUserDescription}
+      />
     </>
   );
 }
@@ -43,7 +46,13 @@ function MyDataGrid({ toggleUserDescription }) {
   // CSS for custom row spacing
 
   return (
-    <div style={{ height: 500, width: "100%", padding: "10px" }}>
+    <div
+      style={{
+        height: 350,
+        width: "100%",
+        padding: "10px",
+      }}
+    >
       <DataGrid
         rows={rows}
         columns={columns(toggleUserDescription)} // Pass the function as a parameter

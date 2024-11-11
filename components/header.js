@@ -43,10 +43,10 @@ export default function Header() {
       >
         <div className="container mx-auto px-20">
           <div className="justify-between items-center flex py-5">
-            {/* Company Logo */}
+            {/* Company Logo */} 
             <div
               className={`text-3xl font-extrabold ${
-                isHomePage ? "text-white" : "text-blue-700"
+                isHomePage ? "text-white" : "text-primary"
               }`}
             >
               <Link href="/">
@@ -69,7 +69,7 @@ export default function Header() {
             {/* Navigation Links */}
             <div
               className={`flex items-center gap-12 text-lg ${
-                isHomePage ? "text-white" : "text-blue-600"
+                isHomePage ? "text-white" : "text-primary"
               }`}
             >
               <div className="cursor-pointer duration-200">
@@ -87,8 +87,8 @@ export default function Header() {
                 <button
                   className={`${
                     isHomePage
-                      ? "bg-blue-600 text-white"
-                      : "bg-blue-600 text-white"
+                      ? "bg-primary text-white"
+                      : "bg-primary text-white"
                   } flex gap-3 items-center py-2 px-4 rounded`}
                 >
                   <div className="w-5">
@@ -106,8 +106,8 @@ export default function Header() {
                 <button
                   className={`${
                     isHomePage
-                      ? "bg-blue-600 text-white"
-                      : "bg-blue-600 text-white"
+                      ? "bg-primary text-white"
+                      : "bg-primary text-white"
                   } flex gap-3 items-center py-2 px-4 rounded`}
                 >
                   <div className="w-5">

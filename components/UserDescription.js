@@ -1,28 +1,29 @@
-// UserDescription Component
-import { CircleChevronUp } from "lucide-react";
+import { CircleChevronUp, User, CalendarDays, Clock, Bell } from "lucide-react";
 import React from "react";
-import { User } from "lucide-react";
-import { CalendarDays } from "lucide-react";
-import { Clock } from "lucide-react";
-import { Bell } from "lucide-react";
+import { useTheme } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import { Phone, Mail } from "lucide-react";
 
 const UserDescription = ({ user }) => {
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark"; // Check if dark mode is active
+
   if (!user) return null;
 
   return (
-    <div className="bg-[#F7FAFF] p-4 text-black px-5">
+    <div
+      className={`p-4 px-5 pb-10 ${
+        isDarkMode ? "bg-[#1E1E1E] text-white" : "bg-[#037D40] text-black"
+      }`}
+    >
       <div className="px-5 py-5">
         <div className="flex justify-between items-center pb-5">
-          <div className="flex gap-2 ">
+          <div className="flex gap-2">
             <User
               height={17}
               width={17}
-              className="fill-white"
               style={{
-                outline: "none",
-                border: "none",
-                boxShadow: "none", // Ensures no shadow
-                stroke: "#037D40", // Removes any SVG stroke if present
+                stroke: isDarkMode ? "#90CAF9" : "#037D40",
               }}
             />
             <strong>Name:</strong> {user.Name}
@@ -32,9 +33,8 @@ const UserDescription = ({ user }) => {
             <CalendarDays
               height={17}
               width={17}
-              className="fill-white"
               style={{
-                stroke: "#037D40",
+                stroke: isDarkMode ? "#90CAF9" : "#037D40",
               }}
             />
             <strong>Date:</strong> {user.Date}
@@ -44,9 +44,8 @@ const UserDescription = ({ user }) => {
             <Clock
               height={17}
               width={17}
-              className="fill-white"
               style={{
-                stroke: "#037D40",
+                stroke: isDarkMode ? "#90CAF9" : "#037D40",
               }}
             />
             <strong>Time:</strong> {user.Time}
@@ -56,16 +55,16 @@ const UserDescription = ({ user }) => {
             <Bell
               height={17}
               width={17}
-              className="fill-white"
               style={{
-                stroke: "#037D40",
+                stroke: isDarkMode ? "#90CAF9" : "#037D40",
               }}
             />
             <strong>Status:</strong> {user.status}
           </div>
+
           <button
             style={{
-              backgroundColor: "#037D40",
+              backgroundColor: isDarkMode ? "#90CAF9" : "#037D40",
               cursor: "pointer",
             }}
           >
@@ -77,7 +76,7 @@ const UserDescription = ({ user }) => {
         </div>
         <div>
           <strong>Description:</strong>
-          <p className="pt-5 text-wrap md:text-balance">
+          <p className="pt-5 text-wrap pb-5">
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi quasi
             voluptatem voluptate sunt dolor consectetur, perspiciatis nisi
             praesentium molestias, repudiandae maiores culpa dolore architecto,
@@ -87,6 +86,74 @@ const UserDescription = ({ user }) => {
             molestias, repudiandae maiores culpa dolore architecto, blanditiis
             cumque itaque pariatur impedit ducimus!
           </p>
+        </div>
+        <div
+          className="flex"
+          style={{
+            display: "flex",
+            gap: "8px",
+            alignItems: "center",
+            //justifyContent: "center",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <button
+            className="px-3 rounded-sm"
+            onClick={() => alert(`Calling ${params.value}`)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#037D40",
+              border: "1",
+              borderColor: "#037D40",
+
+              cursor: "pointer",
+              marginRight: "8px",
+            }}
+          >
+            <Phone
+              size={29}
+              style={{
+                color: "white",
+                // backgroundColor: "#fff",
+                borderRadius: "20%",
+                // border: "2px solid #037D40",
+                padding: "5px",
+              }}
+            />
+            0760237431
+          </button>
+          {/* {params.value} */}
+          <button
+            className="px-3 rounded-sm"
+            onClick={() => alert(`Calling ${params.value}`)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#037D40",
+              border: "1",
+              borderColor: "#037D40",
+              
+              cursor: "pointer",
+              marginRight: "8px",
+            }}
+          >
+            <Mail
+              size={29}
+              style={{
+                color: "white",
+                // backgroundColor: "#fff",
+                borderRadius: "20%",
+                // border: "2px solid #037D40",
+                padding: "5px",
+              }}
+            />
+            sakuniakela273@gmail.com
+          </button>
+          {/* {params.value} */}
         </div>
       </div>
     </div>

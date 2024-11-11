@@ -1,17 +1,17 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Chip from '@mui/material/Chip';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { LineChart } from '@mui/x-charts/LineChart';
+import * as React from "react";
+import PropTypes from "prop-types";
+import { useTheme } from "@mui/material/styles";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Chip from "@mui/material/Chip";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { LineChart } from "@mui/x-charts/LineChart";
 
 function AreaGradient({ color, id }) {
   return (
@@ -31,8 +31,8 @@ AreaGradient.propTypes = {
 
 function getDaysInMonth(month, year) {
   const date = new Date(year, month, 0);
-  const monthName = date.toLocaleDateString('en-US', {
-    month: 'short',
+  const monthName = date.toLocaleDateString("en-US", {
+    month: "short",
   });
   const daysInMonth = date.getDate();
   const days = [];
@@ -64,7 +64,7 @@ export default function SessionsChart() {
   };
 
   return (
-    <Card variant="outlined" sx={{ width: '100%' }}>
+    <Card variant="outlined" sx={{ width: "100%" }}>
       <CardContent>
         {/* Header Section */}
         <Stack
@@ -72,14 +72,14 @@ export default function SessionsChart() {
           justifyContent="space-between"
           alignItems="center"
           mb={2}
-          sx={{ flexWrap: { xs: 'wrap', sm: 'nowrap' } }} // Ensures horizontal layout on mobile
+          sx={{ flexWrap: { xs: "wrap", sm: "nowrap" } }} // Ensures horizontal layout on mobile
         >
           <Typography
             component="h2"
             variant="subtitle1"
             gutterBottom
             sx={{
-              fontSize: { xs: '0.8rem', sm: '1rem' }, // 20% smaller on mobile
+              fontSize: { xs: "0.8rem", sm: "1rem" }, // 20% smaller on mobile
             }}
           >
             Bookings
@@ -89,16 +89,28 @@ export default function SessionsChart() {
             spacing={1}
             alignItems="center"
             sx={{
-              flexWrap: { xs: 'wrap', sm: 'nowrap' }, // Horizontal layout on mobile
+              flexWrap: { xs: "wrap", sm: "nowrap" }, // Horizontal layout on mobile
               gap: { xs: 0.3, sm: 1 }, // Space adjustment for mobile
             }}
           >
-            <Button variant="outlined" size="small">Today</Button>
-            <Button variant="outlined" size="small">Yesterday</Button>
-            <Button variant="outlined" size="small">Week</Button>
-            <Button variant="outlined" size="small">Month</Button>
-            <Button variant="outlined" size="small">Quarter</Button>
-            <Button variant="outlined" size="small">Year</Button>
+            <Button variant="outlined" size="small">
+              Today
+            </Button>
+            <Button variant="outlined" size="small">
+              Yesterday
+            </Button>
+            <Button variant="outlined" size="small">
+              Week
+            </Button>
+            <Button variant="outlined" size="small">
+              Month
+            </Button>
+            <Button variant="outlined" size="small">
+              Quarter
+            </Button>
+            <Button variant="outlined" size="small">
+              Year
+            </Button>
 
             <Button
               aria-controls="simple-menu"
@@ -124,19 +136,19 @@ export default function SessionsChart() {
         </Stack>
 
         {/* Chart Section */}
-        <Stack sx={{ justifyContent: 'space-between' }}>
+        <Stack sx={{ justifyContent: "space-between" }}>
           <Stack
             direction="row"
             sx={{
-              alignContent: { xs: 'center', sm: 'flex-start' },
-              alignItems: 'center',
+              alignContent: { xs: "center", sm: "flex-start" },
+              alignItems: "center",
               gap: 1,
             }}
           >
             <Typography
               variant="h4"
               component="p"
-              sx={{ fontSize: { xs: '0.4rem', sm: '2.5rem' } }} // 20% smaller on mobile
+              sx={{ fontSize: { xs: "0.4rem", sm: "2rem" } }} // 20% smaller on mobile
             >
               13,277
             </Typography>
@@ -144,7 +156,10 @@ export default function SessionsChart() {
           </Stack>
           <Typography
             variant="caption"
-            sx={{ color: 'text.secondary', fontSize: { xs: '0.4rem', sm: '0.75rem' } }} // 20% smaller on mobile
+            sx={{
+              color: "text.secondary",
+              fontSize: { xs: "0.4rem", sm: "0.75rem" },
+            }} // 20% smaller on mobile
           >
             Sessions per day for the last 30 days
           </Typography>
@@ -153,66 +168,66 @@ export default function SessionsChart() {
           colors={colorPalette}
           xAxis={[
             {
-              scaleType: 'point',
+              scaleType: "point",
               data,
               tickInterval: (index, i) => (i + 1) % 5 === 0,
             },
           ]}
           series={[
             {
-              id: 'direct',
-              label: 'Direct',
+              id: "direct",
+              label: "Direct",
               showMark: false,
-              curve: 'linear',
-              stack: 'total',
+              curve: "linear",
+              stack: "total",
               area: true,
-              stackOrder: 'ascending',
+              stackOrder: "ascending",
               data: [
-                300, 900, 600, 1200, 1500, 1800, 2400, 2100, 2700, 3000, 1800, 3300,
-                3600, 3900, 4200, 4500, 3900, 4800, 5100, 5400, 4800, 5700, 6000,
-                6300, 6600, 6900, 7200, 7500, 7800, 8100,
+                300, 900, 600, 1200, 1500, 1800, 2400, 2100, 2700, 3000, 1800,
+                3300, 3600, 3900, 4200, 4500, 3900, 4800, 5100, 5400, 4800,
+                5700, 6000, 6300, 6600, 6900, 7200, 7500, 7800, 8100,
               ],
             },
             {
-              id: 'referral',
-              label: 'Referral',
+              id: "referral",
+              label: "Referral",
               showMark: false,
-              curve: 'linear',
-              stack: 'total',
+              curve: "linear",
+              stack: "total",
               area: true,
-              stackOrder: 'ascending',
+              stackOrder: "ascending",
               data: [
-                500, 900, 700, 1400, 1100, 1700, 2300, 2000, 2600, 2900, 2300, 3200,
-                3500, 3800, 4100, 4400, 2900, 4700, 5000, 5300, 5600, 5900, 6200,
-                6500, 5600, 6800, 7100, 7400, 7700, 8000,
+                500, 900, 700, 1400, 1100, 1700, 2300, 2000, 2600, 2900, 2300,
+                3200, 3500, 3800, 4100, 4400, 2900, 4700, 5000, 5300, 5600,
+                5900, 6200, 6500, 5600, 6800, 7100, 7400, 7700, 8000,
               ],
             },
             {
-              id: 'organic',
-              label: 'Organic',
+              id: "organic",
+              label: "Organic",
               showMark: false,
-              curve: 'linear',
-              stack: 'total',
-              stackOrder: 'ascending',
+              curve: "linear",
+              stack: "total",
+              stackOrder: "ascending",
               data: [
-                1000, 1500, 1200, 1700, 1300, 2000, 2400, 2200, 2600, 2800, 2500,
-                3000, 3400, 3700, 3200, 3900, 4100, 3500, 4300, 4500, 4000, 4700,
-                5000, 5200, 4800, 5400, 5600, 5900, 6100, 6300,
+                1000, 1500, 1200, 1700, 1300, 2000, 2400, 2200, 2600, 2800,
+                2500, 3000, 3400, 3700, 3200, 3900, 4100, 3500, 4300, 4500,
+                4000, 4700, 5000, 5200, 4800, 5400, 5600, 5900, 6100, 6300,
               ],
               area: true,
             },
           ]}
-          height={250}
+          height={215}
           margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
           grid={{ horizontal: true }}
           sx={{
-            '& .MuiAreaElement-series-organic': {
+            "& .MuiAreaElement-series-organic": {
               fill: "url('#organic')",
             },
-            '& .MuiAreaElement-series-referral': {
+            "& .MuiAreaElement-series-referral": {
               fill: "url('#referral')",
             },
-            '& .MuiAreaElement-series-direct': {
+            "& .MuiAreaElement-series-direct": {
               fill: "url('#direct')",
             },
           }}

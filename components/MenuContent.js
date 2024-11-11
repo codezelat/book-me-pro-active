@@ -8,7 +8,6 @@ import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import AnalyticsRoundedIcon from "@mui/icons-material/AnalyticsRounded";
-import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
@@ -35,9 +34,10 @@ export default function MenuContent() {
   };
 
   const theme = useTheme();
+  
   const textColor = theme.palette.mode === "dark" ? "white" : "#037D40";
-  const bgColorHover = theme.palette.mode === "dark" ? "#E4E0E1" : "#D1E8D5";
-  const selectedBgColor = "#D1E8D5";
+  const bgColorHover = theme.palette.mode === "dark" ? "#333333" : "#D1E8D5";
+  const selectedBgColor = theme.palette.mode === "dark" ? "#333333" : "#D1E8D5";
 
   return (
     <Stack
@@ -49,6 +49,7 @@ export default function MenuContent() {
         flexGrow: 1,
         p: 1,
         justifyContent: "space-between",
+        fontFamily: "Kanit, sans-serif", // Apply the font family here
       }}
     >
       <List dense>
@@ -59,10 +60,11 @@ export default function MenuContent() {
             padding: "0px 20px",
             gap: "10px",
             color: "#037D40",
-            fontSize: "15px",
+            fontSize: "18px",
             fontWeight: 700,
             textAlign: "left",
             marginBottom: "10px",
+            fontFamily: "Kanit, sans-serif", // Apply the font family to the section title
           }}
         >
           Main Menu
@@ -92,7 +94,6 @@ export default function MenuContent() {
                     height: "24px",
                     padding: "2px 0 0 0",
                     gap: "0px",
-                    opacity: 0.8,
                   }}
                 >
                   {React.cloneElement(item.icon, {
@@ -105,11 +106,12 @@ export default function MenuContent() {
                     width: "88px",
                     height: "22px",
                     typography: "body1",
-                    fontFamily: "Kanit",
+                    fontFamily: "Kanit, sans-serif", // Apply the font family
                     fontSize: "18px",
                     fontWeight: 400,
                     lineHeight: "21.6px",
                     textAlign: "left",
+                    color: textColor,
                   }}
                 />
                 <ArrowRightIcon sx={{ fill: textColor }} />
@@ -128,10 +130,11 @@ export default function MenuContent() {
             padding: "0px 20px",
             gap: "10px",
             color: "#037D40",
-            fontSize: "15px",
+            fontSize: "18px",
             fontWeight: 700,
             textAlign: "left",
             marginBottom: "10px",
+            fontFamily: "Kanit, sans-serif", // Apply the font family to the section title
           }}
         >
           Help & Support
@@ -178,7 +181,7 @@ export default function MenuContent() {
                     width: "88px",
                     height: "22px",
                     typography: "body1",
-                    fontFamily: "Kanit",
+                    fontFamily: "Kanit, sans-serif", // Apply the font family
                     fontSize: "18px",
                     fontWeight: 400,
                     lineHeight: "21.6px",
