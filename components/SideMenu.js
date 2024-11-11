@@ -12,6 +12,9 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useTheme } from "@mui/material/styles";
 import { isOverflown } from "@mui/x-data-grid/utils/domUtils";
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import { Card, CardContent, IconButton } from '@mui/material';
+import LinkIcon from '@mui/icons-material/Link';
 
 const drawerWidth = 357;
 
@@ -33,6 +36,11 @@ const Drawer = styled(MuiDrawer)(({ theme }) => ({
 export default function SideMenu({ session }) {
   const [activeSection, setActiveSection] = React.useState("Home");
   const theme = useTheme();
+  const profileUrl = `https://yourdomain.com/coach/${session?.user?.id}`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(profileUrl);
+  };
 
   const handleSectionChange = (section) => {
     setActiveSection(section);
@@ -132,19 +140,37 @@ export default function SideMenu({ session }) {
       </Box>
 
       {session && session.user && (
-        <Box sx={{ px: 2, wordBreak: "break-word", color: "black" }}>
-          <Typography variant="subtitle2">
+         <Card sx={{ maxWidth: 300, mx: "auto", my: 3, p: 2, display: "flex", alignItems: "center", backgroundColor: theme.palette.background.default }}>
+         <IconButton color="primary" component="a" href={`https://yourdomain.com/coach/${session.user.id}`} target="_blank">
+           <LinkIcon />
+         </IconButton>
+         <CardContent sx={{ flex: 1 }}>
+
+         <Typography variant="subtitle2" color="textSecondary">
             Your Coach Profile Page Link:
           </Typography>
           <Link
             href={`/coach/${session.user.id}`}
-            className="text-blue-500 underline "
-            sx={{ color: theme.palette.mode === "dark" ? "white" : "black" }}
+            underline="hover"
+            color={theme.palette.mode === "dark" ? "white" : "primary"}
+            sx={{ fontWeight: "bold" }}
           >
             {`https://yourdomain.com/coach/${session.user.id}`}
           </Link>
-        </Box>
+          </CardContent>
+          <Button
+            variant="outlined"
+            color="primary"
+            startIcon={<FileCopyIcon />}
+            onClick={handleCopy}
+        >
+          Copy Link
+        </Button>
+        </Card>
+        
       )}
+
+      
 
       <Divider sx={{ backgroundColor: "#A3D2D5" }} />
       <MenuContent session={session} />

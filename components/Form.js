@@ -20,6 +20,10 @@ const Form = ({ selectedDate, selectedTime, closeModal }) => {
     appointmentDetails: "",
   });
 
+  // Log the selected date and time to verify they're passed correctly
+  console.log("Form selected date:", selectedDate);
+  console.log("Form selected time:", selectedTime);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -103,7 +107,7 @@ const Form = ({ selectedDate, selectedTime, closeModal }) => {
             <Button
               type="submit"
               variant="contained"
-              color="#1976d2"
+              color="primary"
               sx={{ mt: 2 }}
             >
               Submit

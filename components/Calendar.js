@@ -1,34 +1,22 @@
-// Calendar.js
 import React, { useState, Fragment } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Dialog, Transition } from "@headlessui/react";
-import axios from "axios";
 import Form from "./Form"; // Import the Form component
+import TimePicker from 'react-time-picker'; // Import TimePicker
+import 'react-time-picker/dist/TimePicker.css'; // Import default styles for TimePicker
 
 export default function Calendar() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null); // No default time
   const [showForm, setShowForm] = useState(false); // State to manage form visibility
-
-  const timeslots = [
-    "10:00 AM",
-    "10:30 AM",
-    "11:00 AM",
-    "11:30 AM",
-    "12:00 PM",
-    "12:30 PM",
-    "01:00 PM",
-    "01:30 PM",
-    "02:00 PM",
-    "02:30 PM",
-    "03:00 PM",
-  ];
 
   function closeModal() {
     setIsOpen(false);
     setShowForm(false); // Reset form visibility when modal is closed
+    setSelectedDate(null); // Reset selected date
+    setSelectedTime(null); // Reset selected time
   }
 
   function openModal() {
@@ -40,14 +28,46 @@ export default function Calendar() {
       alert("Please select a date and time.");
       return;
     }
+    console.log("Selected Date:", selectedDate);
+    console.log("Selected Time:", selectedTime);
     setShowForm(true); // Show the Form component
+  };
+
+  const handleSubmit = async () => {
+    // Prepare the data to be sent to the database
+    const appointmentData = {
+      date: selectedDate,
+      time: selectedTime,
+    };
+
+    // Example API call to send data to the database
+    try {
+      const response = await fetch('/api/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(appointmentData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log('Appointment saved:', result);
+      // Optionally close modal or reset state
+      closeModal();
+    } catch (error) {
+      console.error('Error saving appointment:', error);
+    }
   };
 
   return (
     <>
       <button
         onClick={openModal}
-        className="bg-[#037D40] text-white font-semibold  rounded-md flex items-center "
+        className="bg-[#037D40] text-white font-semibold rounded-md flex items-center"
       >
         Book Me
       </button>
@@ -96,21 +116,13 @@ export default function Calendar() {
                         <label className="text-sm font-medium text-gray-900 dark:text-white mt-4 block">
                           Pick your time
                         </label>
-                        <div className="grid grid-cols-3 gap-2 mt-2">
-                          {timeslots.map((time, index) => (
-                            <button
-                              key={index}
-                              onClick={() => setSelectedTime(time)}
-                              className={`inline-flex items-center justify-center w-full px-2 py-1 text-sm font-medium rounded-lg cursor-pointer ${
-                                selectedTime === time
-                                  ? "bg-blue-600 text-white"
-                                  : "bg-white text-gray-500 dark:bg-gray-800 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-                              }`}
-                            >
-                              {time}
-                            </button>
-                          ))}
-                        </div>
+                        <TimePicker
+                          onChange={(time) => setSelectedTime(time)}
+                          value={selectedTime}
+                          className="bg-gray-50 dark:bg-gray-700 rounded-lg shadow p-2 w-full"
+                          clearIcon={null} // Hides the clear icon
+                          clockIcon={null} // Hides the clock icon
+                        />
                         <div className="mt-4 flex justify-end">
                           <button
                             type="button"
@@ -122,7 +134,12 @@ export default function Calendar() {
                         </div>
                       </>
                     ) : (
-                      <Form />
+                      <Form 
+                        selectedDate={selectedDate} 
+                        selectedTime={selectedTime} 
+                        closeModal={closeModal} 
+                        handleSubmit={handleSubmit} // Pass handleSubmit to the Form
+                      />
                     )}
                   </div>
                 </Dialog.Panel>
