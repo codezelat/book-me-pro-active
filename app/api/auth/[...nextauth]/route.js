@@ -30,6 +30,12 @@ export const authOptions = {
                     email: user.email,
                     name: user.name,
                     contact: user.contact,
+                    title: user.title,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    description: user.description,
+                    hourlyRate: user.hourlyRate,
+                    
                 };
             },
         }),
@@ -45,6 +51,11 @@ export const authOptions = {
                 token.email = user.email;
                 token.name = user.name;
                 token.contact = user.contact;
+                token.title = user.title;
+                token.firstName = user.firstName;
+                token.lastName = user.lastName;
+                token.description = user.description;
+                token.hourlyRate = user.hourlyRate;
             }
             return token;
         },
@@ -53,6 +64,11 @@ export const authOptions = {
             session.user.email = token.email;
             session.user.name = token.name;
             session.user.contact = token.contact;
+            session.user.title = token.title;
+            session.user.firstName = token.firstName;
+            session.user.lastName = token.lastName;
+            session.user.description = token.description;
+            session.user.hourlyRate = token.hourlyRate;
             return session;
         },
     },

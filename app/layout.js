@@ -18,7 +18,7 @@ export default function Layout({ children }) {
 
   // Check if the current page is not dashboard or myBookings
   const showHeaderAndFooter = !(
-    pathname.startsWith("/dashboard") || pathname.startsWith("/myBookings")
+    pathname.startsWith("/dashboard") 
   );
 
   return (

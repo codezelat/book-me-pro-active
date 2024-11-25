@@ -6,24 +6,25 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import AnalyticsRoundedIcon from "@mui/icons-material/AnalyticsRounded";
-import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
-import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
-import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
+import { Album } from "lucide-react";
+import { CalendarDays } from "lucide-react";
+import { Settings } from "lucide-react";
+import { LayoutGrid } from "lucide-react";
+import { CircleAlert } from "lucide-react";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 const mainListItems = [
-  { text: "Dashboard", icon: <HomeRoundedIcon /> },
-  { text: "My Bookings", icon: <AnalyticsRoundedIcon /> },
-  { text: "My Calendar", icon: <AssignmentRoundedIcon /> },
+  { text: "Dashboard", icon: <LayoutGrid /> },
+  { text: "My Bookings", icon: <Album /> },
+  { text: "My Calendar", icon: <CalendarDays /> },
 ];
 
 const secondaryListItems = [
-  { text: "Contact Us", icon: <HelpRoundedIcon /> },
-  { text: "Settings", icon: <SettingsRoundedIcon /> },
+  { text: "Contact Us", icon: <CircleAlert /> },
+  { text: "Settings", icon: <Settings /> },
 ];
 
 export default function MenuContent() {
@@ -34,8 +35,9 @@ export default function MenuContent() {
   };
 
   const theme = useTheme();
-  
-  const textColor = theme.palette.mode === "dark" ? "white" : "#037D40";
+
+  const textColor = "#037D40";
+  const iconColor = "#037D40";
   const bgColorHover = theme.palette.mode === "dark" ? "#333333" : "#D1E8D5";
   const selectedBgColor = theme.palette.mode === "dark" ? "#333333" : "#D1E8D5";
 
@@ -45,7 +47,6 @@ export default function MenuContent() {
         width: "297px",
         height: "auto",
         gap: "20px",
-        opacity: 1,
         flexGrow: 1,
         p: 1,
         justifyContent: "space-between",
@@ -59,7 +60,7 @@ export default function MenuContent() {
             height: "18px",
             padding: "0px 20px",
             gap: "10px",
-            color: "#037D40",
+            color: textColor,
             fontSize: "18px",
             fontWeight: 700,
             textAlign: "left",
@@ -77,8 +78,9 @@ export default function MenuContent() {
                 sx={{
                   width: "297px",
                   height: "64px",
-                  padding: "20px 0 0 0",
+                  padding: "0 20px", // Uniform padding
                   justifyContent: "space-between",
+                  alignItems: "center", // Ensure vertical alignment
                   bgcolor:
                     selectedIndex === index ? selectedBgColor : "inherit",
                   "&:hover": { bgcolor: bgColorHover },
@@ -88,32 +90,41 @@ export default function MenuContent() {
                   borderRadius: 0,
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    width: "24px",
-                    height: "24px",
-                    padding: "2px 0 0 0",
-                    gap: "0px",
-                  }}
-                >
-                  {React.cloneElement(item.icon, {
-                    sx: { fill: textColor },
-                  })}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.text}
-                  sx={{
-                    width: "88px",
-                    height: "22px",
-                    typography: "body1",
-                    fontFamily: "Kanit, sans-serif", // Apply the font family
-                    fontSize: "18px",
-                    fontWeight: 400,
-                    lineHeight: "21.6px",
-                    textAlign: "left",
-                    color: textColor,
-                  }}
-                />
+                <Box sx={{ gap: 4, display: "flex" }}>
+                  <ListItemIcon
+                    sx={{
+                      width: "24px",
+                      height: "24px",
+                      display: "flex",
+                      alignItems: "center", // Center icon vertically
+                      justifyContent: "center", // Center icon horizontally
+                      color: iconColor,
+                    }}
+                  >
+                    {React.cloneElement(item.icon, {
+                      size: 28, // Increase icon size
+                      strokeWidth: 2, // Make icon bold
+                      color: iconColor,
+                    })}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.text}
+                    primaryTypographyProps={{
+                      sx: {
+                        fontSize: "22px", // Adjust to your desired size
+                        fontWeight: "bold",
+                        lineHeight: "21.6px",
+                        textAlign: "left",
+                        color: textColor,
+                        fontFamily: "Kanit, sans-serif",
+                      },
+                    }}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center", // Ensure text aligns vertically with icon
+                    }}
+                  />
+                </Box>
                 <ArrowRightIcon sx={{ fill: textColor }} />
               </ListItemButton>
             </ListItem>
@@ -129,7 +140,7 @@ export default function MenuContent() {
             height: "18px",
             padding: "0px 20px",
             gap: "10px",
-            color: "#037D40",
+            color: textColor,
             fontSize: "18px",
             fontWeight: 700,
             textAlign: "left",
@@ -139,6 +150,7 @@ export default function MenuContent() {
         >
           Help & Support
         </div>
+
         {secondaryListItems.map((item, index) => (
           <React.Fragment key={index}>
             <ListItem disablePadding>
@@ -149,8 +161,9 @@ export default function MenuContent() {
                 sx={{
                   width: "297px",
                   height: "64px",
-                  padding: "20px 0 0 0",
+                  
                   justifyContent: "space-between",
+                  alignItems: "center", // Ensure vertical alignment
                   bgcolor:
                     selectedIndex === index + mainListItems.length
                       ? selectedBgColor
@@ -162,32 +175,42 @@ export default function MenuContent() {
                   borderRadius: 0,
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    width: "24px",
-                    height: "24px",
-                    padding: "2px 0 0 0",
-                    gap: "0px",
-                    opacity: 0.8,
-                  }}
-                >
-                  {React.cloneElement(item.icon, {
-                    sx: { fill: textColor },
-                  })}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.text}
-                  sx={{
-                    width: "88px",
-                    height: "22px",
-                    typography: "body1",
-                    fontFamily: "Kanit, sans-serif", // Apply the font family
-                    fontSize: "18px",
-                    fontWeight: 400,
-                    lineHeight: "21.6px",
-                    textAlign: "left",
-                  }}
-                />
+                <Box sx={{ gap: 4, display: "flex" }}>
+                  <ListItemIcon
+                    sx={{
+                      width: "24px",
+                      height: "24px",
+                      display: "flex",
+                      alignItems: "center", // Center icon vertically
+                      justifyContent: "center", // Center icon horizontally
+                      color: iconColor,
+                      paddingLeft:"4px"
+                    }}
+                  >
+                    {React.cloneElement(item.icon, {
+                      size: 28, // Increase icon size
+                      strokeWidth: 2, // Make icon bold
+                      color: iconColor,
+                    })}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.text}
+                    primaryTypographyProps={{
+                      sx: {
+                        fontSize: "20px", // Adjust to your desired size
+                        fontWeight: "bold",
+                        lineHeight: "21.6px",
+                        textAlign: "left",
+                        color: textColor,
+                        fontFamily: "Kanit, sans-serif",
+                      },
+                    }}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center", // Ensure text aligns vertically with icon
+                    }}
+                  />
+                </Box>
                 <ArrowRightIcon sx={{ fill: textColor }} />
               </ListItemButton>
             </ListItem>

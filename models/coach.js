@@ -5,7 +5,6 @@ const CoachSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   contact: { type: String, required: false },
   image: { type: String, default: "../public/images/coach/coach1.png" },
-
   profilePhoto: { type: String, default: "../public/images/coach/coach1.png" },
   gallery: { type: [String], default: [] }, // Array to store gallery image URLs
   firstName: { type: String, default: "" },

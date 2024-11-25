@@ -46,14 +46,14 @@ export default function MainGrid() {
       className="custom-padding"
       sx={{
         width: "100%",
-        height: "auto",
+        height: "100%", // Adjust this to take the full height of the screen
         maxWidth: { xs: "100%", md: "1700px" },
         paddingTop: 10,
-        paddingLeft: 30,
-        paddingRight: 20,
-        position: "fixed",
+        paddingLeft: 20,
+        //paddingRight: 20,
         bgcolor: isDarkMode ? "background.default" : "background.paper",
         color: isDarkMode ? "text.primary" : "text.secondary",
+        overflowY: "auto", // This ensures scrolling is enabled
       }}
     >
       {/* Stat cards */}
@@ -68,7 +68,7 @@ export default function MainGrid() {
             sx={{
               width: "402px",
               height: "159px",
-              padding: "10px",
+              padding: "12px",
               gap: "20px",
               borderRadius: "5px 0px 0px 0px",
             }}

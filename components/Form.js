@@ -1,4 +1,6 @@
 // components/Form.js
+
+
 import React, { useState } from "react";
 import axios from "axios";
 import {
@@ -10,7 +12,7 @@ import {
   Container,
 } from "@mui/material";
 
-const Form = ({ selectedDate, selectedTime, closeModal }) => {
+const Form = ({ selectedDate, selectedTime, closeModal, coachId }) => {
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -31,13 +33,14 @@ const Form = ({ selectedDate, selectedTime, closeModal }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting data:", { ...formData, selectedDate, selectedTime });
+    console.log("Submitting data:", { ...formData, selectedDate, selectedTime, coachId });
 
     try {
       const response = await axios.post("/api/appointments", {
         ...formData,
         selectedDate,
         selectedTime,
+        coachId, // Include the coach ID in the request body
       });
 
       if (response.status === 201) {
@@ -104,6 +107,11 @@ const Form = ({ selectedDate, selectedTime, closeModal }) => {
               value={formData.appointmentDetails}
               onChange={handleChange}
             />
+
+            {/* Hidden input for coachId */}
+            <input type="hidden" name="coachId" value={coachId} />
+
+
             <Button
               type="submit"
               variant="contained"

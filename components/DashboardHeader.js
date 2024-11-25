@@ -50,6 +50,16 @@ export default function DashboardHeader() {
             </div>
 
             <div>
+              <Image
+                src="/images/coach/coach1.png" // Correct path
+                alt="Coach Image" // Add descriptive alt text
+                width={50} // Desired width
+                height={50} // Desired height
+                style={{ borderRadius: "50%" }} // Styling for round image
+              />
+            </div>
+
+            {/* <div>
               <Avatar
                 alt={session?.user?.name || "User"}
                 src={session?.user?.image || "default-image.jpg"}
@@ -60,7 +70,7 @@ export default function DashboardHeader() {
                   borderColor: "#037D40",
                 }}
               />
-            </div>
+            </div> */}
 
             {/* Navigation Links */}
           </div>

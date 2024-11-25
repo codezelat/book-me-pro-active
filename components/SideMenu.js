@@ -12,38 +12,44 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import Image from "next/image";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
 
 const drawerWidth = 357;
 
 const Drawer = styled(MuiDrawer)(({ theme }) => ({
   width: drawerWidth,
   flexShrink: 0,
-  overflow: "hidden",
   boxSizing: "border-box",
   "& .MuiDrawer-paper": {
     width: drawerWidth,
     backgroundColor: theme.palette.mode === "dark" ? "#121212" : "#ffffff",
-    color: theme.palette.mode === "dark" ? "#ffff" : "#0000",
-    padding: "70px 40px",
+    color: theme.palette.mode === "dark" ? "#ffffff" : "#000000",
+    padding: "50px 40px",
     borderRadius: "5px 0px 0px 0px",
-    overflow: "hidden",
   },
 }));
 
 export default function SideMenu({ session }) {
   const [coachData, setCoachData] = React.useState(null);
+  const [activeSection, setActiveSection] = React.useState("Home");
   const theme = useTheme();
   const router = useRouter();
 
+  const profileUrl = `https://yourdomain.com/coach/${session?.user?.id}`;
+
   React.useEffect(() => {
     if (session?.user?.id) {
-      // Fetch the coach's data by ID
       axios
         .get(`/api/coach/${session.user.id}`)
         .then((response) => setCoachData(response.data))
         .catch((error) => console.error("Error fetching coach data:", error));
     }
   }, [session?.user?.id]);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(profileUrl);
+  };
 
   const handleEditProfileClick = () => {
     router.push("/dashboard/profile");
@@ -58,9 +64,7 @@ export default function SideMenu({ session }) {
         alignItems: "center",
         textAlign: "center",
         gap: "30px",
-        paddingBottom: 5,
         height: "calc(100vh - 60px)",
-        overflow: "hidden",
       }}
     >
       <Box
@@ -70,94 +74,138 @@ export default function SideMenu({ session }) {
           alignItems: "center",
           textAlign: "center",
           padding: "30px",
-          gap: "30px",
+          // gap: "30px",
+          paddingTop: 5,
         }}
       >
-        <Avatar
-          alt={coachData?.firstName || session?.user?.name || "User"}
-          src={"../public/images/coach/coach1.png"}
-          sx={{ width: "75px", height: "75px" }}
+        <Image
+          src="/images/coach/coach1.png"
+          alt="Coach Image"
+          width={75}
+          height={75}
+          style={{ borderRadius: "50%" }}
         />
-
-        <Box
-          sx={{
-            width: "198px",
-            height: "45px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Button
-            onClick={handleEditProfileClick}
+        <Box sx={{ paddingBottom: "10px" }}>
+          <Avatar
+            alt={session?.user?.name || "User"}
+            src={session?.user?.image || "default-image.jpg"}
+            sx={{ width: "75px", height: "75px" }}
+          />
+        </Box>
+        <Box>
+          <Typography
+            variant="body2"
             sx={{
-              width: "188px",
-              height: "46px",
-              gap: "20px",
-              borderRadius: "5px 0px 0px 0px",
-              bgcolor: "#037D40",
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              width: "147px",
+              textAlign: "center",
               fontFamily: "Kanit, sans-serif",
-              "&:hover": { bgcolor: "#036b34" },
+              fontSize: "18px",
+              fontWeight: 700,
+              color: theme.palette.text.primary,
             }}
-            size="large"
           >
-            Edit Profile
-            <SquareArrowRight sx={{ color: "white", fill: "white" }} />
-          </Button>
+            {coachData?.firstName || "Guest"}
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              width: "198px",
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "15px",
+              fontWeight: 400,
+              textAlign: "center",
+              color: "#037D40",
+              padding: 0,
+            }}
+          >
+            {coachData?.title || "Member"}
+          </Typography>
         </Box>
 
-        <Typography
-          variant="body2"
+        <Button
+          component={Link}
+          href="/dashboard/profile"
           sx={{
-            width: "147px",
-            height: "22px",
-            textAlign: "center",
+            width: "188px",
+            height: "46px",
+            gap: "20px",
+            borderRadius: "5px ",
+            bgcolor: "#037D40",
+            color: "white",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             fontFamily: "Kanit, sans-serif",
-            fontSize: "18px",
-            fontWeight: 700,
-            color: theme.palette.text.primary,
+            "&:hover": { bgcolor: "#036b34" },
           }}
+          size="large"
         >
-          {coachData?.firstName  || session?.user?.name || "Guest"}
-        </Typography>
-        <Typography
-          variant="caption"
-          sx={{
-            width: "198px",
-            height: "18px",
-            fontFamily: "Kanit, sans-serif",
-            fontSize: "15px",
-            fontWeight: 400,
-            textAlign: "center",
-            color: "#037D40",
-            padding: "2px 4px",
-          }}
-        >
-          {coachData?.title || session?.user?.title || "Member"}
-        </Typography>
+          Edit Profile
+          <SquareArrowRight sx={{ color: "white", fill: "white" }} />
+        </Button>
       </Box>
 
       {coachData && (
-        <Box sx={{ px: 2, wordBreak: "break-word", color: "black" }}>
-          <Typography variant="subtitle2">
-            Your Coach Profile Page Link:
-          </Typography>
-          <Link
-            href={`/coach/${session.user.id}`}
-            className="text-blue-500 underline"
-            sx={{ color: theme.palette.mode === "dark" ? "white" : "black" }}
+        <Box
+          sx={{
+            width: "100%",
+            p: 2,
+            borderRadius: 2,
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: 1,
+            textAlign: "center",
+            mb: 2,
+          }}
+        >
+          <Typography
+            variant="subtitle1"
+            sx={{
+              fontWeight: 600,
+              color: theme.palette.text.primary,
+              fontFamily: "Kanit, sans-serif",
+              mb: 1,
+            }}
           >
-            {`https://yourdomain.com/coach/${session.user.id}`}
-          </Link>
+            Your Profile URL
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              color: theme.palette.text.secondary,
+              wordBreak: "break-word",
+              mb: 1,
+            }}
+          >
+            <Link
+              href={`/coach/${session.user.id}`}
+              style={{
+                textDecoration: "none",
+                color: theme.palette.mode === "dark" ? "white" : "#037D40",
+              }}
+            >
+              {`https://yourdomain.com/coach/${session.user.id}`}
+            </Link>
+          </Typography>
+          <Button
+            variant="contained"
+            size="small"
+            sx={{
+              mt: 1,
+              bgcolor: "#037D40",
+              color: "white",
+              "&:hover": { bgcolor: "#036b34" },
+            }}
+            startIcon={<FileCopyIcon />}
+            onClick={handleCopy}
+          >
+            Copy Link
+          </Button>
         </Box>
       )}
 
-      <Divider sx={{ backgroundColor: "#A3D2D5" }} />
+      <Divider />
       <MenuContent session={session} />
+
       <Box
         sx={{
           padding: "5px 50px 0px 60px",
@@ -176,7 +224,6 @@ export default function SideMenu({ session }) {
             display: "flex",
             alignItems: "center",
             opacity: 0.8,
-            "&:hover": { backgroundColor: "#D1E8D5", opacity: 0.8 },
             "&:hover": {
               bgcolor: theme.palette.mode === "dark" ? "#333333" : "#D1E8D5",
             },

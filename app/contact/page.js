@@ -84,15 +84,15 @@ export default function Contact() {
           {/* Social Media Section */}
           <div className="flex mt-16 gap-20 items-center">
             <p className="text-black text-4xl font-bold">Follow Us On</p>
-            <div className="flex text-blue-600 space-x-8">
+            <div className="flex text-primary space-x-8">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-                <FaFacebookF className="w-8 h-8 hover:text-gray-400" />
+                <FaFacebookF className="w-8 h-8 hover:text-footer" />
               </a>
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                <FaInstagram className="w-8 h-8 hover:text-gray-400" />
+                <FaInstagram className="w-8 h-8 hover:text-footer" />
               </a>
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
-                <FaLinkedinIn className="w-8 h-8 hover:text-gray-400" />
+                <FaLinkedinIn className="w-8 h-8 hover:text-footer" />
               </a>
             </div>
           </div>

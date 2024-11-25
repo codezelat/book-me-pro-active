@@ -1,25 +1,27 @@
+// components/CustomizedDataGrid.js
+
 import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { useState, useEffect } from "react";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
-import { CircleX, CircleCheck, CircleChevronDown } from "lucide-react";
+import { CircleX, CircleCheck } from "lucide-react";
+import axios from "axios"; // Use axios for API calls
+import { useSession } from "next-auth/react"; 
 
 export default function CustomizedDataGrid() {
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchAppointments = async () => {
+      if (!session || !session.user || !session.user.id) return; // Ensure session and user data are available
       try {
-        const response = await fetch("/api/appointments"); // Replace with your API endpoint
-        if (!response.ok) {
-          throw new Error("Failed to fetch appointments");
-        }
-        const data = await response.json();
+        const response = await axios.get(`/api/appointments?coachId=${session.user.id}`); // Replace with your API endpoint
+        const data = response.data;
 
-        // Assuming the data structure is known and consistent
-        // Set columns based on your data structure
+        // Define columns
         const columns = [
           { field: "name", headerName: "Name", flex: 1.5, minWidth: 200 },
           { field: "email", headerName: "Email", flex: 1, minWidth: 150 },
@@ -31,14 +33,7 @@ export default function CustomizedDataGrid() {
             headerName: "Status",
             flex: 0.5,
             minWidth: 90,
-            renderCell: (params) => renderStatus(params.value), // Custom render for status
-          },
-          {
-            field: "contact",
-            headerName: "Contact",
-            headerAlign: "center",
-            flex: 0.5,
-            minWidth: 200,
+            renderCell: (params) => renderStatus(params.value),
           },
           {
             field: "actions",
@@ -48,64 +43,64 @@ export default function CustomizedDataGrid() {
             minWidth: 200,
             renderCell: (params) => (
               <div
-              style={{
-                display: "flex",
-                gap: "8px",
-                alignItems: "center",
-                justifyContent: "center", // Center align horizontally
-                width: "100%", // Take full width of the cell
-                height: "100%", // Take full height of the cell to vertically center items
-              }}
-            >
-              <Button
-                sx={{
-                  bgcolor: "#D50000",
-                  color: "white",
-                  px: 2,
-                  py: 0.5,
-                  "&:hover": { bgcolor: "#B20000" },
+                style={{
                   display: "flex",
+                  gap: "8px",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 1.5,
+                  width: "100%",
+                  height: "100%",
                 }}
-                size="small"
-                onClick={() => alert("Declined")}
               >
-                Decline
-                <CircleX sx={{ color: "white", fill: "white" }} />
-              </Button>
-              <Button
-                sx={{
-                  bgcolor: "#037D40",
-                  color: "white",
-                  px: 2,
-                  py: 0.5,
-                  "&:hover": { bgcolor: "#025b2e" },
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 1.5,
-                }}
-                size="small"
-                onClick={() => alert("Accepted")}
-              >
-                Approve
-                <CircleCheck sx={{ color: "white", fill: "white" }} />
-              </Button>
-            </div>
+                <Button
+                  sx={{
+                    bgcolor: "#D50000",
+                    color: "white",
+                    px: 2,
+                    py: 0.5,
+                    "&:hover": { bgcolor: "#B20000" },
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1.5,
+                  }}
+                  size="small"
+                  onClick={() => handleAction(params.row, "Declined")}
+                >
+                  Decline
+                  <CircleX sx={{ color: "white", fill: "white" }} />
+                </Button>
+                <Button
+                  sx={{
+                    bgcolor: "#037D40",
+                    color: "white",
+                    px: 2,
+                    py: 0.5,
+                    "&:hover": { bgcolor: "#025b2e" },
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1.5,
+                  }}
+                  size="small"
+                  onClick={() => handleAction(params.row, "Approved")}
+                >
+                  Approve
+                  <CircleCheck sx={{ color: "white", fill: "white" }} />
+                </Button>
+              </div>
             ),
           },
         ];
 
         // Map data to the format expected by DataGrid
         const formattedRows = data.map((appointment, index) => ({
-          id: index + 1, // Assign a unique ID
+          id: appointment._id, // Use unique MongoDB ID as the row ID
           name: appointment.name,
           email: appointment.email,
           phone: appointment.phone,
           date: new Date(appointment.selectedDate).toLocaleDateString(),
-          time: new Date(appointment.selectedDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          time: appointment.selectedTime,
           status: appointment.status || "Pending",
         }));
 
@@ -117,7 +112,7 @@ export default function CustomizedDataGrid() {
     };
 
     fetchAppointments();
-  }, []);
+  }, [session]);
 
   // Function to render status
   function renderStatus(status) {
@@ -130,13 +125,24 @@ export default function CustomizedDataGrid() {
     return <Chip label={status} color={colors[status]} size="small" />;
   }
 
-  // Placeholder functions for Edit and Delete actions
-  const handleEdit = (row) => {
-    console.log("Edit row:", row);
-  };
+  // Function to handle Approve/Decline actions
+  const handleAction = async (row, newStatus) => {
+    try {
+      const response = await axios.patch("/api/appointments", {
+        id: row.id,
+        status: newStatus,
+      });
 
-  const handleDelete = (row) => {
-    console.log("Delete row:", row);
+      if (response.status === 200) {
+        // Remove the updated row from the DataGrid
+        setRows((prevRows) => prevRows.filter((r) => r.id !== row.id));
+        console.log(`Appointment ${newStatus.toLowerCase()} successfully.`);
+      } else {
+        console.error(`Failed to ${newStatus.toLowerCase()} appointment.`);
+      }
+    } catch (error) {
+      console.error(`Error during ${newStatus.toLowerCase()} action:`, error);
+    }
   };
 
   return (

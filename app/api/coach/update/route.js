@@ -16,13 +16,12 @@ export async function POST(req) {
 
   const { db } = await connectToDatabase();
   const userEmail = session.user.email;
-  
 
   try {
     const formData = await req.formData();
     
     // Extract basic data from formData
-    const name = formData.get("name");
+    const name = formData.get("name"); 
     const firstName = formData.get("firstName");
     const lastName = formData.get("lastName");
     const email = formData.get("email");
@@ -40,6 +39,7 @@ export async function POST(req) {
       title,
       description,
       hourlyRate,
+   
       
     };
 

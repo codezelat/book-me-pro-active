@@ -1,20 +1,33 @@
-"use client";
-import { useSession } from "next-auth/react";
+// page.js
+"use client"; // Mark this as a Client Component
+
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
 import ProfileEditComponent from "/components/ProfileEditComponent/page";
 import DashboardHeader from "@/components/DashboardHeader";
 import SideMenu from "@/components/SideMenu";
 import AppTheme from "@/app/shared-theme/AppTheme";
-import MainGrid from "@/components/MainGrid";
+import { chartsCustomizations, dataGridCustomizations, datePickersCustomizations, treeViewCustomizations } from "@/app/dashboard/theme/customizations";
+import Calendar from "./Calendar";
+import CustomizedDataGrid from "@/app/myBookings/Theme/customizations/dataGrid";
+
+const xThemeComponents = {
+  ...chartsCustomizations,
+  ...dataGridCustomizations,
+  ...datePickersCustomizations,
+  ...treeViewCustomizations,
+};
 
 export default function Dashboard(props) {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [showProfileEdit, setShowProfileEdit] = useState(false);
+  
+  // State for managing the selected date and whether to show the data grid
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [showDataGrid, setShowDataGrid] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -26,9 +39,12 @@ export default function Dashboard(props) {
     return <p>Loading...</p>;
   }
 
-  const handleProfileClick = () => {
-    setShowProfileEdit(true);
+  const handleDateClick = (date) => {
+    setSelectedDate(date); // Store the selected date
+    setShowDataGrid(true); // Show the data grid
   };
+
+  const handleProfileClick = () => setShowProfileEdit(true);
 
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
@@ -40,9 +56,7 @@ export default function Dashboard(props) {
             position: "fixed",
             left: 0,
             right: 0,
-            
             paddingTop: "10px",
-            paddingLeft: "20px",
             paddingRight: "20px",
             height: "82px",
             zIndex: 10,
@@ -69,7 +83,55 @@ export default function Dashboard(props) {
           <SideMenu session={session} />
         </Box>
 
-       
+        {/* Main Content Area */}
+        <Box
+          sx={{
+            minHeight:"100vh",
+            justifyContent: "center",
+            alignItems: "center",
+            marginLeft: "300px",
+            
+            padding: "20px", // General padding for the main content
+            backgroundColor: "white",
+            display: "flex",
+            flexDirection: "column",
+            
+          }}
+        >
+          {/* Calendar Section */}
+          <Box
+            sx={{
+              marginTop:"60px",
+              backgroundColor: "white",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <Calendar 
+              selectedDate={selectedDate} 
+              setSelectedDate={setSelectedDate} 
+              setShowDataGrid={setShowDataGrid} 
+            />
+          </Box>
+
+          {/* Data Grid Section */}
+          <Box
+            sx={{
+              width: "100%", // Ensure full width
+              maxWidth: "1190px", // Set a consistent max-width
+              margin: "0 auto", // Center align
+              padding: "20px", // Uniform padding
+              borderRadius: "8px", // Optional: Rounded corners
+            }}
+          >
+            {/* Conditionally render the Data Grid below the calendar */}
+            {showDataGrid && selectedDate && (
+              <div className="mt-4">
+                <CustomizedDataGrid selectedDate={selectedDate} />
+              </div>
+            )}
+          </Box>
+        </Box>
       </div>
     </AppTheme>
   );

@@ -1,15 +1,12 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import CssBaseline from "@mui/material/CssBaseline";
 import axios from "axios";
 import AppTheme from "@/app/shared-theme/AppTheme";
 import DashboardHeader from "@/components/DashboardHeader";
 import SideMenu from "@/components/SideMenu";
 import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import { PhotoCamera } from "@mui/icons-material"; // Import an icon for the image change button
 import { SquarePen, Upload } from "lucide-react";
 
 const ProfileEditComponent = ({ onUpdateSuccess }) => {
@@ -45,6 +42,7 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
 
     setGallery(updatedGallery);
   };
+  
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -123,13 +121,13 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
           sx={{
             marginLeft: "150px",
             overflow: "auto",
-            backgroundColor: "#f7f7f7",
+            backgroundColor: "white",
             minHeight: "100vh",
           }}
         >
           {/* form */}
-          <div className="w-[1236px] h-[1234px] rounded-[5px] pt-40">
-            <form onSubmit={handleUpdate} className="p-4 max-w-lg mx-auto ">
+          <div className="w-[1236px] h-[1234px] rounded-[5px] pt-32">
+            <form onSubmit={handleUpdate} className="p-4 max-w-lg mx-auto pb-10 ">
               <h2 className=" font-bold text-[22px] landing-[26.4px] text-[#037D40] mb-4">
                 Profile Details
               </h2>
