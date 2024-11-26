@@ -20,13 +20,24 @@ const AdminCalendar = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
+  const [multipleBookingsAllowed, setMultipleBookingsAllowed] = useState(false);
   
 
   useEffect(() => {
     const fetchAvailableDates = async () => {
       try {
         const response = await axios.get('/api/available_dates?coachId=' + session?.user?.id);
-        setAvailableDates(response.data);
+        
+        // Get today's date and set the time to midnight
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); 
+
+        // Filter and sort dates starting from today
+        const filteredAndSortedDates = response.data
+          .filter(date => new Date(date.date) >= today) // Filter for dates from today onwards
+          .sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort by date ascending
+
+        setAvailableDates(filteredAndSortedDates);
       } catch (error) {
         console.error("Error fetching available dates:", error);
       }
@@ -39,6 +50,29 @@ const AdminCalendar = () => {
 
   const addTimeSlot = () => {
     if (startTime && endTime) {
+      // Convert start and end times to Date objects for comparison
+      const newStartTime = new Date(`1970-01-01T${startTime}:00`);
+      const newEndTime = new Date(`1970-01-01T${endTime}:00`);
+  
+      // Check for overlapping time slots if the date already exists
+      const existingDate = availableDates.find(
+        (availableDate) => new Date(availableDate.date).toISOString().split("T")[0] === new Date(date).toISOString().split("T")[0]
+      );
+  
+      if (existingDate) {
+        const isOverlapping = existingDate.timeSlots.some((timeSlot) => {
+          const [existingStart, existingEnd] = timeSlot.split(' - ').map(time => new Date(`1970-01-01T${time}:00`));
+          // Check if the new time slot overlaps with any existing time slot
+          return (newStartTime < existingEnd && newEndTime > existingStart);
+        });
+  
+        if (isOverlapping) {
+          alert("The new time slot overlaps with an existing time slot. Please choose a different time.");
+          return;
+        }
+      }
+  
+      // If no overlap, add the time slot
       setTimeSlots([...timeSlots, `${startTime} - ${endTime}`]);
       setStartTime('');
       setEndTime('');
@@ -53,24 +87,54 @@ const AdminCalendar = () => {
       alert("Please select a date and enter the number of slots.");
       return;
     }
-
+  
     const coachId = session?.user?.id; // Get coachId from session
-
+  
     if (!coachId) {
       alert("Coach ID is not available.");
       return;
     }
-
-    try {
-      // Send coachId along with date, slots, and timeSlots
-      await axios.post('/api/available_dates', { date, slots, timeSlots, coachId });
-      setAvailableDates([...availableDates, { date, slots, timeSlots, coachId }]);
-      setDate(null);
-      setSlots('');
-      setTimeSlots([]);
-    } catch (error) {
-      console.error("Error adding available date:", error);
-      alert("Failed to add available date.");
+  
+    const formattedDate = new Date(date).toISOString().split("T")[0]; // Ensure date is in a comparable format
+  
+    // Check if the date already exists
+    const existingDate = availableDates.find(
+      (availableDate) => new Date(availableDate.date).toISOString().split("T")[0] === formattedDate
+    );
+  
+    if (existingDate) {
+      // If date exists, append the new time slots to the existing timeSlots array
+      try {
+        const updatedTimeSlots = [...existingDate.timeSlots, ...timeSlots];
+        await axios.put(`/api/available_dates?id=${existingDate._id}`, { timeSlots: updatedTimeSlots });
+        
+        // Update the local state
+        setAvailableDates(availableDates.map((d) =>
+          d._id === existingDate._id
+            ? { ...d, timeSlots: updatedTimeSlots }
+            : d
+        ));
+        setDate(null);
+        setSlots('');
+        setTimeSlots([]);
+        alert("Time slots added successfully to the existing date.");
+      } catch (error) {
+        console.error("Error appending time slots:", error);
+        alert("Failed to append time slots.");
+      }
+    } else {
+      // If date doesn't exist, create a new record
+      try {
+        await axios.post('/api/available_dates', { date, slots, timeSlots, coachId });
+        setAvailableDates([...availableDates, { date, slots, timeSlots, coachId }]);
+        setDate(null);
+        setSlots('');
+        setTimeSlots([]);
+        alert("Available date added successfully.");
+      } catch (error) {
+        console.error("Error adding available date:", error);
+        alert("Failed to add available date.");
+      }
     }
   };
 

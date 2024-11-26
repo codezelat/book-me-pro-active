@@ -29,6 +29,7 @@ export async function POST(req) {
 }
 
 // GET request: Fetch all available dates for a specific coach
+// GET request: Fetch all available dates for a specific coach starting from today
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const coachId = searchParams.get("coachId"); // Get coachId from query parameters
@@ -40,7 +41,15 @@ export async function GET(req) {
   const { db } = await connectToDatabase();
 
   try {
-    const result = await db.collection("available_dates").find({ coachId }).toArray(); // Filter by coachId
+    const today = new Date();
+    // Set the time to the start of the day (midnight)
+    today.setHours(0, 0, 0, 0);
+
+    const result = await db.collection("available_dates").find({
+      coachId,
+      date: { $gte: today } // Filter for dates that are today or in the future
+    }).toArray(); // Convert the cursor to an array
+
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {
     console.error("Error fetching available dates:", error);
