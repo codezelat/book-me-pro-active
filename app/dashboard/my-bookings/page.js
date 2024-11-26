@@ -17,7 +17,7 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from "@/app/dashboard/theme/customizations";
-import CustomizedDataGrid from "./Theme/customizations/dataGrid";
+import CustomizedDataGrid from '@/app/dashboard/my-bookings/dataGrid'
 
 const xThemeComponents = {
   ...chartsCustomizations,

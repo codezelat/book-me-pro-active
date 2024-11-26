@@ -1,4 +1,7 @@
+'use client';
+
 import * as React from "react";
+import { useRouter } from 'next/navigation';
 import { styled, useTheme } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
 import MuiDrawer from "@mui/material/Drawer";
@@ -10,7 +13,6 @@ import Button from "@mui/material/Button";
 import { SquareArrowRight, LogOut } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import axios from "axios";
 import Image from "next/image";
 import FileCopyIcon from "@mui/icons-material/FileCopy";

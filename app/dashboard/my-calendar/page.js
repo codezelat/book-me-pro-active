@@ -12,7 +12,7 @@ import SideMenu from "@/components/SideMenu";
 import AppTheme from "@/app/shared-theme/AppTheme";
 import { chartsCustomizations, dataGridCustomizations, datePickersCustomizations, treeViewCustomizations } from "@/app/dashboard/theme/customizations";
 import Calendar from "./Calendar";
-import CustomizedDataGrid from "@/app/myBookings/Theme/customizations/dataGrid";
+import CustomizedDataGrid from "@/app/dashboard/my-bookings/dataGrid";
 
 const xThemeComponents = {
   ...chartsCustomizations,

@@ -1,4 +1,6 @@
-import * as React from "react";
+'use client';
+
+import React from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -15,11 +17,12 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-
+import { useRouter } from 'next/navigation';
+ 
 const mainListItems = [
-  { text: "Dashboard", icon: <LayoutGrid /> },
-  { text: "My Bookings", icon: <Album /> },
-  { text: "My Calendar", icon: <CalendarDays /> },
+  { text: "Dashboard", icon: <LayoutGrid />, path: "/dashboard" },
+  { text: "My Bookings", icon: <Album />, path: "/dashboard/my-bookings" },
+  { text: "My Calendar", icon: <CalendarDays />, path: "/dashboard/my-calendar" },
 ];
 
 const secondaryListItems = [
@@ -29,12 +32,16 @@ const secondaryListItems = [
 
 export default function MenuContent() {
   const [selectedIndex, setSelectedIndex] = React.useState(null);
-
-  const handleListItemClick = (index) => {
-    setSelectedIndex(index);
-  };
-
+  const router = useRouter();
+  
   const theme = useTheme();
+
+  const handleListItemClick = (index, path) => {
+    setSelectedIndex(index);
+    if (router) {
+      router.push(path); // Navigate to the specified path
+    }
+  };
 
   const textColor = "#037D40";
   const iconColor = "#037D40";
@@ -50,7 +57,7 @@ export default function MenuContent() {
         flexGrow: 1,
         p: 1,
         justifyContent: "space-between",
-        fontFamily: "Kanit, sans-serif", // Apply the font family here
+        fontFamily: "Kanit, sans-serif",
       }}
     >
       <List dense>
@@ -65,7 +72,7 @@ export default function MenuContent() {
             fontWeight: 700,
             textAlign: "left",
             marginBottom: "10px",
-            fontFamily: "Kanit, sans-serif", // Apply the font family to the section title
+            fontFamily: "Kanit, sans-serif",
           }}
         >
           Main Menu
@@ -74,15 +81,14 @@ export default function MenuContent() {
           <React.Fragment key={index}>
             <ListItem disablePadding>
               <ListItemButton
-                onClick={() => handleListItemClick(index)}
+               onClick={() => handleListItemClick(index, item.path)} 
                 sx={{
                   width: "297px",
                   height: "64px",
-                  padding: "0 20px", // Uniform padding
+                  padding: "0 20px",
                   justifyContent: "space-between",
-                  alignItems: "center", // Ensure vertical alignment
-                  bgcolor:
-                    selectedIndex === index ? selectedBgColor : "inherit",
+                  alignItems: "center",
+                  bgcolor: selectedIndex === index ? selectedBgColor : "inherit",
                   "&:hover": { bgcolor: bgColorHover },
                   color: textColor,
                   gap: "0px",
@@ -96,14 +102,14 @@ export default function MenuContent() {
                       width: "24px",
                       height: "24px",
                       display: "flex",
-                      alignItems: "center", // Center icon vertically
-                      justifyContent: "center", // Center icon horizontally
+                      alignItems: "center",
+                      justifyContent: "center",
                       color: iconColor,
                     }}
                   >
                     {React.cloneElement(item.icon, {
-                      size: 28, // Increase icon size
-                      strokeWidth: 2, // Make icon bold
+                      size: 28,
+                      strokeWidth: 2,
                       color: iconColor,
                     })}
                   </ListItemIcon>
@@ -111,7 +117,7 @@ export default function MenuContent() {
                     primary={item.text}
                     primaryTypographyProps={{
                       sx: {
-                        fontSize: "22px", // Adjust to your desired size
+                        fontSize: "22px",
                         fontWeight: "bold",
                         lineHeight: "21.6px",
                         textAlign: "left",
@@ -121,7 +127,7 @@ export default function MenuContent() {
                     }}
                     sx={{
                       display: "flex",
-                      alignItems: "center", // Ensure text aligns vertically with icon
+                      alignItems: "center",
                     }}
                   />
                 </Box>
@@ -145,7 +151,7 @@ export default function MenuContent() {
             fontWeight: 700,
             textAlign: "left",
             marginBottom: "10px",
-            fontFamily: "Kanit, sans-serif", // Apply the font family to the section title
+            fontFamily: "Kanit, sans-serif",
           }}
         >
           Help & Support
@@ -155,19 +161,13 @@ export default function MenuContent() {
           <React.Fragment key={index}>
             <ListItem disablePadding>
               <ListItemButton
-                onClick={() =>
-                  handleListItemClick(index + mainListItems.length)
-                }
+                onClick={() => handleListItemClick(index + mainListItems.length, "/help-support")}
                 sx={{
                   width: "297px",
                   height: "64px",
-                  
                   justifyContent: "space-between",
-                  alignItems: "center", // Ensure vertical alignment
-                  bgcolor:
-                    selectedIndex === index + mainListItems.length
-                      ? selectedBgColor
-                      : "transparent",
+                  alignItems: "center",
+                  bgcolor: selectedIndex === index + mainListItems.length ? selectedBgColor : "transparent",
                   "&:hover": { bgcolor: bgColorHover },
                   color: textColor,
                   gap: "0px",
@@ -178,18 +178,18 @@ export default function MenuContent() {
                 <Box sx={{ gap: 4, display: "flex" }}>
                   <ListItemIcon
                     sx={{
-                      width: "24px",
-                      height: "24px",
+                      width: "25px",
+                      height: "25px",
                       display: "flex",
-                      alignItems: "center", // Center icon vertically
-                      justifyContent: "center", // Center icon horizontally
+                      alignItems: "center",
+                      justifyContent: "center",
                       color: iconColor,
-                      paddingLeft:"4px"
+                      paddingLeft: "4px",
                     }}
                   >
                     {React.cloneElement(item.icon, {
-                      size: 28, // Increase icon size
-                      strokeWidth: 2, // Make icon bold
+                      size: 28,
+                      strokeWidth: 2,
                       color: iconColor,
                     })}
                   </ListItemIcon>
@@ -197,7 +197,7 @@ export default function MenuContent() {
                     primary={item.text}
                     primaryTypographyProps={{
                       sx: {
-                        fontSize: "20px", // Adjust to your desired size
+                        fontSize: "20px",
                         fontWeight: "bold",
                         lineHeight: "21.6px",
                         textAlign: "left",
@@ -207,7 +207,7 @@ export default function MenuContent() {
                     }}
                     sx={{
                       display: "flex",
-                      alignItems: "center", // Ensure text aligns vertically with icon
+                      alignItems: "center",
                     }}
                   />
                 </Box>
