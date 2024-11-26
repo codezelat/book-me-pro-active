@@ -40,6 +40,7 @@
     "@types/react-calendar": "^4.1.0",
     "@types/react-datepicker": "^7.0.0",
     "@types/react-day-picker": "^5.3.0",
+    "@types/react-router-dom": "^5.3.3",
     "@types/react-time-picker": "^6.0.0",
     "@wix/bookings": "^1.0.459",
     "axios": "^1.7.7",
