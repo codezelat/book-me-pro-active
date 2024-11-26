@@ -34,7 +34,9 @@ export const authOptions = {
                     firstName: user.firstName,
                     lastName: user.lastName,
                     description: user.description,
-                    hourlyRate: user.hourlyRate,
+                    hourlyRate: user.hourlyRate, 
+                    profilePhoto: user.profilePhoto, 
+                
                     
                 };
             },
@@ -56,6 +58,7 @@ export const authOptions = {
                 token.lastName = user.lastName;
                 token.description = user.description;
                 token.hourlyRate = user.hourlyRate;
+                token.profilePhoto = user.profilePhoto;
             }
             return token;
         },
@@ -69,6 +72,7 @@ export const authOptions = {
             session.user.lastName = token.lastName;
             session.user.description = token.description;
             session.user.hourlyRate = token.hourlyRate;
+            session.user.profilePhoto = token.profilePhoto;
             return session;
         },
     },

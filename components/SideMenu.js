@@ -37,6 +37,11 @@ export default function SideMenu({ session }) {
   const router = useRouter();
 
   const profileUrl = `https://yourdomain.com/coach/${session?.user?.id}`;
+  const profileImage = session?.user?.profilePhoto
+  ? `http://localhost:3000${session.user.profilePhoto}`
+  : ""; // Fallback image
+
+  console.log( "URL :",profileImage);
 
   React.useEffect(() => {
     if (session?.user?.id) {
@@ -79,19 +84,14 @@ export default function SideMenu({ session }) {
         }}
       >
         <Image
-          src="/images/coach/coach1.png"
+          src={profileImage}
           alt="Coach Image"
           width={75}
           height={75}
           style={{ borderRadius: "50%" }}
+          className="mb-5"
         />
-        <Box sx={{ paddingBottom: "10px" }}>
-          <Avatar
-            alt={session?.user?.name || "User"}
-            src={session?.user?.image || "default-image.jpg"}
-            sx={{ width: "75px", height: "75px" }}
-          />
-        </Box>
+        
         <Box>
           <Typography
             variant="body2"
