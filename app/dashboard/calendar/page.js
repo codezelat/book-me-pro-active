@@ -23,13 +23,19 @@ const AdminCalendar = () => {
   
 
   useEffect(() => {
-    // const fetchAvailableDates = async () => {
-    //   const response = await axios.get('/api/available-dates');
-    //   setAvailableDates(response.data);
-    // };
+    const fetchAvailableDates = async () => {
+      try {
+        const response = await axios.get('/api/available_dates?coachId=' + session?.user?.id);
+        setAvailableDates(response.data);
+      } catch (error) {
+        console.error("Error fetching available dates:", error);
+      }
+    };
 
-    // fetchAvailableDates();
-  }, []);
+    if (session?.user?.id) {
+      fetchAvailableDates();
+    }
+  }, [session]);
 
   const addTimeSlot = () => {
     if (startTime && endTime) {
@@ -65,6 +71,40 @@ const AdminCalendar = () => {
     } catch (error) {
       console.error("Error adding available date:", error);
       alert("Failed to add available date.");
+    }
+  };
+
+  const removeAvailableDate = async (id) => {
+    try {
+      // Make an API call to delete the available date
+      await axios.delete(`/api/available_dates?id=${id}`);
+  
+      // Update the local state to remove the deleted date
+      setAvailableDates(availableDates.filter(item => item._id !== id));
+    } catch (error) {
+      console.error("Error removing available date:", error);
+      alert("Failed to remove available date.");
+    }
+  };
+
+  const removeTimeSlot = async (availableDateId, index) => {
+    // Find the available date to update its time slots
+    const availableDate = availableDates.find(date => date._id === availableDateId);
+    if (!availableDate) return;
+
+    const updatedTimeSlots = availableDate.timeSlots.filter((_, i) => i !== index); // Remove the time slot at the given index
+
+    // Update the local state
+    setAvailableDates(availableDates.map(date => 
+      date._id === availableDateId ? { ...date, timeSlots: updatedTimeSlots } : date
+    ));
+
+    // Send the updated time slots to the backend
+    try {
+      await axios.put(`/api/available_dates?id=${availableDateId}`, { timeSlots: updatedTimeSlots });
+    } catch (error) {
+      console.error("Error updating time slots:", error);
+      alert("Failed to update time slots.");
     }
   };
 
@@ -149,7 +189,7 @@ const AdminCalendar = () => {
                           <Button 
                             variant="outlined" 
                             color="error" 
-                            onClick={() => removeTimeSlot(index)} 
+                            onClick={() => removeTimeSlot(availableDate._id, index)} 
                             style={{ marginLeft: '10px' }}
                           >
                             Remove
