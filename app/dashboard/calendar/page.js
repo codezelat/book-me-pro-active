@@ -9,8 +9,20 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Divider, Grid, CardContent, Card, FormControlLabel, Checkbox } from '@mui/material';
 import { useSession } from "next-auth/react";
+import { styled } from '@mui/material/styles';
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  marginBottom: theme.spacing(3),
+  borderRadius: theme.spacing(2),
+  boxShadow: theme.shadows[3],
+}));
+
+const StyledCardContent = styled(CardContent)(({ theme }) => ({
+  padding: theme.spacing(3),
+}));
+
 
 const AdminCalendar = () => {
   const { data: session } = useSession(); // Get session data
@@ -94,6 +106,15 @@ const AdminCalendar = () => {
       alert("Coach ID is not available.");
       return;
     }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(date);
+
+    if (selectedDate < today) {
+      alert("You cannot add a date in the past. Please select today or a future date.");
+      return;
+    }
   
     const formattedDate = new Date(date).toISOString().split("T")[0]; // Ensure date is in a comparable format
   
@@ -174,100 +195,265 @@ const AdminCalendar = () => {
 
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>
-        Coach Calendar
+       <Typography 
+        variant="h4" 
+        component="h1" 
+        gutterBottom 
+        sx={{ 
+          fontWeight: 'bold', 
+          color: 'primary.main',
+          textAlign: 'center',
+          marginBottom: 4 
+        }}
+      >
+        Coach Calendar Management
       </Typography>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker
-        label="Select Date"
-        value={date}
-        onChange={(newValue) => setDate(newValue)}
-        // Use the 'textField' prop instead of 'renderInput'
-        textField={(params) => <TextField {...params} fullWidth />} 
-      />
-      </LocalizationProvider>
-      <TextField
-        label="Number of Slots"
-        type="number"
-        value={slots}
-        onChange={(e) => setSlots(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+          <StyledCard>
+            <StyledCardContent>
+              <Typography variant="h6" gutterBottom>
+                Date & Slot Configuration
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Select Date"
+                      value={date}
+                      onChange={(newValue) => setDate(newValue)}
+                      renderInput={(params) => (
+                        <TextField 
+                          {...params} 
+                          fullWidth 
+                          variant="outlined" 
+                          margin="normal" 
+                        />
+                      )}
+                      sx={{ width: '100%' }}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Number of Slots"
+                    type="number"
+                    value={slots}
+                    onChange={(e) => setSlots(e.target.value)}
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                  />
+                </Grid>
+              </Grid>
+            </StyledCardContent>
+          </StyledCard>
+        </Grid>
 
-<Typography variant="h6" gutterBottom>
-        Add Time Slots
-      </Typography>
-      <TextField
-        label="Start Time"
-        type="time"
-        value={startTime}
-        onChange={(e) => setStartTime(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="End Time"
-        type="time"
-        value={endTime}
-        onChange={(e) => setEndTime(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-      <Button variant="contained" color="secondary" onClick={addTimeSlot}>
-        Add Time Slot
-      </Button>
+        <Grid item xs={12} md={6}>
+          <StyledCard>
+            <StyledCardContent>
+              <Typography variant="h6" gutterBottom>
+                Time Slot Configuration
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField
+                    label="Start Time"
+                    type="time"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    // InputLabelProps={{
+                    //   shrink: true,
+                    // }}
+                    // inputProps={{
+                    //   step: 300, // 5 min
+                    // }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    label="End Time"
+                    type="time"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    // InputLabelProps={{
+                    //   shrink: true,
+                    // }}
+                    // inputProps={{
+                    //   step: 300, // 5 min
+                    // }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button 
+                    variant="contained" 
+                    color="primary" 
+                    onClick={addTimeSlot}
+                    fullWidth
+                    sx={{ mt: 2 }}
+                  >
+                    Add Time Slot
+                  </Button>
+                </Grid>
+                <Grid item xs>
+                  <Typography variant="body2" color="textSecondary">
+                    Current Time Slots: {timeSlots.length > 0 ? timeSlots.join(', ') : 'None'}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </StyledCardContent>
+          </StyledCard>
+        </Grid>
 
-      <Typography variant="body1" style={{ marginTop: '10px' }}>
-        Current Time Slots: {timeSlots.length > 0 ? timeSlots.join(', ') : 'None'}
-      </Typography>
+        <Grid item xs={12}>
+          <StyledCard>
+            <StyledCardContent>
+              <Grid container alignItems="center" spacing={2}>
+                <Grid item>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={multipleBookingsAllowed}
+                        onChange={(e) => setMultipleBookingsAllowed(e.target.checked)}
+                        color="primary"
+                      />
+                    }
+                    label="Allow Multiple Bookings"
+                  />
+                </Grid>
+                {/* <Grid item xs>
+                  <Typography variant="body2" color="textSecondary">
+                    Current Time Slots: {timeSlots.length > 0 ? timeSlots.join(', ') : 'None'}
+                  </Typography>
+                </Grid> */}
+              </Grid>
+            </StyledCardContent>
+          </StyledCard>
+        </Grid>
+      </Grid>
 
       <Button variant="contained" color="primary" onClick={addAvailableDate}>
         Add Available Date
       </Button>
+     
+      <Divider sx={{ my: 3 }} />
+ 
 
-      <Typography variant="h5" gutterBottom style={{ marginTop: '20px' }}>
+      <Box sx={{ width: '100%', mb: 2 }}>
+      <Typography 
+        variant="h5" 
+        gutterBottom 
+        sx={{ 
+          marginTop: 3, 
+          marginBottom: 2, 
+          fontWeight: 600, 
+          color: 'text.primary' 
+        }}
+      >
         Available Dates
       </Typography>
 
-
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
+      <TableContainer 
+        component={Paper} 
+        elevation={3} 
+        sx={{ 
+          borderRadius: 2, 
+          overflow: 'hidden' 
+        }}
+      >
+        <Table sx={{ minWidth: 650 }}>
+          <TableHead sx={{ backgroundColor: 'grey.100' }}>
             <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Time Slots</TableCell>
-              <TableCell>Action</TableCell>
+              <TableCell 
+                sx={{ 
+                  fontWeight: 'bold', 
+                  color: 'text.secondary' 
+                }}
+              >
+                Date
+              </TableCell>
+              <TableCell 
+                sx={{ 
+                  fontWeight: 'bold', 
+                  color: 'text.secondary' 
+                }}
+              >
+                Time Slots
+              </TableCell>
+              <TableCell 
+                sx={{ 
+                  fontWeight: 'bold', 
+                  color: 'text.secondary' 
+                }}
+              >
+                Action
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {availableDates.map((availableDate) => (
-              <TableRow key={availableDate._id}>
-                <TableCell>{new Date(availableDate.date).toLocaleDateString()}</TableCell>
+              <TableRow 
+                key={availableDate._id} 
+                hover
+                sx={{ 
+                  '&:last-child td, &:last-child th': { border: 0 } 
+                }}
+              >
                 <TableCell>
-                  <ul>
+                  {new Date(availableDate.date).toLocaleDateString()}
+                </TableCell>
+                <TableCell>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    gap: 1 
+                  }}>
                     {Array.isArray(availableDate.timeSlots) && availableDate.timeSlots.length > 0 ? (
                       availableDate.timeSlots.map((timeSlot, index) => (
-                        <li key={index}>
-                          {timeSlot}
+                        <Box 
+                          key={index} 
+                          sx={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'space-between', 
+                            p: 1, 
+                            bgcolor: 'grey.100', 
+                            borderRadius: 1 
+                          }}
+                        >
+                          <Typography variant="body2">
+                            {timeSlot}
+                          </Typography>
                           <Button 
                             variant="outlined" 
                             color="error" 
-                            onClick={() => removeTimeSlot(availableDate._id, index)} 
-                            style={{ marginLeft: '10px' }}
+                            size="small"
+                            onClick={() => removeTimeSlot(availableDate._id, index)}
                           >
                             Remove
                           </Button>
-                        </li>
+                        </Box>
                       ))
                     ) : (
-                      <li>No time slots available</li>
+                      <Typography 
+                        variant="body2" 
+                        color="text.secondary"
+                      >
+                        No time slots available
+                      </Typography>
                     )}
-                  </ul>
+                  </Box>
                 </TableCell>
                 <TableCell>
                   <Button 
-                    variant="outlined" 
+                    variant="contained" 
                     color="error" 
                     onClick={() => removeAvailableDate(availableDate._id)}
                   >
@@ -279,6 +465,7 @@ const AdminCalendar = () => {
           </TableBody>
         </Table>
       </TableContainer>
+    </Box>
     </Container>
   );
 };
