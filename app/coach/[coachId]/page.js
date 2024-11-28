@@ -187,7 +187,6 @@ export default function CoachProfilePage() {
           dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
           incididunt ut labore et dolore magna aliqua.
         </div>
-       
       </div>
       {/* <div className="container pb-24 mx-auto px-20">
         <div className="text-3xl text-black font-extrabold mb-6">Awards</div>
