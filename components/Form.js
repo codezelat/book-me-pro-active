@@ -1,6 +1,3 @@
-// components/Form.js
-
-
 import React, { useState } from "react";
 import axios from "axios";
 import {
@@ -12,7 +9,7 @@ import {
   Container,
 } from "@mui/material";
 
-const Form = ({ selectedDate, selectedTime, closeModal, coachId }) => {
+const Form = ({ selectedDate, selectedTime, closeModal, isIndividualSession,  coachId }) => {
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -33,13 +30,14 @@ const Form = ({ selectedDate, selectedTime, closeModal, coachId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting data:", { ...formData, selectedDate, selectedTime, coachId });
+    console.log("Submitting data:", { ...formData, selectedDate, selectedTime,  isIndividualSession, coachId });
 
     try {
       const response = await axios.post("/api/appointments", {
         ...formData,
         selectedDate,
         selectedTime,
+        isIndividualSession,
         coachId, // Include the coach ID in the request body
       });
 
@@ -115,7 +113,7 @@ const Form = ({ selectedDate, selectedTime, closeModal, coachId }) => {
             <Button
               type="submit"
               variant="contained"
-              color="primary"
+              className="text-white bg-green-500 hover:bg-green-800 font-medium rounded-lg text-sm px-4 py-2"
               sx={{ mt: 2 }}
             >
               Submit

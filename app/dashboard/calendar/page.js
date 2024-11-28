@@ -32,8 +32,7 @@ const AdminCalendar = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  const [multipleBookingsAllowed, setMultipleBookingsAllowed] = useState(false);
-  
+
 
   useEffect(() => {
     const fetchAvailableDates = async () => {
@@ -210,26 +209,52 @@ const AdminCalendar = () => {
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <StyledCard>
-            <StyledCardContent>
-              <Typography variant="h6" gutterBottom>
-                Date & Slot Configuration
+          <StyledCard 
+            sx={{ 
+              height: '100%', 
+              display: 'flex', 
+              flexDirection: 'column' 
+            }}
+         >
+            <StyledCardContent sx={{ flexGrow: 1 }}>
+              <Typography variant="h6" 
+              gutterBottom
+              sx={{ 
+                borderBottom: '2px solid', 
+                borderColor: 'primary.main', 
+                paddingBottom: 1, 
+                marginBottom: 2 
+              }}
+              >
+                Date Configuration
               </Typography>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} sx={{ height: '100%' }}>
                 <Grid item xs={12}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label="Select Date"
                       value={date}
                       onChange={(newValue) => setDate(newValue)}
-                      renderInput={(params) => (
-                        <TextField 
-                          {...params} 
-                          fullWidth 
-                          variant="outlined" 
-                          margin="normal" 
-                        />
-                      )}
+                      slots={{
+                        textField: (params) => (
+                          <TextField 
+                            {...params} 
+                            fullWidth 
+                            variant="outlined" 
+                            margin="normal" 
+                            sx={{
+                              '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                  borderColor: 'primary.main',
+                                },
+                                '&:hover fieldset': {
+                                  borderColor: 'primary.dark',
+                                },
+                              },
+                            }}
+                          />
+                        )
+                      }}
                       sx={{ width: '100%' }}
                     />
                   </LocalizationProvider>
@@ -243,7 +268,17 @@ const AdminCalendar = () => {
                     fullWidth
                     variant="outlined"
                     margin="normal"
-                  />
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: 'primary.main',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: 'primary.dark',
+                        },
+                      },
+                    }}
+                    />
                 </Grid>
               </Grid>
             </StyledCardContent>
@@ -251,9 +286,23 @@ const AdminCalendar = () => {
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <StyledCard>
-            <StyledCardContent>
-              <Typography variant="h6" gutterBottom>
+          <StyledCard
+            sx={{ 
+              height: '100%', 
+              display: 'flex', 
+              flexDirection: 'column' 
+            }}
+          >
+            <StyledCardContent sx={{ flexGrow: 1 }}>
+              <Typography variant="h6" 
+                gutterBottom
+                sx={{ 
+                  borderBottom: '2px solid', 
+                  borderColor: 'primary.main', 
+                  paddingBottom: 1, 
+                  marginBottom: 2 
+                }}
+              >
                 Time Slot Configuration
               </Typography>
               <Grid container spacing={2}>
@@ -297,51 +346,53 @@ const AdminCalendar = () => {
                     color="primary" 
                     onClick={addTimeSlot}
                     fullWidth
-                    sx={{ mt: 2 }}
+                    sx={{ 
+                      mt: 2, 
+                      backgroundColor: '#10b981', // Tailwind's green-500
+                      '&:hover': {
+                        backgroundColor: '#059669', // Slightly darker green for hover
+                      }
+                    }}
                   >
                     Add Time Slot
                   </Button>
                 </Grid>
-                <Grid item xs>
-                  <Typography variant="body2" color="textSecondary">
+                <Grid item xs={12}>
+                  <Typography 
+                    variant="body2" 
+                    color="textSecondary"
+                    sx={{ 
+                      mt: 1,
+                      p: 1,
+                      backgroundColor: '#f0f9ff', // Light background for better visibility
+                      border: '1px solid',
+                      borderColor: 'divider',
+                      borderRadius: 1
+                    }}
+                  >
                     Current Time Slots: {timeSlots.length > 0 ? timeSlots.join(', ') : 'None'}
                   </Typography>
                 </Grid>
-              </Grid>
-            </StyledCardContent>
-          </StyledCard>
-        </Grid>
-
-        <Grid item xs={12}>
-          <StyledCard>
-            <StyledCardContent>
-              <Grid container alignItems="center" spacing={2}>
-                <Grid item>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={multipleBookingsAllowed}
-                        onChange={(e) => setMultipleBookingsAllowed(e.target.checked)}
-                        color="primary"
-                      />
-                    }
-                    label="Allow Multiple Bookings"
-                  />
-                </Grid>
-                {/* <Grid item xs>
-                  <Typography variant="body2" color="textSecondary">
-                    Current Time Slots: {timeSlots.length > 0 ? timeSlots.join(', ') : 'None'}
-                  </Typography>
-                </Grid> */}
               </Grid>
             </StyledCardContent>
           </StyledCard>
         </Grid>
       </Grid>
 
-      <Button variant="contained" color="primary" onClick={addAvailableDate}>
-        Add Available Date
-      </Button>
+      <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}>
+        <Button 
+          variant="contained" 
+          onClick={addAvailableDate}
+          sx={{ 
+            backgroundColor: '#10b981', // Tailwind's green-500
+            '&:hover': {
+              backgroundColor: '#059669', // Slightly darker green for hover
+            }
+          }}
+        >
+          Add Available Date
+        </Button>
+      </Box>
      
       <Divider sx={{ my: 3 }} />
  
