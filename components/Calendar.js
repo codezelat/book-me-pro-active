@@ -76,7 +76,11 @@ export default function Calendar() {
   
       // Check if any appointment exists at the selected time
       const existingAppointment = appointments.find(appointment => appointment.time === selectedTime);
-  
+      
+      // Determine if booking is allowed
+      const isSessionAllowed = !isIndividualSession || (isIndividualSession && !existingAppointment);
+
+        // Check booking condition
       if (existingAppointment) {
         // Appointment exists at the selected time
         if (isIndividualSession && existingAppointment.individualSession) {
@@ -87,7 +91,11 @@ export default function Calendar() {
         }
       } else {
         // No existing appointment at the selected time
-        alert(`Booking allowed: No existing appointment. You can book a ${isIndividualSession ? 'individual' : 'group'} session.`);
+        if (!isIndividualSession) {
+          alert("Booking allowed: No existing appointment. You can book a group session.");
+        } else {
+          alert("Booking allowed: No existing appointment. You can book an individual session.");
+        }
       }
     } catch (error) {
       console.error('Error handling session type:', error);

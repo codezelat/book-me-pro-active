@@ -6,10 +6,18 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import "../styles/globals.css";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function MyApp({ Component, pageProps }) {
   // Destructure theme-related functions and states from the useThemeMode hook
   const { isDarkMode, toggleTheme } = useThemeMode();
+
+  const showToastMessage = () => {
+    toast.success("Success Notification !", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
 
   return (
     <ThemeProviderComponent>
@@ -23,6 +31,7 @@ function MyApp({ Component, pageProps }) {
       {/* Main Content */}
       <Box sx={{ p: 2 }}>
         <Component {...pageProps} />
+        <ToastContainer />
       </Box>
     </ThemeProviderComponent>
   );
