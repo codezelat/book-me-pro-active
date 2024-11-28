@@ -17,7 +17,7 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from "@/app/dashboard/theme/customizations";
-import CustomizedDataGrid from '@/app/dashboard/my-bookings/dataGrid'
+import CustomizedDataGrid from "@/app/dashboard/my-bookings/dataGrid";
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -66,14 +66,10 @@ export default function Dashboard(props) {
             left: 0,
             right: 0,
             paddingTop: "10px",
-            paddingLeft: "20px",
             paddingRight: "20px",
-            height: "94px",
+            height: "82px",
             zIndex: 10,
-            backgroundColor: isDarkMode
-              ? "background.default"
-              : "background.paper",
-            color: isDarkMode ? "text.primary" : "text.secondary",
+            backgroundColor: "white",
           }}
         >
           <DashboardHeader />
@@ -116,7 +112,7 @@ export default function Dashboard(props) {
 
                 backgroundColor: isDarkMode
                   ? "background.default"
-                  : "background.paper",
+                  : "white",
                 color: isDarkMode ? "text.primary" : "text.secondary",
               }}
             >

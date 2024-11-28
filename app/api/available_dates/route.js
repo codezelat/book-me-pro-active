@@ -29,6 +29,7 @@ export async function POST(req) {
 }
 
 // GET request: Fetch all available dates for a specific coach
+// GET request: Fetch all available dates for a specific coach starting from today
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const coachId = searchParams.get("coachId"); // Get coachId from query parameters
@@ -40,7 +41,15 @@ export async function GET(req) {
   const { db } = await connectToDatabase();
 
   try {
-    const result = await db.collection("available_dates").find({ coachId }).toArray(); // Filter by coachId
+    const today = new Date();
+    // Set the time to the start of the day (midnight)
+    today.setHours(0, 0, 0, 0);
+
+    const result = await db.collection("available_dates").find({
+      coachId,
+      date: { $gte: today } // Filter for dates that are today or in the future
+    }).toArray(); // Convert the cursor to an array
+
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {
     console.error("Error fetching available dates:", error);
@@ -48,66 +57,56 @@ export async function GET(req) {
   }
 }
 
-// // DELETE request: Remove an available date by ID
-// export async function DELETE(req) {
-//   const { id } = req.query; // Assuming you are passing the ID as a query parameter
+// DELETE request: Remove an available date by ID
+export async function DELETE(req) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id"); // Get the ID from query parameters
 
-//   if (!id) {
-//     return new Response(JSON.stringify({ message: "ID is required." }), { status: 400 });
-//   }
+  if (!id) {
+    return new Response(JSON.stringify({ message: "ID is required." }), { status: 400 });
+  }
 
-//   const { db } = await connectToDatabase();
+  const { db } = await connectToDatabase();
 
-//   try {
-//     const result = await db.collection("available_dates").deleteOne({ _id: new ObjectId(id) }); // Ensure to import ObjectId
+  try {
+    const result = await db.collection("available_dates").deleteOne({ _id: new ObjectId(id) });
 
-//     if (result.deletedCount === 0) {
-//       return new Response(JSON.stringify({ message: "Date not found." }), { status: 404 });
-//     }
+    if (result.deletedCount === 0) {
+      return new Response(JSON.stringify({ message: "No available date found." }), { status: 404 });
+    }
 
-//     return new Response(JSON.stringify({ message: "Date deleted successfully." }), { status: 200 });
-//   } catch (error) {
-//     console.error("Error deleting available date:", error);
-//     return new Response(JSON.stringify({ message: "Error deleting available date.", error: error.message }), { status: 500 });
-//   }
-// }
+    return new Response(JSON.stringify({ message: "Available date deleted successfully." }), { status: 200 });
+  } catch (error) {
+    console.error("Error deleting available date:", error);
+    return new Response(JSON.stringify({ message: "Error deleting available date.", error: error.message }), { status: 500 });
+  }
+}
 
-// // DELETE request: Remove a specific time slot from an available date
-// export async function DELETE_TIME_SLOT(req) {
-//   const { id, index } = req.query; // Assuming you are passing the ID and index as query parameters
+// PUT request: Update time slots for a specific available date
+export async function PUT(req) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id"); // Get the ID from query parameters
 
-//   if (!id || index === undefined) {
-//     return new Response(JSON.stringify({ message: "ID and index are required." }), { status: 400 });
-//   }
+  if (!id) {
+    return new Response(JSON.stringify({ message: "ID is required." }), { status: 400 });
+  }
 
-//   const { db } = await connectToDatabase();
+  const { db } = await connectToDatabase();
+  const { timeSlots } = await req.json(); // Get the new time slots from the request body
 
-//   try {
-//     // Fetch the available date document
-//     const availableDate = await db.collection("available_dates").findOne({ _id: new ObjectId(id) });
-    
-//     if (!availableDate) {
-//       return new Response(JSON.stringify({ message: "Date not found." }), { status: 404 });
-//     }
+  try {
+    const result = await db.collection("available_dates").updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { timeSlots } } // Update the timeSlots field
+    );
 
-//     // Ensure the index is a number
-//     const indexNum = parseInt(index, 10);
-//     if (isNaN(indexNum) || indexNum < 0 || indexNum >= availableDate.timeSlots.length) {
-//       return new Response(JSON.stringify({ message: "Invalid index." }), { status: 400 });
-//     }
+    if (result.modifiedCount === 0) {
+      return new Response(JSON.stringify({ message: "No available date found or no changes made." }), { status: 404 });
+    }
 
-//     // Remove the time slot
-//     availableDate.timeSlots.splice(indexNum, 1); // Remove the time slot from the array
-
-//     // Update the document in the database
-//     await db.collection("available_dates").updateOne(
-//       { _id: new ObjectId(id) },
-//       { $set: { timeSlots: availableDate.timeSlots } } // Update the timeSlots array
-//     );
-
-//     return new Response(JSON.stringify(availableDate), { status: 200 });
-//   } catch (error) {
-//     console.error("Error removing time slot:", error);
-//     return new Response(JSON.stringify({ message: "Error removing time slot.", error: error.message }), { status: 500 });
-//   }
-// }
+    return new Response(JSON.stringify({ message: "Time slots updated successfully." }), { status: 200 });
+  } catch (error) {
+    console.error("Error updating time slots:", error);
+    return new Response(JSON.stringify({ message: "Error updating time slots.", error: error.message }), { status: 500 });
+  }
+}

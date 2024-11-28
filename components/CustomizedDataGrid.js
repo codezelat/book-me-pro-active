@@ -23,18 +23,19 @@ export default function CustomizedDataGrid() {
 
         // Define columns
         const columns = [
-          { field: "name", headerName: "Name", flex: 1.5, minWidth: 200 },
-          { field: "email", headerName: "Email", flex: 1, minWidth: 150 },
-          { field: "phone", headerName: "Phone", flex: 1, minWidth: 150 },
-          { field: "date", headerName: "Date", flex: 1, minWidth: 100 },
-          { field: "time", headerName: "Time", flex: 1, minWidth: 100 },
-          {
-            field: "status",
-            headerName: "Status",
-            flex: 0.5,
-            minWidth: 90,
-            renderCell: (params) => renderStatus(params.value),
-          },
+          { field: "name", headerName: "Name", flex: 1.5, minWidth: 150 },
+          { field: "email", headerName: "Email", flex: 1, minWidth: 120 },
+          { field: "phone", headerName: "Phone", flex: 1, minWidth: 120 },
+          { field: "date", headerName: "Date", flex: 1, minWidth: 80 },
+          { field: "time", headerName: "Time", flex: 1, minWidth: 80 },
+          { field: "isIndividualSession", headerName: "Individual Session", flex: 1, minWidth: 80 },
+          // {
+          //   field: "status",
+          //   headerName: "Status",
+          //   flex: 0.5,
+          //   minWidth: 80,
+          //   renderCell: (params) => renderStatus(params.value),
+          // },
           {
             field: "actions",
             headerName: "Actions",
@@ -101,7 +102,8 @@ export default function CustomizedDataGrid() {
           phone: appointment.phone,
           date: new Date(appointment.selectedDate).toLocaleDateString(),
           time: appointment.selectedTime,
-          status: appointment.status || "Pending",
+          isIndividualSession: appointment.isIndividualSession,
+          // status: appointment.status || "Pending",
         }));
 
         setRows(formattedRows);
@@ -114,16 +116,16 @@ export default function CustomizedDataGrid() {
     fetchAppointments();
   }, [session]);
 
-  // Function to render status
-  function renderStatus(status) {
-    const colors = {
-      Approved: "success",
-      Declined: "default",
-      Pending: "default",
-    };
+  // // Function to render status
+  // function renderStatus(status) {
+  //   const colors = {
+  //     Approved: "success",
+  //     Declined: "default",
+  //     Pending: "default",
+  //   };
 
-    return <Chip label={status} color={colors[status]} size="small" />;
-  }
+  //   return <Chip label={status} color={colors[status]} size="small" />;
+  // }
 
   // Function to handle Approve/Decline actions
   const handleAction = async (row, newStatus) => {

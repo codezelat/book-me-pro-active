@@ -33,7 +33,7 @@ async function sendEmail({ email, name, status }) {
 
 // POST request: Create a new appointment
 export async function POST(req) {
-  const { name, email, phone, appointmentDetails, selectedDate, selectedTime, coachId } = await req.json();
+  const { name, email, phone, appointmentDetails, selectedDate, selectedTime, isIndividualSession, coachId } = await req.json();
 
   // Validate required fields
   if (!name || !email || !phone || !coachId) {
@@ -51,6 +51,7 @@ export async function POST(req) {
       appointmentDetails,
       selectedDate: new Date(selectedDate), // Ensure this is a valid date
       selectedTime,
+      isIndividualSession,
       coachId, // Store the coachId in the appointment
       createdAt,
       status: "pending", // Default status for new appointments
@@ -63,6 +64,7 @@ export async function POST(req) {
     return new Response(JSON.stringify({ message: "Error saving appointment.", error: error.message }), { status: 500 });
   }
 }
+
 
 // GET request: Fetch all appointments
 export async function GET(req) {

@@ -1,15 +1,18 @@
-const { db } = await connectToDatabase();
+import * as mongoose from "mongoose";
+import { model, Schema } from "mongoose";
 
-// Define your appointment document (example)
-const appointmentData = {
-    coachId: "coach123",
-    userId: "user456",
-    appointmentTime: new Date("2024-11-06T10:00:00Z"),
-    createdAt: new Date(),
-    status: "confirmed",
-    status: "pending", // Default status
-    sessionDuration: 60,
-};
+const appointmentSchema = new Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  phone: { type: String, required: true },
+  appointmentDetails: { type: String, required: false },
+  selectedDate: { type: Date, required: false },
+  selectedTime: { type: String, required: false },
+  isIndividualSession: { type: Boolean, required: true },
+  coachId: { type: Schema.Types.ObjectId, ref: "Coach", required: true },
+  createdAt: { type: Date, default: Date.now },
+});
 
-// Insert appointment data into the "appointments" collection
-await db.collection("appointments").insertOne(appointmentData);
+const Appointment = model("Appointment", appointmentSchema);
+
+export default Appointment;

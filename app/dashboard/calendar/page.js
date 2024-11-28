@@ -9,8 +9,20 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Divider, Grid, CardContent, Card, FormControlLabel, Checkbox } from '@mui/material';
 import { useSession } from "next-auth/react";
+import { styled } from '@mui/material/styles';
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  marginBottom: theme.spacing(3),
+  borderRadius: theme.spacing(2),
+  boxShadow: theme.shadows[3],
+}));
+
+const StyledCardContent = styled(CardContent)(({ theme }) => ({
+  padding: theme.spacing(3),
+}));
+
 
 const AdminCalendar = () => {
   const { data: session } = useSession(); // Get session data
@@ -20,19 +32,58 @@ const AdminCalendar = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  
+
 
   useEffect(() => {
-    // const fetchAvailableDates = async () => {
-    //   const response = await axios.get('/api/available-dates');
-    //   setAvailableDates(response.data);
-    // };
+    const fetchAvailableDates = async () => {
+      try {
+        const response = await axios.get('/api/available_dates?coachId=' + session?.user?.id);
+        
+        // Get today's date and set the time to midnight
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); 
 
-    // fetchAvailableDates();
-  }, []);
+        // Filter and sort dates starting from today
+        const filteredAndSortedDates = response.data
+          .filter(date => new Date(date.date) >= today) // Filter for dates from today onwards
+          .sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort by date ascending
+
+        setAvailableDates(filteredAndSortedDates);
+      } catch (error) {
+        console.error("Error fetching available dates:", error);
+      }
+    };
+
+    if (session?.user?.id) {
+      fetchAvailableDates();
+    }
+  }, [session]);
 
   const addTimeSlot = () => {
     if (startTime && endTime) {
+      // Convert start and end times to Date objects for comparison
+      const newStartTime = new Date(`1970-01-01T${startTime}:00`);
+      const newEndTime = new Date(`1970-01-01T${endTime}:00`);
+  
+      // Check for overlapping time slots if the date already exists
+      const existingDate = availableDates.find(
+        (availableDate) => new Date(availableDate.date).toISOString().split("T")[0] === new Date(date).toISOString().split("T")[0]
+      );
+  
+      if (existingDate) {
+        const isOverlapping = existingDate.timeSlots.some((timeSlot) => {
+          const [existingStart, existingEnd] = timeSlot.split(' - ').map(time => new Date(`1970-01-01T${time}:00`));
+          // Check if the new time slot overlaps with any existing time slot
+          return (newStartTime < existingEnd && newEndTime > existingStart);
+        });
+  
+        if (isOverlapping) {
+          alert("The new time slot overlaps with an existing time slot. Please choose a different time.");
+          return;
+        }
+      }
+  
+      // If no overlap, add the time slot
       setTimeSlots([...timeSlots, `${startTime} - ${endTime}`]);
       setStartTime('');
       setEndTime('');
@@ -47,123 +98,413 @@ const AdminCalendar = () => {
       alert("Please select a date and enter the number of slots.");
       return;
     }
-
+  
     const coachId = session?.user?.id; // Get coachId from session
-
+  
     if (!coachId) {
       alert("Coach ID is not available.");
       return;
     }
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(date);
+
+    if (selectedDate < today) {
+      alert("You cannot add a date in the past. Please select today or a future date.");
+      return;
+    }
+  
+    const formattedDate = new Date(date).toISOString().split("T")[0]; // Ensure date is in a comparable format
+  
+    // Check if the date already exists
+    const existingDate = availableDates.find(
+      (availableDate) => new Date(availableDate.date).toISOString().split("T")[0] === formattedDate
+    );
+  
+    if (existingDate) {
+      // If date exists, append the new time slots to the existing timeSlots array
+      try {
+        const updatedTimeSlots = [...existingDate.timeSlots, ...timeSlots];
+        await axios.put(`/api/available_dates?id=${existingDate._id}`, { timeSlots: updatedTimeSlots });
+        
+        // Update the local state
+        setAvailableDates(availableDates.map((d) =>
+          d._id === existingDate._id
+            ? { ...d, timeSlots: updatedTimeSlots }
+            : d
+        ));
+        setDate(null);
+        setSlots('');
+        setTimeSlots([]);
+        alert("Time slots added successfully to the existing date.");
+      } catch (error) {
+        console.error("Error appending time slots:", error);
+        alert("Failed to append time slots.");
+      }
+    } else {
+      // If date doesn't exist, create a new record
+      try {
+        await axios.post('/api/available_dates', { date, slots, timeSlots, coachId });
+        setAvailableDates([...availableDates, { date, slots, timeSlots, coachId }]);
+        setDate(null);
+        setSlots('');
+        setTimeSlots([]);
+        alert("Available date added successfully.");
+      } catch (error) {
+        console.error("Error adding available date:", error);
+        alert("Failed to add available date.");
+      }
+    }
+  };
+
+  const removeAvailableDate = async (id) => {
     try {
-      // Send coachId along with date, slots, and timeSlots
-      await axios.post('/api/available_dates', { date, slots, timeSlots, coachId });
-      setAvailableDates([...availableDates, { date, slots, timeSlots, coachId }]);
-      setDate(null);
-      setSlots('');
-      setTimeSlots([]);
+      // Make an API call to delete the available date
+      await axios.delete(`/api/available_dates?id=${id}`);
+  
+      // Update the local state to remove the deleted date
+      setAvailableDates(availableDates.filter(item => item._id !== id));
     } catch (error) {
-      console.error("Error adding available date:", error);
-      alert("Failed to add available date.");
+      console.error("Error removing available date:", error);
+      alert("Failed to remove available date.");
+    }
+  };
+
+  const removeTimeSlot = async (availableDateId, index) => {
+    // Find the available date to update its time slots
+    const availableDate = availableDates.find(date => date._id === availableDateId);
+    if (!availableDate) return;
+
+    const updatedTimeSlots = availableDate.timeSlots.filter((_, i) => i !== index); // Remove the time slot at the given index
+
+    // Update the local state
+    setAvailableDates(availableDates.map(date => 
+      date._id === availableDateId ? { ...date, timeSlots: updatedTimeSlots } : date
+    ));
+
+    // Send the updated time slots to the backend
+    try {
+      await axios.put(`/api/available_dates?id=${availableDateId}`, { timeSlots: updatedTimeSlots });
+    } catch (error) {
+      console.error("Error updating time slots:", error);
+      alert("Failed to update time slots.");
     }
   };
 
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>
-        Coach Calendar
+       <Typography 
+        variant="h4" 
+        component="h1" 
+        gutterBottom 
+        sx={{ 
+          fontWeight: 'bold', 
+          color: 'primary.main',
+          textAlign: 'center',
+          marginBottom: 4 
+        }}
+      >
+        Coach Calendar Management
       </Typography>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker
-        label="Select Date"
-        value={date}
-        onChange={(newValue) => setDate(newValue)}
-        // Use the 'textField' prop instead of 'renderInput'
-        textField={(params) => <TextField {...params} fullWidth />} 
-      />
-      </LocalizationProvider>
-      <TextField
-        label="Number of Slots"
-        type="number"
-        value={slots}
-        onChange={(e) => setSlots(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+          <StyledCard 
+            sx={{ 
+              height: '100%', 
+              display: 'flex', 
+              flexDirection: 'column' 
+            }}
+         >
+            <StyledCardContent sx={{ flexGrow: 1 }}>
+              <Typography variant="h6" 
+              gutterBottom
+              sx={{ 
+                borderBottom: '2px solid', 
+                borderColor: 'primary.main', 
+                paddingBottom: 1, 
+                marginBottom: 2 
+              }}
+              >
+                Date Configuration
+              </Typography>
+              <Grid container spacing={2} sx={{ height: '100%' }}>
+                <Grid item xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Select Date"
+                      value={date}
+                      onChange={(newValue) => setDate(newValue)}
+                      slots={{
+                        textField: (params) => (
+                          <TextField 
+                            {...params} 
+                            fullWidth 
+                            variant="outlined" 
+                            margin="normal" 
+                            sx={{
+                              '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                  borderColor: 'primary.main',
+                                },
+                                '&:hover fieldset': {
+                                  borderColor: 'primary.dark',
+                                },
+                              },
+                            }}
+                          />
+                        )
+                      }}
+                      sx={{ width: '100%' }}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Number of Slots"
+                    type="number"
+                    value={slots}
+                    onChange={(e) => setSlots(e.target.value)}
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: 'primary.main',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: 'primary.dark',
+                        },
+                      },
+                    }}
+                    />
+                </Grid>
+              </Grid>
+            </StyledCardContent>
+          </StyledCard>
+        </Grid>
 
-<Typography variant="h6" gutterBottom>
-        Add Time Slots
-      </Typography>
-      <TextField
-        label="Start Time"
-        type="time"
-        value={startTime}
-        onChange={(e) => setStartTime(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="End Time"
-        type="time"
-        value={endTime}
-        onChange={(e) => setEndTime(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-      <Button variant="contained" color="secondary" onClick={addTimeSlot}>
-        Add Time Slot
-      </Button>
+        <Grid item xs={12} md={6}>
+          <StyledCard
+            sx={{ 
+              height: '100%', 
+              display: 'flex', 
+              flexDirection: 'column' 
+            }}
+          >
+            <StyledCardContent sx={{ flexGrow: 1 }}>
+              <Typography variant="h6" 
+                gutterBottom
+                sx={{ 
+                  borderBottom: '2px solid', 
+                  borderColor: 'primary.main', 
+                  paddingBottom: 1, 
+                  marginBottom: 2 
+                }}
+              >
+                Time Slot Configuration
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField
+                    label="Start Time"
+                    type="time"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    // InputLabelProps={{
+                    //   shrink: true,
+                    // }}
+                    // inputProps={{
+                    //   step: 300, // 5 min
+                    // }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    label="End Time"
+                    type="time"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    // InputLabelProps={{
+                    //   shrink: true,
+                    // }}
+                    // inputProps={{
+                    //   step: 300, // 5 min
+                    // }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button 
+                    variant="contained" 
+                    color="primary" 
+                    onClick={addTimeSlot}
+                    fullWidth
+                    sx={{ 
+                      mt: 2, 
+                      backgroundColor: '#10b981', // Tailwind's green-500
+                      '&:hover': {
+                        backgroundColor: '#059669', // Slightly darker green for hover
+                      }
+                    }}
+                  >
+                    Add Time Slot
+                  </Button>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography 
+                    variant="body2" 
+                    color="textSecondary"
+                    sx={{ 
+                      mt: 1,
+                      p: 1,
+                      backgroundColor: '#f0f9ff', // Light background for better visibility
+                      border: '1px solid',
+                      borderColor: 'divider',
+                      borderRadius: 1
+                    }}
+                  >
+                    Current Time Slots: {timeSlots.length > 0 ? timeSlots.join(', ') : 'None'}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </StyledCardContent>
+          </StyledCard>
+        </Grid>
+      </Grid>
 
-      <Typography variant="body1" style={{ marginTop: '10px' }}>
-        Current Time Slots: {timeSlots.length > 0 ? timeSlots.join(', ') : 'None'}
-      </Typography>
+      <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}>
+        <Button 
+          variant="contained" 
+          onClick={addAvailableDate}
+          sx={{ 
+            backgroundColor: '#10b981', // Tailwind's green-500
+            '&:hover': {
+              backgroundColor: '#059669', // Slightly darker green for hover
+            }
+          }}
+        >
+          Add Available Date
+        </Button>
+      </Box>
+     
+      <Divider sx={{ my: 3 }} />
+ 
 
-      <Button variant="contained" color="primary" onClick={addAvailableDate}>
-        Add Available Date
-      </Button>
-
-      <Typography variant="h5" gutterBottom style={{ marginTop: '20px' }}>
+      <Box sx={{ width: '100%', mb: 2 }}>
+      <Typography 
+        variant="h5" 
+        gutterBottom 
+        sx={{ 
+          marginTop: 3, 
+          marginBottom: 2, 
+          fontWeight: 600, 
+          color: 'text.primary' 
+        }}
+      >
         Available Dates
       </Typography>
 
-
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
+      <TableContainer 
+        component={Paper} 
+        elevation={3} 
+        sx={{ 
+          borderRadius: 2, 
+          overflow: 'hidden' 
+        }}
+      >
+        <Table sx={{ minWidth: 650 }}>
+          <TableHead sx={{ backgroundColor: 'grey.100' }}>
             <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Time Slots</TableCell>
-              <TableCell>Action</TableCell>
+              <TableCell 
+                sx={{ 
+                  fontWeight: 'bold', 
+                  color: 'text.secondary' 
+                }}
+              >
+                Date
+              </TableCell>
+              <TableCell 
+                sx={{ 
+                  fontWeight: 'bold', 
+                  color: 'text.secondary' 
+                }}
+              >
+                Time Slots
+              </TableCell>
+              <TableCell 
+                sx={{ 
+                  fontWeight: 'bold', 
+                  color: 'text.secondary' 
+                }}
+              >
+                Action
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {availableDates.map((availableDate) => (
-              <TableRow key={availableDate._id}>
-                <TableCell>{new Date(availableDate.date).toLocaleDateString()}</TableCell>
+              <TableRow 
+                key={availableDate._id} 
+                hover
+                sx={{ 
+                  '&:last-child td, &:last-child th': { border: 0 } 
+                }}
+              >
                 <TableCell>
-                  <ul>
+                  {new Date(availableDate.date).toLocaleDateString()}
+                </TableCell>
+                <TableCell>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    gap: 1 
+                  }}>
                     {Array.isArray(availableDate.timeSlots) && availableDate.timeSlots.length > 0 ? (
                       availableDate.timeSlots.map((timeSlot, index) => (
-                        <li key={index}>
-                          {timeSlot}
+                        <Box 
+                          key={index} 
+                          sx={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'space-between', 
+                            p: 1, 
+                            bgcolor: 'grey.100', 
+                            borderRadius: 1 
+                          }}
+                        >
+                          <Typography variant="body2">
+                            {timeSlot}
+                          </Typography>
                           <Button 
                             variant="outlined" 
                             color="error" 
-                            onClick={() => removeTimeSlot(index)} 
-                            style={{ marginLeft: '10px' }}
+                            size="small"
+                            onClick={() => removeTimeSlot(availableDate._id, index)}
                           >
                             Remove
                           </Button>
-                        </li>
+                        </Box>
                       ))
                     ) : (
-                      <li>No time slots available</li>
+                      <Typography 
+                        variant="body2" 
+                        color="text.secondary"
+                      >
+                        No time slots available
+                      </Typography>
                     )}
-                  </ul>
+                  </Box>
                 </TableCell>
                 <TableCell>
                   <Button 
-                    variant="outlined" 
+                    variant="contained" 
                     color="error" 
                     onClick={() => removeAvailableDate(availableDate._id)}
                   >
@@ -175,6 +516,7 @@ const AdminCalendar = () => {
           </TableBody>
         </Table>
       </TableContainer>
+    </Box>
     </Container>
   );
 };

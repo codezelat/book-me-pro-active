@@ -4,6 +4,7 @@ const availableDateSchema = new Schema({
   date: { type: Date, required: true, unique: true },
   slots: { type: Number, required: true }, // Number of slots available for booking
   timeSlots: { type: [String], required: true },
+  multipleBookings: { type: Boolean, default: false }, 
   coachId: { type: Schema.Types.ObjectId, required: true, ref: 'User ' }, // Reference to the coach (User  model)
 });
 
