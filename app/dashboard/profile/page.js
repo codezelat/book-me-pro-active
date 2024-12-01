@@ -36,13 +36,13 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
   const handleGalleryChange = (e) => {
     const file = e.target.files[0];
     const updatedGallery = [...gallery];
-    updatedGallery[0] = gallery[1] || updatedGallery[0]; // Shift previous images
-    updatedGallery[1] = file; // Update the second slot with the new image
-    updatedGallery[2] = file; // Keep the file in the upload box
-
+    if (updatedGallery[0]) {
+      updatedGallery[1] = updatedGallery[0]; // Shift the first image to the second slot
+    }
+    updatedGallery[0] = file; // Set the new image as the primary image
+    updatedGallery[2] = null; // Keep the last slot as the upload box placeholder
     setGallery(updatedGallery);
   };
-  
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -51,7 +51,9 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
     const formData = new FormData();
     if (profilePhoto) formData.append("profilePhoto", profilePhoto);
     gallery.forEach((file, index) => {
-      if (file) formData.append(`gallery${index}`, file);
+      if (file instanceof File) {
+        formData.append(`gallery${index}`, file);
+      }
     });
     formData.append("firstName", firstName);
     formData.append("lastName", lastName);
@@ -127,7 +129,10 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
         >
           {/* form */}
           <div className="w-[1236px] h-[1234px] rounded-[5px] pt-32">
-            <form onSubmit={handleUpdate} className="p-4 max-w-lg mx-auto pb-10 ">
+            <form
+              onSubmit={handleUpdate}
+              className="p-4 max-w-lg mx-auto pb-10 "
+            >
               <h2 className=" font-bold text-[22px] landing-[26.4px] text-[#037D40] mb-4">
                 Profile Details
               </h2>
@@ -174,7 +179,9 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                           className="w-32 h-32 bg-[#E6F2EC] flex justify-center items-center overflow-hidden rounded"
                           style={{
                             backgroundImage: image
-                              ? `url(${URL.createObjectURL(image)})`
+                              ? image instanceof File
+                                ? `url(${URL.createObjectURL(image)})`
+                                : `url(${image})` // Use server URL if it's not a File
                               : "none",
                             backgroundSize: "cover",
                             backgroundPosition: "center",
@@ -193,7 +200,7 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                         type="file"
                         onChange={handleGalleryChange}
                         accept="image/*"
-                        className="hidden"
+                        className="absolute inset-0 opacity-0 cursor-pointer"
                       />
                     </label>
                   </div>
@@ -255,10 +262,10 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                 </div>
               </div>
 
-              <div className="pb-5 text-[18px] font-normal flex flex-col gap-[20px] "> 
+              <div className="pb-5 text-[18px] font-normal flex flex-col gap-[20px] ">
                 <label>Title</label>
                 <input
-                className="w-[1176px] h-[60px] rounded-[5px] border-1 solid padding-[20px] border-[#B0B6D3] px-3"
+                  className="w-[1176px] h-[60px] rounded-[5px] border-1 solid padding-[20px] border-[#B0B6D3] px-3"
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
@@ -268,9 +275,9 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
 
               <div className="pb-5 text-[18px] font-normal flex flex-col gap-[20px]">
                 <label>Description</label>
-                
+
                 <textarea
-                className="w-[1176px] pt-4 h-[250px] rounded-[5px] border-1 solid padding-[20px] border-[#B0B6D3] px-3"
+                  className="w-[1176px] pt-4 h-[250px] rounded-[5px] border-1 solid padding-[20px] border-[#B0B6D3] px-3"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Description"
@@ -280,7 +287,7 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
               <div className="pb-5 text-[18px] font-normal flex flex-col gap-[20px]">
                 <label>Hourly Rate</label>
                 <input
-                className="w-[1176px] h-[60px] rounded-[5px] border-1 solid padding-[20px] border-[#B0B6D3] px-3"
+                  className="w-[1176px] h-[60px] rounded-[5px] border-1 solid padding-[20px] border-[#B0B6D3] px-3"
                   type="number"
                   value={hourlyRate}
                   onChange={(e) => setHourlyRate(e.target.value)}
@@ -288,7 +295,10 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                 />
               </div>
 
-              <button type="submit" className="bg-primary w-[90px] h-[34px] pt-[8px] pl-[20px] pr-[20px] pb-[8px] rounded mt-4  text-white">
+              <button
+                type="submit"
+                className="bg-primary w-[90px] h-[34px] pt-[8px] pl-[20px] pr-[20px] pb-[8px] rounded mt-4  text-white"
+              >
                 Upload
               </button>
             </form>

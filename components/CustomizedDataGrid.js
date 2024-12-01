@@ -7,7 +7,9 @@ import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
 import { CircleX, CircleCheck } from "lucide-react";
 import axios from "axios"; // Use axios for API calls
-import { useSession } from "next-auth/react"; 
+import { useSession } from "next-auth/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function CustomizedDataGrid() {
   const [rows, setRows] = useState([]);
@@ -18,7 +20,9 @@ export default function CustomizedDataGrid() {
     const fetchAppointments = async () => {
       if (!session || !session.user || !session.user.id) return; // Ensure session and user data are available
       try {
-        const response = await axios.get(`/api/appointments?coachId=${session.user.id}`); // Replace with your API endpoint
+        const response = await axios.get(
+          `/api/appointments?coachId=${session.user.id}&status=pending`
+        ); // Replace with your API endpoint
         const data = response.data;
 
         // Define columns
@@ -28,7 +32,13 @@ export default function CustomizedDataGrid() {
           { field: "phone", headerName: "Phone", flex: 1, minWidth: 120 },
           { field: "date", headerName: "Date", flex: 1, minWidth: 80 },
           { field: "time", headerName: "Time", flex: 1, minWidth: 80 },
-          { field: "isIndividualSession", headerName: "Individual Session", flex: 1, minWidth: 80 },
+          { field: "status", headerName: "Status", flex: 1, minWidth: 80 },
+          {
+            field: "isIndividualSession",
+            headerName: "Individual Session",
+            flex: 1,
+            minWidth: 80,
+          },
           // {
           //   field: "status",
           //   headerName: "Status",
@@ -103,7 +113,7 @@ export default function CustomizedDataGrid() {
           date: new Date(appointment.selectedDate).toLocaleDateString(),
           time: appointment.selectedTime,
           isIndividualSession: appointment.isIndividualSession,
-          // status: appointment.status || "Pending",
+          status: appointment.status || "Pending",
         }));
 
         setRows(formattedRows);
@@ -138,32 +148,101 @@ export default function CustomizedDataGrid() {
       if (response.status === 200) {
         // Remove the updated row from the DataGrid
         setRows((prevRows) => prevRows.filter((r) => r.id !== row.id));
+
+        // Customize the toast message based on status
+        if (newStatus === "Approved") {
+          toast.success(
+            `Appointment ${newStatus.toLowerCase()} successfully!`,
+            {
+              position: "top-center",
+              autoClose: 2000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: false,
+              theme: "light",
+              icon: <CircleCheck color="#037D40" />, // Green tick icon
+            }
+          );
+        } else if (newStatus === "Declined") {
+          toast.error(`Appointment ${newStatus.toLowerCase()} successfully!`, {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            theme: "light",
+            icon: <CircleX color="#d50000" />, // Red cross icon
+          });
+        }
+
         console.log(`Appointment ${newStatus.toLowerCase()} successfully.`);
       } else {
+        toast.error(`Failed to ${newStatus.toLowerCase()} appointment.`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          theme: "light",
+        });
+
         console.error(`Failed to ${newStatus.toLowerCase()} appointment.`);
       }
     } catch (error) {
       console.error(`Error during ${newStatus.toLowerCase()} action:`, error);
+      toast.error(`Error: Unable to ${newStatus.toLowerCase()} appointment.`, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        theme: "light",
+      });
     }
   };
 
   return (
     <div style={{ height: 500, width: "100%" }}>
-      <DataGrid
-        autoHeight
-        checkboxSelection
-        rows={rows}
-        columns={columns}
-        rowHeight={70}
-        getRowClassName={(params) =>
-          params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
-        }
-        initialState={{
-          pagination: { paginationModel: { pageSize: 20 } },
-        }}
-        pageSizeOptions={[10, 20, 50]}
-        disableColumnResize
-        density="compact"
+      {rows.length > 0 ? (
+        <DataGrid
+          autoHeight
+          checkboxSelection
+          rows={rows}
+          columns={columns}
+          rowHeight={70}
+          getRowClassName={(params) =>
+            params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
+          }
+          initialState={{
+            pagination: { paginationModel: { pageSize: 20 } },
+          }}
+          pageSizeOptions={[10, 20, 50]}
+          disableColumnResize
+          density="compact"
+        />
+      ) : (
+        <div
+          style={{ textAlign: "center", marginTop: "20px", fontSize: "18px" }}
+        >
+          No appointments available.
+        </div>
+      )}
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
       />
     </div>
   );

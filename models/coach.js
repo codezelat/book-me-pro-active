@@ -6,7 +6,7 @@ const CoachSchema = new mongoose.Schema({
   contact: { type: String, required: false },
   image: { type: String, default: "../public/images/coach/coach1.png" },
   profilePhoto: { type: String, default: "../public/images/coach/coach1.png" },
-  gallery: { type: [String], default: [] }, // Array to store gallery image URLs
+  gallery: { type: [String] }, // Array to store gallery image URLs
   firstName: { type: String, default: "" },
   lastName: { type: String, default: "" },
   title: { type: String, default: "" },

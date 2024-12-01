@@ -7,10 +7,12 @@ const appointmentSchema = new Schema({
   phone: { type: String, required: true },
   appointmentDetails: { type: String, required: false },
   selectedDate: { type: Date, required: false },
+  status: { type: String, required: true },
   selectedTime: { type: String, required: false },
   isIndividualSession: { type: Boolean, required: true },
   coachId: { type: Schema.Types.ObjectId, ref: "Coach", required: true },
   createdAt: { type: Date, default: Date.now },
+  
 });
 
 const Appointment = model("Appointment", appointmentSchema);

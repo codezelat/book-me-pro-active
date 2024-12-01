@@ -9,15 +9,13 @@ import ProfileEditComponent from "/components/ProfileEditComponent/page";
 import DashboardHeader from "@/components/DashboardHeader";
 import SideMenu from "@/components/SideMenu";
 import AppTheme from "@/app/shared-theme/AppTheme";
-import MainGrid from "@/components/MainGrid";
-import { Button, useTheme } from "@mui/material";
+import CustomizedDataGrid from "./dataGrid";
 import {
   chartsCustomizations,
   dataGridCustomizations,
   datePickersCustomizations,
   treeViewCustomizations,
 } from "@/app/dashboard/theme/customizations";
-import CustomizedDataGrid from "@/app/dashboard/my-bookings/dataGrid";
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -26,7 +24,7 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
-export default function Dashboard(props) {
+export default function MyBookingsPage(props) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [showProfileEdit, setShowProfileEdit] = useState(false);
@@ -41,31 +39,23 @@ export default function Dashboard(props) {
     return <p>Loading...</p>;
   }
 
-  const handleProfileClick = () => setShowProfileEdit(true);
-
-  const theme = useTheme(); // Get theme instance
-  const isDarkMode = theme.palette.mode === "dark"; // Dark mode check
+  const handleProfileClick = () => {
+    setShowProfileEdit(true);
+  };
 
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
-      <div
-        className="h-full w-full m-0 p-0 "
-        style={{
-          backgroundColor: isDarkMode
-            ? theme.palette.background.default
-            : "#f7f7f7",
-
-          color: isDarkMode ? "#000000" : "#ffffff",
-        }}
-      >
-        {/* Header */}
+      <div className="h-full  w-full m-0 p-0">
+        {/* Top Header */}
         <Box
           sx={{
             position: "fixed",
             left: 0,
             right: 0,
+            
             paddingTop: "10px",
+            paddingLeft: "20px",
             paddingRight: "20px",
             height: "82px",
             zIndex: 10,
@@ -80,12 +70,12 @@ export default function Dashboard(props) {
           sx={{
             width: "250px",
             position: "fixed",
-            top: "92px",
+            top: "92px", // Positioned below header
             left: 0,
             bottom: 0,
             overflowY: "auto",
-            zIndex: 5,
-            backgroundColor: isDarkMode ? "background.default" : "#f4f4f4",
+            zIndex: 5, // Ensure sidebar stays above main content
+            backgroundColor: "#f4f4f4",
             borderRight: "1px solid #ddd",
           }}
         >
@@ -95,64 +85,16 @@ export default function Dashboard(props) {
         {/* Main Content Area */}
         <Box
           sx={{
-            marginLeft: "250px",
-
-            minHeight: "100vh",
+            marginLeft: "250px", // Adjusts main content to start after sidebar
+            paddingTop: "40px", // Adjusts main content to start after header
             overflow: "auto",
-            backgroundColor: isDarkMode ? "background.default" : "#f7f7f7",
-            color: isDarkMode ? "#000000" : "#ffffff",
+            backgroundColor: "#f7f7f7",
+            minHeight: "100vh",
+            
           }}
         >
-          <Stack direction="column" spacing={2} paddingTop={10} marginLeft={10}>
-            <Box
-              className="custom-padding px-20"
-              sx={{
-                overflow: "auto",
-                minHeight: "100vh",
-
-                backgroundColor: isDarkMode
-                  ? "background.default"
-                  : "white",
-                color: isDarkMode ? "text.primary" : "text.secondary",
-              }}
-            >
-              {/* My Bookings Header */}
-              <Box display="flex" justifyContent="space-between" pt={2}>
-                <Box className="text-black text-[18px] font-bold" sx={{}}>
-                  My Bookings
-                </Box>
-                <Stack direction="row" spacing={3} pt={5} pb={2}>
-                  {["Pending", "Approved", "Rejected"].map((status, index) => (
-                    <Button
-                      key={index}
-                      sx={{
-                        bgcolor: status === "Pending" ? "#037D40" : "#E6F2EC",
-                        color: isDarkMode
-                          ? "black"
-                          : status === "Pending"
-                          ? "white"
-                          : "black",
-                        px: 3,
-                        fontWeight: "bold",
-                        "&:hover": {
-                          bgcolor: status === "Pending" ? "#037D40" : "#037D40",
-                          color: "white",
-                        },
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1.5,
-                      }}
-                      size="large"
-                    >
-                      {status}
-                    </Button>
-                  ))}
-                </Stack>
-              </Box>
-
-              {/* Data Grid */}
-              <CustomizedDataGrid />
-            </Box>
+          <Stack direction="column" spacing={2} padding={3}>
+            {<CustomizedDataGrid/> }
           </Stack>
         </Box>
       </div>
