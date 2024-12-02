@@ -4,8 +4,6 @@ import connectToDatabase from "@/Lib/mongodb";
 import { promises as fs } from "fs";
 import path from "path";
 
-
-// Disable body parsing to handle file streams directly
 export const config = {
   api: { bodyParser: false },
 };
@@ -19,9 +17,8 @@ export async function POST(req) {
 
   try {
     const formData = await req.formData();
-    
-    // Extract basic data from formData
-    const name = formData.get("name");
+
+    // Extract basic data
     const firstName = formData.get("firstName");
     const lastName = formData.get("lastName");
     const email = formData.get("email");
@@ -31,7 +28,6 @@ export async function POST(req) {
     const hourlyRate = parseFloat(formData.get("hourlyRate"));
 
     const updateData = {
-      name,
       firstName,
       lastName,
       email,
@@ -39,18 +35,18 @@ export async function POST(req) {
       title,
       description,
       hourlyRate,
-      
     };
 
-    // Handle profile photo if provided
+    // Handle profile photo
     const profilePhoto = formData.get("profilePhoto");
     if (profilePhoto && profilePhoto.name) {
       const photoDir = path.join(process.cwd(), "public/uploads");
       await fs.mkdir(photoDir, { recursive: true });
-      const profilePhotoPath = path.join(photoDir, profilePhoto.name);
+      const uniquePhotoName = `${Date.now()}-${profilePhoto.name}`;
+      const profilePhotoPath = path.join(photoDir, uniquePhotoName);
       const photoBuffer = Buffer.from(await profilePhoto.arrayBuffer());
       await fs.writeFile(profilePhotoPath, photoBuffer);
-      updateData.profilePhoto = `/uploads/${profilePhoto.name}`;
+      updateData.profilePhoto = `/uploads/${uniquePhotoName}`;
     }
 
     // Handle gallery photos if provided
@@ -67,8 +63,12 @@ export async function POST(req) {
         })
       );
     }
+ 
 
-    await db.collection("users").updateOne({ email: userEmail }, { $set: updateData });
+    // Update database
+    await db
+      .collection("users")
+      .updateOne({ email: userEmail }, { $set: updateData });
     session.user.profilePhoto = updateData.profilePhoto;
     return new Response("Profile updated successfully", { status: 200 });
   } catch (error) {

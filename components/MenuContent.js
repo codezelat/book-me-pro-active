@@ -27,7 +27,7 @@ const mainListItems = [
 
 const secondaryListItems = [
   { text: "Contact Us", icon: <CircleAlert /> },
-  { text: "Settings", icon: <Settings /> },
+  { text: "Settings", icon: <Settings />, path: "/dashboard/my-settings" },
 ];
 
 export default function MenuContent() {
@@ -161,7 +161,7 @@ export default function MenuContent() {
           <React.Fragment key={index}>
             <ListItem disablePadding>
               <ListItemButton
-                onClick={() => handleListItemClick(index + mainListItems.length, "/help-support")}
+                onClick={() => handleListItemClick(index + mainListItems.length, "/dashboard/my-settings")}
                 sx={{
                   width: "297px",
                   height: "64px",

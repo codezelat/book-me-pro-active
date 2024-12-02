@@ -12,19 +12,21 @@ import { SquarePen, Upload } from "lucide-react";
 const ProfileEditComponent = ({ onUpdateSuccess }) => {
   const { data: session } = useSession();
 
-  const [profilePhoto, setProfilePhoto] = useState(null);
-  const [gallery, setGallery] = useState([null, null, null]); // Updated to hold three images, with last as upload box
   const [firstName, setFirstName] = useState(session?.user?.firstName || "");
   const [lastName, setLastName] = useState(session?.user?.lastName || "");
   const [email, setEmail] = useState(session?.user?.email || "");
   const [contact, setContact] = useState(session?.user?.contact || "");
   const [title, setTitle] = useState(session?.user?.title || "");
-  const [description, setDescription] = useState(
-    session?.user?.description || ""
-  );
+  const [description, setDescription] = useState(session?.user?.description || "");
   const [hourlyRate, setHourlyRate] = useState(session?.user?.hourlyRate || "");
+  const [profilePhoto, setProfilePhoto] = useState(session?.user?.profilePhoto || null);
+  const [gallery, setGallery] = useState([null, null]); // Limit to two image previews
+
+  
+
+
   const [statusMessage, setStatusMessage] = useState("");
-  const [name, setName] = useState(session?.user?.name || "");
+
   const [previewImage, setPreviewImage] = useState(null);
 
   const handleProfilePhotoChange = (e) => {
@@ -36,11 +38,10 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
   const handleGalleryChange = (e) => {
     const file = e.target.files[0];
     const updatedGallery = [...gallery];
-    if (updatedGallery[0]) {
-      updatedGallery[1] = updatedGallery[0]; // Shift the first image to the second slot
-    }
-    updatedGallery[0] = file; // Set the new image as the primary image
-    updatedGallery[2] = null; // Keep the last slot as the upload box placeholder
+    updatedGallery[0] = gallery[1] || updatedGallery[0]; // Shift previous images
+    updatedGallery[1] = file; // Update the second slot with the new image
+    updatedGallery[2] = file; // Keep the file in the upload box
+
     setGallery(updatedGallery);
   };
 
@@ -49,12 +50,22 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
     setStatusMessage("");
 
     const formData = new FormData();
+
     if (profilePhoto) formData.append("profilePhoto", profilePhoto);
-    gallery.forEach((file, index) => {
-      if (file instanceof File) {
-        formData.append(`gallery${index}`, file);
-      }
-    });
+
+    console.log(profilePhoto, "profilePhoto");
+
+    // gallery.forEach((file, index) => {
+    //   if (file) formData.append(`gallery${index}`, file);
+    // });
+    if (gallery && Array.isArray(gallery)) {
+      gallery.forEach((image, index) => {
+        formData.append(`gallery[${index}]`, image);
+      });
+    }
+
+    console.log(gallery, "gallery");
+
     formData.append("firstName", firstName);
     formData.append("lastName", lastName);
     formData.append("email", email);
@@ -62,7 +73,6 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("hourlyRate", hourlyRate);
-    formData.append("name", name);
 
     try {
       const response = await axios.post("/api/coach/update", formData, {
@@ -179,9 +189,7 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                           className="w-32 h-32 bg-[#E6F2EC] flex justify-center items-center overflow-hidden rounded"
                           style={{
                             backgroundImage: image
-                              ? image instanceof File
-                                ? `url(${URL.createObjectURL(image)})`
-                                : `url(${image})` // Use server URL if it's not a File
+                              ? `url(${URL.createObjectURL(image)})`
                               : "none",
                             backgroundSize: "cover",
                             backgroundPosition: "center",
@@ -200,7 +208,7 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                         type="file"
                         onChange={handleGalleryChange}
                         accept="image/*"
-                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        className="hidden"
                       />
                     </label>
                   </div>

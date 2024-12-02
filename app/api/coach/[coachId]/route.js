@@ -20,7 +20,7 @@ export async function GET(req, { params }) {
       id: coach._id.toString(),
       firstName: coach.firstName || "No name available",
 
-      lastName: coach.lastName || "No name available",
+      lastName: coach.lastName,
       email: coach.email,
 
       description: coach.description,

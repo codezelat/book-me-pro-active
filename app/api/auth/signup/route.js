@@ -5,10 +5,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
     try {
-        const { name, email, password, contact } = await req.json();
+        const { firstName, email, password, contact } = await req.json();
 
         // Basic validation to ensure all fields are provided
-        if (!name || !email || !password || !contact) {
+        if (!firstName || !email || !password || !contact) {
             return NextResponse.json({ message: "All fields are required." }, { status: 400 });
         }
 
@@ -25,7 +25,7 @@ export async function POST(req) {
 
         // Insert the new user
         await db.collection("users").insertOne({
-            name,
+            firstName,
             email,
             password: hashedPassword,
             contact,

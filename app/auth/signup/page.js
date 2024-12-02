@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function Signup() {
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [contact, setContact] = useState("");
@@ -20,13 +20,13 @@ export default function Signup() {
     setError(""); // Reset error message
 
     // Basic validation
-    if (!name || !email || !password || !contact) {
+    if (!firstName || !email || !password || !contact) {
       setError("All fields are required.");
       setLoading(false);
       return;
     }
 
-    const userData = { name, email, password, contact };
+    const userData = { firstName, email, password, contact };
 
     // Proceed with user registration
     const response = await fetch("/api/auth/signup", {
@@ -82,18 +82,18 @@ export default function Signup() {
           <div className="relative">
             <input
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               placeholder=" "
               className="py-4 px-5 border-2 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-primary w-full text-[#002D74] bg-gray-100"
               required
             />
             <label
               className={`absolute left-5 text-gray-400 text-lg transition-all duration-300 ${
-                name ? "top-2 text-xs" : "top-5"
+                firstName ? "top-2 text-xs" : "top-5"
               }`}
             >
-              Enter your name
+              Enter your first name
             </label>
           </div>
 

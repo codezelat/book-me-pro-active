@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
 import * as React from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { styled, useTheme } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
 import MuiDrawer from "@mui/material/Drawer";
@@ -40,10 +40,10 @@ export default function SideMenu({ session }) {
 
   const profileUrl = `https://yourdomain.com/coach/${session?.user?.id}`;
   const profileImage = session?.user?.profilePhoto
-  ? `http://localhost:3000${session.user.profilePhoto}`
-  : ""; // Fallback image
+    ? `http://localhost:3000${session.user.profilePhoto}`
+    : ""; // Fallback image
 
-  console.log( "URL :",profileImage);
+  console.log("URL :", profileImage);
 
   React.useEffect(() => {
     if (session?.user?.id) {
@@ -85,15 +85,19 @@ export default function SideMenu({ session }) {
           paddingTop: 5,
         }}
       >
-        <Image
-          src={profileImage}
-          alt="Coach Image"
-          width={75}
-          height={75}
-          style={{ borderRadius: "50%" }}
+        <div
+          style={{
+            backgroundImage: `url(${profileImage})`, // Set the background image
+            backgroundSize: "cover", // Ensures the image covers the entire container
+            backgroundPosition: "center", // Centers the image
+            backgroundRepeat: "no-repeat", // Prevents the image from repeating
+            width: "75px", // Fixed width
+            height: "75px", // Fixed height
+            borderRadius: "50%", // Makes it circular
+          }}
           className="mb-5"
         />
-        
+
         <Box>
           <Typography
             variant="body2"

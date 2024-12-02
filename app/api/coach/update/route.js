@@ -21,7 +21,7 @@ export async function POST(req) {
     const formData = await req.formData();
     
     // Extract basic data from formData
-    const name = formData.get("name"); 
+
     const firstName = formData.get("firstName");
     const lastName = formData.get("lastName");
     const email = formData.get("email");
@@ -31,7 +31,7 @@ export async function POST(req) {
     const hourlyRate = parseFloat(formData.get("hourlyRate"));
 
     const updateData = {
-      name,
+    
       firstName,
       lastName,
       email,
@@ -39,12 +39,15 @@ export async function POST(req) {
       title,
       description,
       hourlyRate,
+    
    
       
     };
+    console.log(formData,"profilePhoto");
 
     // Handle profile photo if provided
     const profilePhoto = formData.get("profilePhoto");
+    console.log(profilePhoto.name,"profilePhoto");
     if (profilePhoto && profilePhoto.name) {
       const photoDir = path.join(process.cwd(), "public/uploads");
       await fs.mkdir(photoDir, { recursive: true });
@@ -54,34 +57,43 @@ export async function POST(req) {
       updateData.profilePhoto = `/uploads/${profilePhoto.name}`;
     }
 
-   // Handle gallery photos if provided
-const galleryFiles = formData.getAll("gallery");
+    const gallery = formData.get("gallery");
+    if (gallery && Array.isArray(gallery)) {
+      const photoDir = path.join(process.cwd(), "public/uploads/gallery");
+      await fs.mkdir(photoDir, { recursive: true });
+    
+      // Ensure `updateData.gallery` is an array
+      updateData.gallery = [];
+    
+      for (const image of gallery) {
+        const imagePath = path.join(photoDir, image.name);
+        const imageBuffer = Buffer.from(await image.arrayBuffer());
+        await fs.writeFile(imagePath, imageBuffer);
+    
+        // Push each uploaded image path to the `gallery` array
+        updateData.gallery.push(`/uploads/gallery/${image.name}`);
+      }
+    }
+    
+    
+    
 
-if (galleryFiles && galleryFiles.length > 0) {
-  const galleryDir = path.join(process.cwd(), "public/uploads/gallery");
-
-  // Ensure the directory exists
-  await fs.mkdir(galleryDir, { recursive: true });
-
-  // Update gallery paths
-  updateData.gallery = await Promise.all(
-    galleryFiles.map(async (file, index) => {
-      const timestamp = Date.now(); // Add a timestamp to avoid overwriting files
-      const sanitizedFileName = `${timestamp}-${index}-${file.name.replace(
-        /[^a-zA-Z0-9.-]/g,
-        ""
-      )}`; // Sanitize file name to remove special characters
-      const filePath = path.join(galleryDir, sanitizedFileName);
-      const fileBuffer = Buffer.from(await file.arrayBuffer());
-
-      // Write the file to the gallery directory
-      await fs.writeFile(filePath, fileBuffer);
-
-      // Return the relative path for storage in the database
-      return `/uploads/gallery/${sanitizedFileName}`;
-    })
-  );
-}
+    // Handle gallery photos if provided
+    // const gallery = formData.getAll("gallery");
+    // console.log(gallery,"gallery");
+    
+    // if (gallery && gallery.length > 0) {
+    //   const galleryDir = path.join(process.cwd(), "public/uploads/gallery");
+    //   await fs.mkdir(galleryDir, { recursive: true });
+    //   updateData.gallery = await Promise.all(
+    //     gallery.map(async (file) => {
+    //       const filePath = path.join(galleryDir, file.name);
+    //       const fileBuffer = Buffer.from(await file.arrayBuffer());
+    //       await fs.writeFile(filePath, fileBuffer);
+    //       return `/uploads/gallery/${file.name}`;
+    //     })
+    //   );
+    // }
 
     await db.collection("users").updateOne({ email: userEmail }, { $set: updateData });
     session.user.profilePhoto = updateData.profilePhoto;
