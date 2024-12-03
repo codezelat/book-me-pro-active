@@ -28,9 +28,10 @@ export async function GET(req, { params }) {
       hourlyRate: coach.hourlyRate,
       title: coach.title,
       contact: coach.contact,
-      image: coach.image || "/images/default-coach.png",
+      image: coach.profilePhoto || "/images/default-coach.png",
+      gallery: coach.gallery || "/images/default-coach.png",
     };
-
+  
     return new Response(JSON.stringify(coachData), {
       status: 200,
       headers: { "Content-Type": "application/json" },

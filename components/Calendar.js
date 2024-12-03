@@ -271,7 +271,7 @@ export default function Calendar() {
                           </div>
                         </div>
                           )}
-                        );
+                       
 
                         <div className="mt-4 flex justify-end">
                           <button

@@ -4,13 +4,27 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import * as React from "react";
+import axios from "axios";
+
 
 export default function DashboardHeader() {
   const { data: session } = useSession();
-
+  const BASE_URL = process.env.NEXT_PUBLIC_DOMAIN;
+  const [coachData, setCoachData] = React.useState(null);
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const [isScrolled, setIsScrolled] = useState(false);
+
+  React.useEffect(() => {
+    if (session?.user?.id) {
+      axios
+        .get(`/api/coach/${session.user.id}`)
+        .then((response) => setCoachData(response.data))
+        .catch((error) => console.error("Error fetching coach data:", error));
+    }
+  }, [session?.user?.id]);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,15 +64,18 @@ export default function DashboardHeader() {
           </div>
 
           {/* Coach Image */}
-          <div>
-            <Image
-              src="/images/coach/coach1.png"
-              alt="Coach Image"
-              width={50}
-              height={50}
-              style={{ borderRadius: "50%" }}
-            />
-          </div>
+          <div
+            style={{
+              backgroundImage: `url(${BASE_URL}${coachData?.image})`, // Set the background image
+              backgroundSize: "cover", // Ensures the image covers the entire container
+              backgroundPosition: "center", // Centers the image
+              backgroundRepeat: "no-repeat", // Prevents the image from repeating
+              width: "50px", // Fixed width
+              height: "50px", // Fixed height
+              borderRadius: "50%", // Makes it circular
+            }}
+            className="mb-5"
+          />
         </div>
       </div>
     </section>

@@ -1,4 +1,3 @@
-// app/coach/[coachId]/page.js
 "use client";
 
 import { useParams } from "next/navigation";
@@ -14,35 +13,12 @@ export default function CoachProfilePage() {
   const [coach, setCoach] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const images = [
-    "/images/coach/coach.png",
-    "/images/coach/coach1.png",
-    "/images/coach/coach3.png",
-    "/images/coach/coach2.png",
-    "/images/coach/coach4.png",
-    "/images/coach/coach5.png",
-  ];
   const [showBookingCalendar, setShowBookingCalendar] = useState(false);
   // State to store the selected image
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  // State to track the current index of the image for automatic slideshow
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Effect for automatic slideshow
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 3000); // Change the image every 3 seconds (3000ms)
-
-    // Cleanup the interval on component unmount
-    return () => clearInterval(interval);
-  }, [images.length]); // Dependency array to track changes to the images array
-
-  // Update the selected image whenever currentIndex changes
-  useEffect(() => {
-    setSelectedImage(images[currentIndex]);
-  }, [currentIndex, images]);
+  // Get the BASE_URL from environment variables
+  const BASE_URL = process.env.NEXT_PUBLIC_DOMAIN;
 
   useEffect(() => {
     const fetchCoachData = async () => {
@@ -62,32 +38,34 @@ export default function CoachProfilePage() {
     }
   }, [coachId]);
 
+  useEffect(() => {
+    if (coach?.gallery && coach.gallery.length > 0) {
+      // Set the first image as the default selected image
+      setSelectedImage(`${BASE_URL}${coach.gallery[0]}`);
+    }
+  }, [coach, BASE_URL]);
+
+  // Handling errors and loading states
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
   if (!coach) return <p>Coach not found.</p>;
 
   return (
-    <section className="">
+    <section>
       <div className="container pt-24 mx-auto px-20">
         <div className="grid py-24 justify-center gap-10 grid-cols-2 items-center">
           <div>
-            <div className="text-[54px] text-black font-bold ">
+            <div className="text-[88px] text-black font-bold">
               {coach.firstName} {coach.lastName}
             </div>
-            <div className="text-[45px] font-normal  text-black">
+            <div className="text-[44px] font-normal text-black">
               {coach.title}
             </div>
 
-            <div className="text-[26px] font-[275] text-black mb-6">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo $1,000 per hour
-            </div>
-            <div className="text-black text-[37px]  font-[400]">
+            <div className="text-black font-semibold mt-2 text-[30px] ">
               $ {coach.hourlyRate} per hour
             </div>
-            <div className="flex gap-20 text-xl text-black py-5">
+            <div className="flex gap-20 text-2xl text-black mt-2">
               <p>Contact: {coach.contact}</p>
               <p>
                 Email:
@@ -97,68 +75,53 @@ export default function CoachProfilePage() {
               </p>
             </div>
 
-            <div className="flex items-center mb-6 space-x-8">
+            <div className="flex mt-4 items-center mb-6 space-x-8">
               <button
-                className="bg-[#037D40] text-white font-semibold py-[13px]  px-[24px] gap-[16px] rounded-[8px] flex items-center "
+                className="bg-[#037D40] text-white font-semibold py-[13px] px-[24px] gap-[16px] rounded-[8px] flex items-center "
                 onClick={() => setShowBookingCalendar(true)}
               >
                 <span>
                   <Album width={24} height={24} />
                 </span>
                 <div className="">
-                  <Calendar /> {/* Render the Form component here */}
+                  <Calendar />
                 </div>
               </button>
-
-              <div className="flex items-center space-x-4">
-                {/* <span className="text-lg text-black font-semibold">5.0</span> */}
-
-                <div className="flex space-x-2">
-                  {/* Star icons */}
-                  {/* {[...Array(5)].map((_, index) => (
-                    // <svg
-                    //   key={index}
-                    //   xmlns="http://www.w3.org/2000/svg"
-                    //   fill="currentColor"
-                    //   viewBox="0 0 16 16"
-                    //   className="w-5 h-5 text-blue-500"
-                    // >
-                    //   <path d="M3.612 15.443c-.396.21-.86-.112-.741-.566L4.73 10.5l-4.253-3.937c-.329-.305-.158-.888.283-.95l5.249-.765 2.34-4.705c.197-.396.73-.396.927 0l2.34 4.705 5.249.765c.441.064.612.645.283.95l-4.253 3.937 1.86 4.377c.118.454-.345.776-.741.566L8 13.187l-4.389 2.256z" />
-                    // </svg>
-                  ))} */}
-                </div>
-              </div>
             </div>
           </div>
           <div>
             <div className="flex flex-col gap-4">
-              {/* Main large image section */}
-              <div className="flex-1 flex items-center justify-center">
-                <div className="w-full ">
-                  <Image
-                    src={selectedImage}
-                    width={680}
-                    height={511}
-                    position="absolute"
-                    background-size="cover"
-                    background-position="center"
+              <div className="flex flex-col gap-4">
+                {/* Main large image section */}
+                <div className="flex-1 flex items-center justify-center">
+                  <div
+                    className="w-full"
+                    style={{
+                      backgroundImage: `url(${selectedImage})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      height: "400px", // Fixed height
+                    }}
                   />
                 </div>
               </div>
 
-              {/* Small image thumbnails */}
-              <div className="flex flex-row justify-self-auto gap-3">
-                {images.map((image, index) => (
-                  <Image
+               {/* Small image thumbnails */}
+               <div className="flex flex-row justify-self-auto gap-3">
+                {coach?.gallery?.map((image, index) => (
+                  <div
                     key={index}
-                    src={image}
-                    width={100}
-                    height={100}
-                    alt={`Thumbnail ${index + 1}`}
-                    className={` rounded-[8px] cursor-pointer ${
-                      selectedImage === image ? "ring-4 ring-blue-500" : ""
-                    }`}
-                    onClick={() => setCurrentIndex(index)} // Allow manual selection
+                    className={`rounded-[8px] cursor-pointer`}
+                    onClick={() => setSelectedImage(`${BASE_URL}${image}`)} // Allow manual selection
+                    style={{
+                      backgroundImage: `url(${BASE_URL}${image})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      width: "100px", // Fixed width
+                      height: "100px", // Fixed height
+                      borderRadius: "8px",
+                      border: selectedImage === `${BASE_URL}${image}` ? "4px solid #0066FF" : "none", // Highlight selected image
+                    }}
                   />
                 ))}
               </div>
@@ -171,51 +134,9 @@ export default function CoachProfilePage() {
           Description
         </div>
         <div className="text-[26px] font-[275] mb-4 text-black">
-          {coach.description}{" "}
-        </div>
-        <div className="text-[26px] font-[275] mb-4 text-black">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo. Lorem ipsum dolor sit
-          amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-          labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-          exercitation ullamco laboris nisi ut aliquip ex ea commodo Lorem ipsum
-          dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-          incididunt ut labore et dolore magna aliqua.
+          {coach.description}
         </div>
       </div>
-      {/* <div className="container pb-24 mx-auto px-20">
-        <div className="text-3xl text-black font-extrabold mb-6">Awards</div>
-        <li className="text-[19px] font-[300] mb-4 text-black">
-          Don Balón Award: 2009, 2010
-        </li>
-        <li className="text-[19px] font-[300] mb-4 text-black">
-          Miguel Muñoz Trophy: 2008–09, 2009–10
-        </li>
-        <li className="text-[19px] font-[300] mb-4 text-black">
-          Onze d&apos;Or Coach of the Year: 2009, 2011, 2012
-        </li>
-        <li className="text-[19px] font-[300] mb-4 text-black">
-          World Soccer Magazine World Manager of the Year: 2009, 2011
-        </li>
-        <li className="text-[19px] font-[300] mb-4 text-black">
-          IFFHS World&apos;s Best Club Coach: 2009, 2011,[276] 2023[277]
-        </li>
-        <li className="text-[19px] font-[300] mb-4 text-black">
-          UEFA Team of the Year Best Coach: 2008–09, 2010–11
-        </li>
-        <li className="text-[19px] font-[300] mb-4 text-black">
-          La Liga Coach of the Year: 2009, 2010, 2011, 2012
-        </li>
-        <li className="text-[19px] font-[300] mb-4 text-black">
-          FIFA World Coach of the Year: 2011[278]
-        </li>
-      </div> */}
-      {/* Booking Form Section */}
     </section>
   );
 }

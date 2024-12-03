@@ -32,6 +32,8 @@ const Drawer = styled(MuiDrawer)(({ theme }) => ({
   },
 }));
 
+const BASE_URL = process.env.NEXT_PUBLIC_DOMAIN;
+
 export default function SideMenu({ session }) {
   const [coachData, setCoachData] = React.useState(null);
   const [activeSection, setActiveSection] = React.useState("Home");
@@ -39,11 +41,6 @@ export default function SideMenu({ session }) {
   const router = useRouter();
 
   const profileUrl = `https://yourdomain.com/coach/${session?.user?.id}`;
-  const profileImage = session?.user?.profilePhoto
-    ? `http://localhost:3000${session.user.profilePhoto}`
-    : ""; // Fallback image
-
-  console.log("URL :", profileImage);
 
   React.useEffect(() => {
     if (session?.user?.id) {
@@ -55,12 +52,13 @@ export default function SideMenu({ session }) {
   }, [session?.user?.id]);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(profileUrl);
+    navigator.clipboard.writeText(`${BASE_URL}/coach/${session?.user?.id}`);
   };
 
   const handleEditProfileClick = () => {
     router.push("/dashboard/profile");
   };
+  console.log({bg: `url(${BASE_URL}${coachData?.image})`})
 
   return (
     <Drawer
@@ -87,7 +85,7 @@ export default function SideMenu({ session }) {
       >
         <div
           style={{
-            backgroundImage: `url(${profileImage})`, // Set the background image
+            backgroundImage: `url(${BASE_URL}${coachData?.image})`, // Set the background image
             backgroundSize: "cover", // Ensures the image covers the entire container
             backgroundPosition: "center", // Centers the image
             backgroundRepeat: "no-repeat", // Prevents the image from repeating
@@ -97,6 +95,7 @@ export default function SideMenu({ session }) {
           }}
           className="mb-5"
         />
+        
 
         <Box>
           <Typography

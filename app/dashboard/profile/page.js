@@ -8,33 +8,46 @@ import DashboardHeader from "@/components/DashboardHeader";
 import SideMenu from "@/components/SideMenu";
 import Box from "@mui/material/Box";
 import { SquarePen, Upload } from "lucide-react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { CircleCheck } from "lucide-react";
+import * as React from "react";
 
 const ProfileEditComponent = ({ onUpdateSuccess }) => {
   const { data: session } = useSession();
 
-  const [firstName, setFirstName] = useState(session?.user?.firstName || "");
-  const [lastName, setLastName] = useState(session?.user?.lastName || "");
-  const [email, setEmail] = useState(session?.user?.email || "");
-  const [contact, setContact] = useState(session?.user?.contact || "");
-  const [title, setTitle] = useState(session?.user?.title || "");
-  const [description, setDescription] = useState(session?.user?.description || "");
-  const [hourlyRate, setHourlyRate] = useState(session?.user?.hourlyRate || "");
-  const [profilePhoto, setProfilePhoto] = useState(session?.user?.profilePhoto || null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [hourlyRate, setHourlyRate] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState(null);
   const [gallery, setGallery] = useState([null, null]); // Limit to two image previews
-
-  
-
-
+  const [coachData, setCoachData] = React.useState(null);
   const [statusMessage, setStatusMessage] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [coach, setCoach] = useState(null);
+
+
 
   const [previewImage, setPreviewImage] = useState(null);
+  const BASE_URL = process.env.NEXT_PUBLIC_DOMAIN;
+
+  useEffect(() => {
+    if (coach?.gallery && coach.gallery.length > 0) {
+      // Set the first image as the default selected image
+      setSelectedImage(`${BASE_URL}${coach.gallery[0]}`);
+    }
+  }, [coach, BASE_URL]);
 
   const handleProfilePhotoChange = (e) => {
     const file = e.target.files[0];
     setProfilePhoto(file);
     setPreviewImage(URL.createObjectURL(file)); // Set preview for the circular image display
   };
-
   const handleGalleryChange = (e) => {
     const file = e.target.files[0];
     const updatedGallery = [...gallery];
@@ -45,48 +58,94 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
     setGallery(updatedGallery);
   };
 
+  React.useEffect(() => {
+    if (session?.user?.id) {
+      axios
+        .get(`/api/coach/${session.user.id}`)
+        .then((response) => setCoachData(response.data))
+        .catch((error) => console.error("Error fetching coach data:", error));
+    }
+  }, [session?.user?.id]);
+  if (!coachData) {
+    return <div>Loading...</div>; // Show a loading state
+  }
+
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCoachData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     setStatusMessage("");
 
     const formData = new FormData();
-
     if (profilePhoto) formData.append("profilePhoto", profilePhoto);
-
-    console.log(profilePhoto, "profilePhoto");
-
-    // gallery.forEach((file, index) => {
-    //   if (file) formData.append(`gallery${index}`, file);
-    // });
     if (gallery && Array.isArray(gallery)) {
-      gallery.forEach((image, index) => {
-        formData.append(`gallery[${index}]`, image);
+      gallery.forEach((image) => {
+        if (image) {
+          formData.append("gallery", image);
+        }
       });
     }
 
-    console.log(gallery, "gallery");
-
-    formData.append("firstName", firstName);
-    formData.append("lastName", lastName);
-    formData.append("email", email);
-    formData.append("contact", contact);
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("hourlyRate", hourlyRate);
+    formData.append("firstName", coachData.firstName || "");
+    formData.append("lastName", coachData.lastName || "");
+    formData.append("email", coachData.email || "");
+    formData.append("contact", coachData.contact || "");
+    formData.append("title", coachData.title || "");
+    formData.append("description", coachData.description || "");
+    formData.append("hourlyRate", coachData.hourlyRate || "");
 
     try {
       const response = await axios.post("/api/coach/update", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      setStatusMessage(
-        response.status === 200
-          ? "Profile updated successfully!"
-          : "Failed to update profile."
-      );
+      if (response.status === 200) {
+        toast.success("Profile updated successfully!", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          theme: "light",
+          icon: <CircleCheck color="#037D40" />,
+        });
+
+        // Re-fetch updated data
+        const updatedData = await axios.get(`/api/coach/${session.user.id}`);
+        setCoachData(updatedData.data);
+        setFirstName(updatedData.data.firstName || "");
+        setLastName(updatedData.data.lastName || "");
+        setEmail(updatedData.data.email || "");
+        setContact(updatedData.data.contact || "");
+        setTitle(updatedData.data.title || "");
+        setDescription(updatedData.data.description || "");
+        setHourlyRate(updatedData.data.hourlyRate || "");
+        setProfilePhoto(updatedData.data.profilePhoto || null);
+        setGallery(updatedData.data.gallery || [null, null]);
+      } else {
+        toast.error("Failed to update profile.", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          theme: "light",
+        });
+      }
     } catch (error) {
       console.error("Error updating profile:", error);
-      setStatusMessage("An error occurred.");
+      toast.error(
+        "An error occurred while updating the profile. Please try again."
+      );
     }
   };
 
@@ -157,9 +216,7 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                   <div
                     className="relative w-32 h-32 rounded-full overflow-hidden bg-[#E6F2EC] flex justify-center items-center"
                     style={{
-                      backgroundImage: `url(${
-                        previewImage || session?.user?.profilePhoto
-                      })`,
+                      backgroundImage: `url(${previewImage || `${BASE_URL}${coachData?.image}`})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                     }}
@@ -170,7 +227,7 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                       accept="image/*"
                       className="absolute inset-0 opacity-0 cursor-pointer"
                     />
-                    {!previewImage && (
+                    {!previewImage && !coachData.image &&  (
                       <SquarePen className="text-primary text-4xl absolute " />
                     )}
                   </div>
@@ -188,7 +245,7 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                         <div
                           className="w-32 h-32 bg-[#E6F2EC] flex justify-center items-center overflow-hidden rounded"
                           style={{
-                            backgroundImage: image
+                            backgroundImage: image instanceof Blob || image instanceof File
                               ? `url(${URL.createObjectURL(image)})`
                               : "none",
                             backgroundSize: "cover",
@@ -228,8 +285,10 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                   <input
                     className="w-[578px] h-[60px] rounded-[5px] border-1 solid padding-[20px] border-[#B0B6D3] px-3"
                     type="text"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    value={coachData?.firstName}
+                    onChange={(e) =>
+                      setCoachData({ ...coachData, firstName: e.target.value })
+                    }
                     placeholder="First Name"
                   />
                 </div>
@@ -239,8 +298,10 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                   <input
                     className="w-[578px] h-[60px] rounded-[5px] border-1 solid padding-[20px] border-[#B0B6D3] px-3"
                     type="text"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    value={coachData?.lastName}
+                    onChange={(e) =>
+                      setCoachData({ ...coachData, lastName: e.target.value })
+                    }
                     placeholder="Last Name"
                   />
                 </div>
@@ -252,8 +313,10 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                   <input
                     className="w-[578px] h-[60px] rounded-[5px] border-1 solid padding-[20px] border-[#B0B6D3] px-3"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={coachData?.email}
+                    onChange={(e) =>
+                      setCoachData({ ...coachData, email: e.target.value })
+                    }
                     placeholder="Email"
                   />
                 </div>
@@ -263,8 +326,10 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                   <input
                     className="w-[578px] h-[60px] rounded-[5px] border-1 solid padding-[20px] border-[#B0B6D3] px-3"
                     type="text"
-                    value={contact}
-                    onChange={(e) => setContact(e.target.value)}
+                    value={coachData?.contact}
+                    onChange={(e) =>
+                      setCoachData({ ...coachData, contact: e.target.value })
+                    }
                     placeholder="Contact Number"
                   />
                 </div>
@@ -275,8 +340,10 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                 <input
                   className="w-[1176px] h-[60px] rounded-[5px] border-1 solid padding-[20px] border-[#B0B6D3] px-3"
                   type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  value={coachData?.title}
+                  onChange={(e) =>
+                    setCoachData({ ...coachData, title: e.target.value })
+                  }
                   placeholder="Title"
                 />
               </div>
@@ -286,8 +353,10 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
 
                 <textarea
                   className="w-[1176px] pt-4 h-[250px] rounded-[5px] border-1 solid padding-[20px] border-[#B0B6D3] px-3"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  value={coachData?.description}
+                  onChange={(e) =>
+                    setCoachData({ ...coachData, description: e.target.value })
+                  }
                   placeholder="Description"
                 />
               </div>
@@ -297,8 +366,10 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                 <input
                   className="w-[1176px] h-[60px] rounded-[5px] border-1 solid padding-[20px] border-[#B0B6D3] px-3"
                   type="number"
-                  value={hourlyRate}
-                  onChange={(e) => setHourlyRate(e.target.value)}
+                  value={coachData?.hourlyRate}
+                  onChange={(e) =>
+                    setCoachData({ ...coachData, hourlyRate: e.target.value })
+                  }
                   placeholder="Hourly Rate"
                 />
               </div>
@@ -310,6 +381,7 @@ const ProfileEditComponent = ({ onUpdateSuccess }) => {
                 Upload
               </button>
             </form>
+            <ToastContainer />
           </div>
         </Box>
       </div>
