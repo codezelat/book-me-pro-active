@@ -6,9 +6,11 @@ import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
 // Disable body parsing to handle file streams directly
-export const config = {
-  api: { bodyParser: false },
+export const runtime = 'nodejs'; // Specify runtime environment
+export const api = {
+  bodyParser: false, // Disable body parsing for this route
 };
+
 
 function getFileExtension(filename) {
   // Handle empty or invalid input
