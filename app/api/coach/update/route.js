@@ -1,3 +1,5 @@
+export const runtime = 'nodejs'; 
+import { NextResponse } from 'next/server';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import connectToDatabase from "@/Lib/mongodb";
@@ -6,10 +8,7 @@ import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
 // Disable body parsing to handle file streams directly
-export const runtime = 'nodejs'; // Specify runtime environment
-export const api = {
-  bodyParser: false, // Disable body parsing for this route
-};
+// Specify runtime environment
 
 
 function getFileExtension(filename) {
@@ -31,7 +30,7 @@ function getFileExtension(filename) {
 
 export async function POST(req) {
   const session = await getServerSession(authOptions);
-  if (!session) return new Response("Unauthorized", { status: 401 });
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { db } = await connectToDatabase();
   const userEmail = session.user.email;
@@ -144,9 +143,9 @@ export async function POST(req) {
       .collection("users")
       .updateOne({ email: userEmail }, { $set: updateData });
     session.user.profilePhoto = updateData.profilePhoto;
-    return new Response("Profile updated successfully", { status: 200 });
+    return NextResponse.json("Profile updated successfully", { status: 200 });
   } catch (error) {
     console.error("Error updating profile:", error);
-    return new Response("Failed to update profile", { status: 500 });
+    return NextResponse.json("Failed to update profile", { status: 500 });
   }
 }
