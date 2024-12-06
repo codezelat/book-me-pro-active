@@ -1,11 +1,14 @@
 import { getSession } from "next-auth/react";
 import User from "../../../models/user"; // Your User model (adjust the path accordingly)
+import { useMemo } from 'react';
 
 export default async function handler(req, res) {
+
   const { method, query: { userId } } = req;
 
   // Check if the user is authenticated (optional, depending on your requirements)
   const session = await getSession({ req });
+  
 
   if (!session) {
     return res.status(401).json({ message: "Unauthorized" }); // If no session, return 401

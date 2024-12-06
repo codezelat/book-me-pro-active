@@ -1,80 +1,58 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import connectToDatabase from "@/Lib/mongodb";
-import { promises as fs } from "fs";
-import path from "path";
+// app/coach/update/route.js
+import { NextResponse } from "next/server";
+import { MongoClient, ObjectId } from "mongodb";
 
-export const config = {
-  api: { bodyParser: false },
+const uri = process.env.MONGODB_URI; // Ensure your environment variable is set correctly
+const dbName = "your-database-name"; // Replace with your database name
+
+export const segmentConfig = {
+  runtime: "nodejs", // Use "edge" if you're deploying to Edge Runtime
 };
 
 export async function POST(req) {
-  const session = await getServerSession(authOptions);
-  if (!session) return new Response("Unauthorized", { status: 401 });
-
-  const { db } = await connectToDatabase();
-  const userEmail = session.user.email;
-
   try {
-    const formData = await req.formData();
+    // Parse the incoming JSON data from the request body
+    const body = await req.json();
+    const { coachId, updateData } = body;
 
-    // Extract basic data
-    const firstName = formData.get("firstName");
-    const lastName = formData.get("lastName");
-    const email = formData.get("email");
-    const contact = formData.get("contact");
-    const title = formData.get("title");
-    const description = formData.get("description");
-    const hourlyRate = parseFloat(formData.get("hourlyRate"));
-
-    const updateData = {
-      firstName,
-      lastName,
-      email,
-      contact,
-      title,
-      description,
-      hourlyRate,
-    };
-
-    // Handle profile photo
-    const profilePhoto = formData.get("profilePhoto");
-    if (profilePhoto && profilePhoto.name) {
-      const photoDir = path.join(process.cwd(), "public/uploads");
-      await fs.mkdir(photoDir, { recursive: true });
-      const uniquePhotoName = `${Date.now()}-${profilePhoto.name}`;
-      const profilePhotoPath = path.join(photoDir, uniquePhotoName);
-      const photoBuffer = Buffer.from(await profilePhoto.arrayBuffer());
-      await fs.writeFile(profilePhotoPath, photoBuffer);
-      updateData.profilePhoto = `/uploads/${uniquePhotoName}`;
-    }
-
-    // Handle gallery photos if provided
-    const gallery = formData.getAll("gallery");
-    if (gallery && gallery.length > 0) {
-      const galleryDir = path.join(process.cwd(), "public/uploads/gallery");
-      await fs.mkdir(galleryDir, { recursive: true });
-      updateData.gallery = await Promise.all(
-        gallery.map(async (file) => {
-          const filePath = path.join(galleryDir, file.name);
-          const fileBuffer = Buffer.from(await file.arrayBuffer());
-          await fs.writeFile(filePath, fileBuffer);
-          return `/uploads/gallery/${file.name}`;
-        })
+    if (!coachId || !updateData) {
+      return NextResponse.json(
+        { success: false, message: "Invalid request payload" },
+        { status: 400 }
       );
     }
- 
 
-    // Update database
-    await db
-      .collection("users")
-      .updateOne({ email: userEmail }, { $set: updateData });
-    session.user.profilePhoto = updateData.profilePhoto;
-    return new Response("Profile updated successfully", { status: 200 });
+    // Connect to MongoDB
+    const client = new MongoClient(uri);
+    await client.connect();
+    const db = client.db(dbName);
+
+    // Update the coach's data in the database
+    const result = await db.collection("users").updateOne(
+      { _id: new ObjectId(coachId) },
+      { $set: updateData }
+    );
+
+    // Close the connection
+    await client.close();
+
+    // Check if the update was successful
+    if (result.modifiedCount === 0) {
+      return NextResponse.json(
+        { success: false, message: "No updates were made" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { success: true, message: "Coach data updated successfully" },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("Error updating profile:", error);
-    return new Response("Failed to update profile", { status: 500 });
+    console.error("Error updating coach data:", error);
+    return NextResponse.json(
+      { success: false, message: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
-
-

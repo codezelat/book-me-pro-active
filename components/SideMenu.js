@@ -32,33 +32,37 @@ const Drawer = styled(MuiDrawer)(({ theme }) => ({
   },
 }));
 
-const BASE_URL = process.env.NEXT_PUBLIC_DOMAIN;
+const BASE_URL = process.env.NEXT_PUBLIC_DOMAIN || "https://yourfallbackdomain.com";
 
 export default function SideMenu({ session }) {
   const [coachData, setCoachData] = React.useState(null);
-  const [activeSection, setActiveSection] = React.useState("Home");
   const theme = useTheme();
   const router = useRouter();
 
-  const profileUrl = `https://yourdomain.com/coach/${session?.user?.id}`;
+  const profileUrl = `${BASE_URL}/coach/${session?.user?.id || ""}`;
 
   React.useEffect(() => {
     if (session?.user?.id) {
       axios
         .get(`/api/coach/${session.user.id}`)
         .then((response) => setCoachData(response.data))
-        .catch((error) => console.error("Error fetching coach data:", error));
+        .catch((error) =>
+          console.error("Error fetching coach data:", error.response?.data || error.message)
+        );
     }
   }, [session?.user?.id]);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(`${BASE_URL}/coach/${session?.user?.id}`);
+    navigator.clipboard.writeText(profileUrl);
   };
 
   const handleEditProfileClick = () => {
     router.push("/dashboard/profile");
   };
-  console.log({bg: `url(${BASE_URL}${coachData?.image})`})
+
+  const profileImage = coachData?.image
+    ? `${BASE_URL}${coachData.image}`
+    : "/default-profile.png"; // Use a default image as fallback
 
   return (
     <Drawer
@@ -79,23 +83,21 @@ export default function SideMenu({ session }) {
           alignItems: "center",
           textAlign: "center",
           padding: "30px",
-          // gap: "30px",
           paddingTop: 5,
         }}
       >
         <div
           style={{
-            backgroundImage: `url(${BASE_URL}${coachData?.image})`, // Set the background image
-            backgroundSize: "cover", // Ensures the image covers the entire container
-            backgroundPosition: "center", // Centers the image
-            backgroundRepeat: "no-repeat", // Prevents the image from repeating
-            width: "75px", // Fixed width
-            height: "75px", // Fixed height
-            borderRadius: "50%", // Makes it circular
+            backgroundImage: `url(${profileImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            width: "75px",
+            height: "75px",
+            borderRadius: "50%",
           }}
           className="mb-5"
         />
-        
 
         <Box>
           <Typography
@@ -134,7 +136,7 @@ export default function SideMenu({ session }) {
             width: "188px",
             height: "46px",
             gap: "20px",
-            borderRadius: "5px ",
+            borderRadius: "5px",
             bgcolor: "#037D40",
             color: "white",
             display: "flex",
@@ -182,13 +184,13 @@ export default function SideMenu({ session }) {
             }}
           >
             <Link
-              href={`/coach/${session.user.id}`}
+              href={profileUrl}
               style={{
                 textDecoration: "none",
                 color: theme.palette.mode === "dark" ? "white" : "#037D40",
               }}
             >
-              {`https://yourdomain.com/coach/${session.user.id}`}
+              {profileUrl}
             </Link>
           </Typography>
           <Button
@@ -210,7 +212,7 @@ export default function SideMenu({ session }) {
 
       <Divider />
       <MenuContent session={session} />
-
+      
       <Box
         sx={{
           padding: "5px 50px 0px 60px",
@@ -221,7 +223,7 @@ export default function SideMenu({ session }) {
         }}
       >
         <Button
-          startIcon={<LogOut sx={{ fill: "#A3D2D5", padding: "5px" }} />}
+          startIcon={<LogOut sx={{ fill: theme.palette.text.primary, padding: "5px" }} />}
           sx={{
             fontFamily: "Kanit, sans-serif",
             color: "#037D40",

@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGODB_URI;
-const MONGODB_DB = process.env.MONGODB_DB;
+const MONGODB_DB = process.env.MONGODB_DB; // Use this for the database name
 
 let client;
 let clientPromise;
@@ -26,6 +26,6 @@ if (process.env.NODE_ENV === "development") {
 // Export a function to use the connected client
 export default async function connectToDatabase() {
   const client = await clientPromise;
-  const db = client.db("your-database-name");
+  const db = client.db(MONGODB_DB); // Use the MONGODB_DB environment variable here
   return { db, client };
 }

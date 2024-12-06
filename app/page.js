@@ -208,7 +208,7 @@ export default function Home() {
               </div>
               <div className="text-black text-[26px] leading-[31.2px] font-[275] mt-12">
                 Our platform is packed with features that cater specifically to
-                the needs of coaches and their students. Whether you're managing
+                the needs of coaches and their students. Whether you are managing
                 multiple locations or ensuring seamless communication with your
                 players, weve got everything you need in one place. Explore the
                 tools that will revolutionize how you manage your coaching

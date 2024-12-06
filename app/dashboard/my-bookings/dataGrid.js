@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button, Box, CircularProgress, Typography } from "@mui/material";
 import { FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 import { CircleX, CircleCheck } from "lucide-react";
@@ -14,7 +14,7 @@ export default function CustomizedDataGrid() {
   const [loading, setLoading] = useState(false);
 
   // Function to fetch appointments based on status
-  const fetchAppointments = async (status) => {
+  const fetchAppointments = useCallback(async (status) => {
     if (!session?.user?.id) {
       console.error("User session is not available");
       return;
@@ -23,17 +23,28 @@ export default function CustomizedDataGrid() {
     try {
       setLoading(true);
       setSelectedStatus(status);
-      const response = await axios.get(
-        `/api/appointments?coachId=${session.user.id}&status=${status}`
-      );
-      setAppointments(response.data);
-      console.log(`Fetched appointments for status '${status}':`, response.data);
+
+      // Ensure the correct parameters are used (coachId from session and status)
+      const response = await axios.get(`/api/appointments`, {
+        params: {
+          coachId: session.user.id,
+          status: status,
+        },
+      });
+
+      // Check for successful response
+      if (response.data) {
+        setAppointments(response.data);
+        console.log(`Fetched appointments for status '${status}':`, response.data);
+      } else {
+        console.error("No data returned from API.");
+      }
     } catch (error) {
       console.error("Error fetching appointments:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [session?.user?.id]);
 
   // Define Data Grid columns
   const columns = [
@@ -144,7 +155,7 @@ export default function CustomizedDataGrid() {
   // Initial fetch for "pending" appointments
   useEffect(() => {
     fetchAppointments("pending");
-  }, []);
+  }, [fetchAppointments]); // Add fetchAppointments to the dependency array
 
   return (
     <Box sx={{ width: "100%", paddingTop: 10, paddingLeft: 20 }}>

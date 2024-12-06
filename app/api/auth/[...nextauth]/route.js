@@ -15,17 +15,12 @@ export const authOptions = {
       async authorize(credentials) {
         const { db } = await connectToDatabase();
 
-        const user = await db
-          .collection("users")
-          .findOne({ email: credentials.email });
+        const user = await db.collection("users").findOne({ email: credentials.email });
         if (!user) {
           throw new Error("No user found with that email.");
         }
 
-        const isValidPassword = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
+        const isValidPassword = await bcrypt.compare(credentials.password, user.password);
         if (!isValidPassword) {
           throw new Error("Invalid password.");
         }
@@ -49,9 +44,12 @@ export const authOptions = {
   pages: {
     signIn: "/auth/login", // Custom sign-in page
   },
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt", // Fix: Change to "jwt"
+  },
   callbacks: {
     async jwt({ token, user }) {
+      // This callback is called when a JWT is created (after login)
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -68,6 +66,7 @@ export const authOptions = {
       return token;
     },
     async session({ session, token }) {
+      // This callback is called when the session is returned
       session.user.id = token.id;
       session.user.email = token.email;
       session.user.name = token.name;
