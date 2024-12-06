@@ -68,6 +68,34 @@ export async function POST(req) {
       updateData.profilePhoto = `/uploads/${fileName}`;
     }
 
+    const gallery = formData.getAll("gallery");
+    if (gallery && gallery.length > 0) {
+      const galleryDir = path.join(process.cwd(), "public/uploads/gallery");
+      await fs.mkdir(galleryDir, { recursive: true });
+      updateData.gallery = [];
+
+      for (const image of gallery) {
+        if (image && image.name) {
+          const uniqueKey = uuidv4();
+          const fileExtension = getFileExtension(image.name);
+
+          if (!fileExtension) {
+            throw new Error(`Invalid file extension for image: ${image.name}`);
+          }
+
+          const fileName = `${uniqueKey}.${fileExtension}`;
+          const imagePath = path.join(galleryDir, fileName);
+
+          const imageBuffer = Buffer.from(await image.arrayBuffer());
+          await fs.writeFile(imagePath, imageBuffer);
+
+          updateData.gallery.push(`/uploads/gallery/${fileName}`);
+        } else {
+          console.warn("Skipping invalid or missing image:", image);
+        }
+      }
+    }
+
     console.log("Updating user with email:", userEmail);
     await db.collection("users").updateOne({ email: userEmail }, { $set: updateData });
 

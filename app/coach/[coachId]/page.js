@@ -18,7 +18,10 @@ export default function CoachProfilePage() {
 
   const BASE_URL = process.env.NEXT_PUBLIC_DOMAIN;
 
-  const images = useMemo(() => coach?.gallery || [], [coach?.gallery]);
+  console.log("BASE_URL:", BASE_URL);
+
+
+  const image = useMemo(() => coach?.gallery || [], [coach?.gallery]);
 
   useEffect(() => {
     const fetchCoachData = async () => {
@@ -37,6 +40,9 @@ export default function CoachProfilePage() {
       fetchCoachData();
     }
   }, [coachId]);
+
+  console.log("Fetched Coach Data:", coach);
+
 
   useEffect(() => {
     if (coach?.gallery && coach.gallery.length > 0) {
@@ -124,16 +130,16 @@ export default function CoachProfilePage() {
                   />
                 ))}
               </div>
-              <div className="container pb-24 mx-auto px-20">
-                <div className="text-3xl text-black font-extrabold mb-6">
-                  Description
-                </div>
-                <div className="text-[26px] font-[275] mb-4 text-black">
-                  {coach.description}
-                </div>
-              </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="container pb-24 mx-auto px-20">
+        <div className="text-3xl text-black font-extrabold mb-6">
+          Description
+        </div>
+        <div className="text-[26px] font-[275] mb-4 text-black">
+          {coach.description}
         </div>
       </div>
     </section>

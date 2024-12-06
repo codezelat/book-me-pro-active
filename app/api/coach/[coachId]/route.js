@@ -31,6 +31,7 @@ export async function GET(req, { params }) {
       image: coach.profilePhoto || "/images/default-coach.png",
       gallery: coach.gallery || "/images/default-coach.png",
     };
+    console.log ({coachData}) ;
   
     return new Response(JSON.stringify(coachData), {
       status: 200,
