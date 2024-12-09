@@ -20,8 +20,7 @@ export default function CoachProfilePage() {
 
   console.log("BASE_URL:", BASE_URL);
 
-
-  const image = useMemo(() => coach?.gallery || [], [coach?.gallery]);
+  const image = useMemo(() => Array.isArray(coach?.gallery) ? coach.gallery : [], [coach?.gallery]);
 
   useEffect(() => {
     const fetchCoachData = async () => {
@@ -43,10 +42,11 @@ export default function CoachProfilePage() {
 
   console.log("Fetched Coach Data:", coach);
 
-
   useEffect(() => {
-    if (coach?.gallery && coach.gallery.length > 0) {
+    if (Array.isArray(coach?.gallery) && coach.gallery.length > 0) {
       setSelectedImage(`${BASE_URL}${coach.gallery[0]}`);
+    } else {
+      setSelectedImage("/default-image.jpg");
     }
   }, [coach, BASE_URL]);
 
@@ -60,23 +60,23 @@ export default function CoachProfilePage() {
         <div className="grid py-24 justify-center gap-10 grid-cols-2 items-center">
           <div>
             <div className="text-[88px] text-black font-bold">
-              {coach.firstName} {coach.lastName}
+              {coach?.firstName || "First Name"} {coach?.lastName || "Last Name"}
             </div>
             <div className="text-[44px] font-normal text-black">
-              {coach.title}
+              {coach?.title || "Title Unavailable"}
             </div>
             <div className="text-black font-semibold mt-2 text-[30px] ">
-              $ {coach.hourlyRate} per hour
+              ${coach?.hourlyRate || "Rate Not Set"} per hour
             </div>
             <div className="flex gap-20 text-2xl text-black mt-2">
               <p>
-                Contact: {coach.contact}
-                utils/middleware.js Email:
+                Contact: {coach?.contact || "N/A"}
+                Email:
                 <Link
-                  href={`mailto:${coach.email}`}
+                  href={`mailto:${coach?.email || ""}`}
                   className="text-blue-600 underline"
                 >
-                  {coach.email}
+                  {coach?.email || "Not Provided"}
                 </Link>
               </p>
             </div>
@@ -109,20 +109,20 @@ export default function CoachProfilePage() {
                 />
               </div>
               <div className="flex flex-row justify-self-auto gap-3">
-                {coach?.gallery?.map((image, index) => (
+                {image.map((img, index) => (
                   <div
                     key={index}
                     className={`rounded-[8px] cursor-pointer`}
-                    onClick={() => setSelectedImage(`${BASE_URL}${image}`)}
+                    onClick={() => setSelectedImage(`${BASE_URL}${img}`)}
                     style={{
-                      backgroundImage: `url(${BASE_URL}${image})`,
+                      backgroundImage: `url(${BASE_URL}${img})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       width: "100px",
                       height: "100px",
                       borderRadius: "8px",
                       border:
-                        selectedImage === `${BASE_URL}${image}`
+                        selectedImage === `${BASE_URL}${img}`
                           ? "4px solid #0066FF"
                           : "none",
                     }}
@@ -139,7 +139,7 @@ export default function CoachProfilePage() {
           Description
         </div>
         <div className="text-[26px] font-[275] mb-4 text-black">
-          {coach.description}
+          {coach?.description || "No description available."}
         </div>
       </div>
     </section>
