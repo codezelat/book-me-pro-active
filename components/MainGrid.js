@@ -38,8 +38,8 @@ const data = [
 ];
 
 export default function MainGrid() {
-  const theme = useTheme(); // Use theme within the component
-  const isDarkMode = theme.palette.mode === "dark"; // Check if dark mode is active
+  // const theme = useTheme(); // Use theme within the component
+  // const isDarkMode = theme.palette.mode === "dark"; // Check if dark mode is active
 
   return (
     <Box
@@ -50,9 +50,11 @@ export default function MainGrid() {
         maxWidth: { xs: "100%", md: "1700px" },
         paddingTop: 10,
         paddingLeft: 20,
+        bgcolor: "background.paper", // Set a default background color
+        color: "text.secondary", 
         //paddingRight: 20,
-        bgcolor: isDarkMode ? "background.default" : "background.paper",
-        color: isDarkMode ? "text.primary" : "text.secondary",
+        // bgcolor: isDarkMode ? "background.default" : "background.paper",
+        // color: isDarkMode ? "text.primary" : "text.secondary",
         overflowY: "auto", // This ensures scrolling is enabled
       }}
     >
