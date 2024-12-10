@@ -8,44 +8,45 @@ import MenuItem from '@mui/material/MenuItem';
 import { useColorScheme } from '@mui/material/styles';
 
 export default function ColorModeIconDropdown(props) {
-  const { mode, systemMode, setMode } = useColorScheme();
+  // const { mode, systemMode, setMode } = useColorScheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleMode = (targetMode) => () => {
-    setMode(targetMode);
-    handleClose();
-  };
-  if (!mode) {
-    return (
-      <Box
-        data-screenshot="toggle-mode"
-        sx={(theme) => ({
-          verticalAlign: 'bottom',
-          display: 'inline-flex',
-          width: '2.25rem',
-          height: '2.25rem',
-          borderRadius: (theme.vars || theme).shape.borderRadius,
-          border: '1px solid',
-          borderColor: (theme.vars || theme).palette.divider,
-        })}
-      />
-    );
-  }
-  const resolvedMode = systemMode || mode;
-  const icon = {
-    light: <LightModeIcon />,
-    dark: <DarkModeIcon />,
-  }[resolvedMode];
+  // const handleMode = (targetMode) => () => {
+  //   setMode(targetMode);
+  //   handleClose();
+  // };
+  // if (!mode) {
+  //   return (
+  //     <Box
+  //       data-screenshot="toggle-mode"
+  //       sx={(theme) => ({
+  //         verticalAlign: 'bottom',
+  //         display: 'inline-flex',
+  //         width: '2.25rem',
+  //         height: '2.25rem',
+  //         borderRadius: (theme.vars || theme).shape.borderRadius,
+  //         border: '1px solid',
+  //         borderColor: (theme.vars || theme).palette.divider,
+  //       })}
+  //     />
+  //   );
+  // }
+  // const resolvedMode = systemMode || mode;
+  // const icon = {
+  //   light: <LightModeIcon />,
+  //   dark: <DarkModeIcon />,
+  // }[resolvedMode];
   return (
     <React.Fragment>
       <IconButton
-        data-screenshot="toggle-mode"
+        // data-screenshot="toggle-mode"
         onClick={handleClick}
         disableRipple
         size="small"
@@ -56,7 +57,7 @@ export default function ColorModeIconDropdown(props) {
       >
         {icon}
       </IconButton>
-      <Menu
+      {/* <Menu
         anchorEl={anchorEl}
         id="account-menu"
         open={open}
@@ -82,7 +83,7 @@ export default function ColorModeIconDropdown(props) {
         <MenuItem selected={mode === 'dark'} onClick={handleMode('dark')}>
           Dark
         </MenuItem>
-      </Menu>
+      </Menu> */}
     </React.Fragment>
   );
 }
