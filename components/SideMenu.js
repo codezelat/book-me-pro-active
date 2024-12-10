@@ -25,8 +25,10 @@ const Drawer = styled(MuiDrawer)(({ theme }) => ({
   boxSizing: "border-box",
   "& .MuiDrawer-paper": {
     width: drawerWidth,
-    backgroundColor: theme.palette.mode === "dark" ? "#121212" : "#ffffff",
-    color: theme.palette.mode === "dark" ? "#ffffff" : "#000000",
+    // backgroundColor: theme.palette.mode === "dark" ? "#121212" : "#ffffff",
+    // color: theme.palette.mode === "dark" ? "#ffffff" : "#000000",
+    backgroundColor: "#ffffff", // Set background color to white
+    color: "#000000", 
     padding: "50px 40px",
     borderRadius: "5px 0px 0px 0px",
   },
