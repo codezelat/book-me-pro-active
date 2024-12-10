@@ -13,13 +13,13 @@
   --font-kanit: 'Kanit', sans-serif; /* Define the Kanit font */
 }
 
-.dark {
+/* .dark {
   --background-color: #121212;
   --foreground-color: #ffffff;
   --primary-color: #90caf9;
   --secondary-color: #37474f;
   --footer-color: #0a1f1b;
-}
+} */
 
 @media (prefers-color-scheme: dark) {
   :root {
