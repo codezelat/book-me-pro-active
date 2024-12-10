@@ -3,7 +3,6 @@ import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material/styles"; // Import useTheme
 import Copyright from "../app/internals/components/copyright";
 import CustomizedTreeView from "./CustomizedTreeView";
 import CustomizedDataGrid from "./CustomizedDataGrid";
@@ -38,24 +37,20 @@ const data = [
 ];
 
 export default function MainGrid() {
-  // const theme = useTheme(); // Use theme within the component
-  // const isDarkMode = theme.palette.mode === "dark"; // Check if dark mode is active
-
   return (
     <Box
       className="custom-padding"
       sx={{
         width: "100%",
-        height: "100%", // Adjust this to take the full height of the screen
+        height: "100%", 
         maxWidth: { xs: "100%", md: "1700px" },
         paddingTop: 10,
         paddingLeft: 20,
-        bgcolor: "background.paper", // Set a default background color
+        bgcolor: "background.paper", 
         color: "text.secondary", 
-        //paddingRight: 20,
-        // bgcolor: isDarkMode ? "background.default" : "background.paper",
-        // color: isDarkMode ? "text.primary" : "text.secondary",
-        overflowY: "auto", // This ensures scrolling is enabled
+        // Removed overflowY: "auto"
+        // Optional: If you want to ensure no scrollbar, you can add:
+        overflow: "hidden", 
       }}
     >
       {/* Stat cards */}
@@ -127,23 +122,7 @@ export default function MainGrid() {
         >
           <CustomizedDataGrid />
         </Grid>
-        {/* <Grid
-          item
-          xs={12}
-          md={3}
-          sx={{
-            width: "100%",
-            height: "354px",
-          }}
-        > */}
-        {/* <Stack gap={2} direction={{ xs: "column", sm: "row", lg: "column" }}> */}
-        {/* <CustomizedTreeView />
-                <ChartUserByCountry /> */}
-        {/* </Stack>
-        </Grid> */}
       </Grid>
-
-      {/* <Copyright sx={{ my: 4 }} /> */}
     </Box>
   );
 }

@@ -27,10 +27,12 @@ const Drawer = styled(MuiDrawer)(({ theme }) => ({
     width: drawerWidth,
     // backgroundColor: theme.palette.mode === "dark" ? "#121212" : "#ffffff",
     // color: theme.palette.mode === "dark" ? "#ffffff" : "#000000",
-    backgroundColor: "#ffffff", // Set background color to white
+    backgroundColor: "#ffffff", 
     color: "#000000", 
     padding: "50px 40px",
     borderRadius: "5px 0px 0px 0px",
+    overscrollBehavior: "none", // Prevent overscrolling
+    overflow: "hidden", // Remove scrollbars
   },
 }));
 
@@ -75,7 +77,9 @@ export default function SideMenu({ session }) {
         alignItems: "center",
         textAlign: "center",
         gap: "30px",
-        height: "calc(100vh - 60px)",
+        // height: "calc(100vh - 60px)",
+        height: "100vh", // Full viewport height
+        overflow: "hidden",
       }}
     >
       <Box
@@ -84,6 +88,7 @@ export default function SideMenu({ session }) {
           flexDirection: "column",
           alignItems: "center",
           textAlign: "center",
+          width: "100%", // Ensure full width
           padding: "30px",
           paddingTop: 5,
         }}
@@ -105,7 +110,8 @@ export default function SideMenu({ session }) {
           <Typography
             variant="body2"
             sx={{
-              width: "147px",
+              width: "100%", // Adjusted for responsiveness
+              // width: "147px",
               textAlign: "center",
               fontFamily: "Kanit, sans-serif",
               fontSize: "18px",
@@ -118,7 +124,8 @@ export default function SideMenu({ session }) {
           <Typography
             variant="caption"
             sx={{
-              width: "198px",
+              // width: "198px",
+              width: "100%", // Adjusted for responsiveness
               fontFamily: "Kanit, sans-serif",
               fontSize: "15px",
               fontWeight: 400,
@@ -146,6 +153,7 @@ export default function SideMenu({ session }) {
             justifyContent: "center",
             fontFamily: "Kanit, sans-serif",
             "&:hover": { bgcolor: "#036b34" },
+            mt: 2, // Add some margin top
           }}
           size="large"
         >
@@ -157,7 +165,8 @@ export default function SideMenu({ session }) {
       {coachData && (
         <Box
           sx={{
-            width: "100%",
+            width: "90%", // Slightly reduced width
+            // width: "100%",
             p: 2,
             borderRadius: 2,
             backgroundColor: theme.palette.background.paper,
@@ -212,8 +221,11 @@ export default function SideMenu({ session }) {
         </Box>
       )}
 
-      <Divider />
-      <MenuContent session={session} />
+      <Divider sx={{ width: '90%' }} />
+      
+      <Box sx={{ width: '100%', flexGrow: 1, overflow: 'hidden' }}>
+        <MenuContent session={session} />
+      </Box>
       
       <Box
         sx={{
@@ -222,6 +234,7 @@ export default function SideMenu({ session }) {
           alignItems: "center",
           fontWeight: 700,
           fontFamily: "Kanit, sans-serif",
+          width: '100%',
         }}
       >
         <Button
